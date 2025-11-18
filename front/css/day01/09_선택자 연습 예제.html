@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>선택자 연습 예제</title>
+	<!-- 
+	문제1:
+	1에 글자색을 빨강으로 변경하려고 할 때 올바른 선택자를 입력하세요.
+	-->
+	<style>
+		.first{color: red;}
+		.ex1 > .first{color: red;}
+		.ex1 > :first-child{color: red;}
+		[class*=first]{color: red;}
+		/* 선생님꺼 */
+		/* .first, li:first-of-type, .item.first, ex1 > :first-child  */
+		/*
+		문제2:
+		li태그에 hover했을 때 배경색이 노랑이 되도록 다음과 같이 작성했는데,
+		정상적으로 동작하지 않음 올바르게 수정하세요.
+		.item :hover{background: yellow;}*/
+		.item:hover,
+		.ex1 :hover,
+		.ex1 > li:hover
+		{background: yellow;}
+
+		#text:hover > .name{color: red;}
+		.text:hover > .name{color: red;}
+		/* p:hover .hover-red{color:red} */
+	</style>
+</head>
+<body>
+	<h1>선택자 연습 예제</h1>
+	<h2>예제1</h2>
+	<ul class="ex1">
+		<li class="item first">1</li>
+		<li class="item">2</li>
+		<li class="item">3</li>
+		<li class="item">4</li>
+	</ul>
+	<h2>예제3</h2>
+	<!-- 아래 요소를 hover 하면 홍길동이 빨강이 되도록 코드를 수정하세요. -->
+	<p id="text">안녕하세요. 제 이름은 <span class="name">홍길동</span>입니다.</p>
+	<p class="text">안녕하세요. 제 이름은 <span class="name">홍길동</span>입니다.</p>
+</body>
+</html>
