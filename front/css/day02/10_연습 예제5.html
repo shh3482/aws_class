@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>영역 분할 예제</title>
+	<!-- 
+	calc() 함수
+	- 서로 다른 단위를 계산할 때 사용
+	- 연산자 앞 뒤로 공백을 반드시 써야 함
+	- +, -, *, /
+	-->
+	<style>	
+	.container{
+		width: 500px;
+		height: 500px;
+		background-color: black;
+	}
+	.box{
+		width: 235px;
+		height: 480px;
+	}
+	.left-box{
+		background-color: red;
+		float: left;
+		margin: 10px 0px 10px 10px;
+	}
+	.right-box{
+		background-color: red;
+		float: right;
+		margin: 10px 10px 10px 0px;
+	}
+	.innerbox::after{
+		content: '';
+		display: block;
+		clear: both;
+	}
+	/* 선생님꺼 */
+	.container2{
+		width: 500px;
+		height: 500px;
+		padding: 10px;
+		box-sizing: border-box;
+		background-color: grey;
+	}
+	.inner-container{
+		width: 100%;
+		height: 100%;
+	}
+	.box1{
+		width: calc(50% - 5px);
+		height: 100%;
+	}
+	.box2{
+		width: 235px;
+		height: 100%;
+	}
+	.left{
+		float: left;
+		background: red;
+	}
+	.right{
+		float: right;
+		background: red;
+	}
+	.inner-container::after{
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.container3{
+		width: 500px;
+		height: 500px;
+		padding: 10px;
+		box-sizing: border-box;
+		background-color: black;
+	}
+	.inner-container3{
+		width: 100%;
+		height: 100%;
+	}
+	.box3{
+		width: calc(33%);
+		height: 100%;
+	}
+	.center{
+		float: center;
+		background: red;
+	}
+	</style>
+</head>
+<body>
+	<h1>영역 분할 예제</h1>
+	<div class="container">
+		<div class="innerbox">
+			<div class="box left-box"></div>
+			<div class="box right-box"></div>
+		</div>
+	</div>
+	<h1>영역 분할 예제(calc함수 이용)</h1>
+	<div class="container2">
+		<div class="inner-container">
+			<div class="box1 left"></div>
+			<div class="box1 right"></div>
+		</div>
+	 </div>
+	<!-- 선생님꺼 -->
+	 <br>
+	 <div class="container2">
+		<div class="inner-container">
+			<div class="box2 left"></div>
+			<div class="box2 right"></div>
+		</div>
+	 </div>
+
+	 <h3>3등분 연습</h3>
+	 <div class="container3">
+		<div class="inner-container3">
+			<div class="box3 left"></div>
+			<div class="box3 center"></div>
+			<div class="box3 right"></div>
+		</div>
+	 </div>
+
+</body>
+</html>
