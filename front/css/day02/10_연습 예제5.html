@@ -11,7 +11,7 @@
 	- +, -, *, /
 	-->
 	<style>	
-	.container{
+	/* .container{
 		width: 500px;
 		height: 500px;
 		background-color: black;
@@ -36,7 +36,7 @@
 		clear: both;
 	}
 	/* 선생님꺼 */
-	.container2{
+	/* .container2{
 		width: 500px;
 		height: 500px;
 		padding: 10px;
@@ -67,7 +67,7 @@
 		content: '';
 		display: block;
 		clear: both;
-	}
+	} */ 
 
 	.container3{
 		width: 500px;
@@ -81,17 +81,30 @@
 		height: 100%;
 	}
 	.box3{
-		width: calc(33%);
+		width: calc(33% - 5px);
 		height: 100%;
 	}
-	.center{
-		float: center;
+	.left{
+		float: none;
 		background: red;
+	}
+	.right{
+		float: none;
+		background: blue;
+	}
+	.center{
+		float: none;
+		background: green;
+	}
+	.inner-container3::after{
+		content: '';
+		display: block;
+		clear: both;
 	}
 	</style>
 </head>
 <body>
-	<h1>영역 분할 예제</h1>
+	<!-- <h1>영역 분할 예제</h1>
 	<div class="container">
 		<div class="innerbox">
 			<div class="box left-box"></div>
@@ -105,21 +118,20 @@
 			<div class="box1 right"></div>
 		</div>
 	 </div>
-	<!-- 선생님꺼 -->
 	 <br>
 	 <div class="container2">
 		<div class="inner-container">
 			<div class="box2 left"></div>
 			<div class="box2 right"></div>
 		</div>
-	 </div>
+	 </div> -->
 
 	 <h3>3등분 연습</h3>
 	 <div class="container3">
 		<div class="inner-container3">
 			<div class="box3 left"></div>
-			<div class="box3 center"></div>
 			<div class="box3 right"></div>
+			<div class="box3 center"></div>
 		</div>
 	 </div>
 
