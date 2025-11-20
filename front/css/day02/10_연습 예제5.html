@@ -81,20 +81,22 @@
 		height: 100%;
 	}
 	.box3{
-		width: calc(33% - 5px);
+		width: calc(33.33% - 6.66px);
 		height: 100%;
 	}
 	.left{
-		float: none;
+		float: left;
 		background: red;
-	}
-	.right{
-		float: none;
-		background: blue;
+		margin-right: 10px;
 	}
 	.center{
-		float: none;
+		float: left;
 		background: green;
+		margin-right: 10px;
+	}
+	.right{
+		float: left;
+		background: blue;
 	}
 	.inner-container3::after{
 		content: '';
@@ -130,8 +132,8 @@
 	 <div class="container3">
 		<div class="inner-container3">
 			<div class="box3 left"></div>
-			<div class="box3 right"></div>
 			<div class="box3 center"></div>
+			<div class="box3 right"></div>
 		</div>
 	 </div>
 
