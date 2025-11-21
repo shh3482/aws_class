@@ -22,7 +22,8 @@
 		.textbox{
 			width: 150px;
 			height: 24px;
-			overflow: hidden;
+			/* overflow: visible; */
+			max-lines: 2;
 		}
 		.text{
 			width: 100%;
@@ -32,7 +33,7 @@
 			line-height: 12px;
 		}
 		.text:hover{
-			text-decoration: overline;
+			text-decoration: underline;
 		}
 
 		/* 버전2 */
@@ -53,20 +54,24 @@
 		.textbox2{
 			margin-top: 5px;
 			width: 150px;
-			overflow: hidden;
+			/* overflow: hidden; */
+			text-overflow: ellipsis;
 		}
 		.text2{
 			width: 100%;
-			text-decoration: none;
-			font-size: 12px;
+			font-size: 14px;
 			text-align: center;
-			line-height: 12px;
+			line-height: 16px;
+			
 			
 		}
 		.text2:hover{
-			text-decoration: overline;
+			text-decoration: underline;
 		}
-		
+		/*
+		{text-overflow: clip;}
+		{text-overflow: ellipsis;}
+		*/
 
 	</style>
 </head>
@@ -98,7 +103,7 @@
 			</div>
 			<div class="textbox2">
 				<div class="text2">
-					순식간에터졌다 신상~<br>20%특가
+					순식간에터졌다 신상~ 20%특가
 			</div>
 		</div>
 	</div>
