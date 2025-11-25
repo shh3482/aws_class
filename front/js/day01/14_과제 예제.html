@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>과제 예제</title>
+</head>
+<body>
+	<script>
+		/*
+		정수를 입력받아(prompt) 2, 3, 6, 의 배수를 판별하여 알림(alert)으로 알려주는 코드를 작성하세요.
+		예: 2를 입력 => 2는 2의 배수입니다.
+		예: 6을 입력 => 6은 6의 배수입니다.
+		예: 5를 입력 => 5는 2,3,6의 배수가 아닙니다.
+		*/
+		
+		let num = prompt("숫자를 입력하세요.");
+		num = parseInt(num);
+		if(num % 6 == 0){
+			alert(`${num} 는 6의 배수입니다.`)
+		}
+		else if(num % 3 == 0){
+			alert(`${num} 는 3의 배수입니다.`)
+		}
+		else if(num % 2 == 0){
+			alert(`${num} 는 2의 배수입니다.`)
+		}
+		else{
+			alert(`${num} 는 홀수입니다.`)
+		}
+
+	</script>
+</body>
+</html>
