@@ -16,19 +16,24 @@
 
 		let num = prompt("숫자를 입력하세요.")
 		num = parseInt(num);
+
 		// if(((num % 2 == 0) && num != 2 || ((num % 3 == 0) && num != 3)) || num == 1){
 		// 	alert(`${num}는/은 소수가 아닙니다.`)
 		// }
 		// else{
 		// 	alert(`${num}는/은 소수입니다.`)
 		// }
+
 		/* 
 		소수인가? 소수아닌가?
 		*/
+		//count; 로 작성시 undefined로 정의 되어 연산이 안됨
 		count = 0;
+
 		for(i = 1; i <= num; i++){
 			if(num % i == 0 ){
-					count = count + 1;
+				//약수 출력하고 싶으면 여기다 다큐멘트 작업.
+					count ++;
 				}
 			}
 			if(count == 2){
@@ -37,6 +42,27 @@
 			else{
 				alert(`${num}는/은 소수가 아닙니다.`)
 			}
+
+
+		/* 
+		반복 횟수 : 2부터 num-1까지 1씩 증가
+		규칙성 : 약수가 있으면 약수를 저장
+		반복문 종료 후 : 약수가 있으면 소수 아님. 아니면 소수
+		*/
+		let div = 0; //약수를 저장. 초기값으로는 0
+		
+		for(i = 2; i < num; i++){
+			if(num % i == 0 ){
+					div = i;
+				}
+		}
+		if(div != 0 || num == 1){
+			document.writeln(`${num}는 소수 아님`)
+		}
+		else{
+			document.writeln(`${num}는 소수`)
+		}
+
 		</script>
 </body>
 </html>
