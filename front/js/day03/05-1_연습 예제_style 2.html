@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<button id="btn1">배경색 변경</button>
+	<button id="btn2">배경색 초기화</button>
+	<hr>
+	<div id="box1" data-num="-1"></div>
+
+	<script>
+		const box1 = document.querySelector("#box1");
+		const btn1 = document.querySelector("#btn1");
+		const btn2 = document.querySelector("#btn2");
+
+		box1.style.border = "5px solid black";
+		box1.style.borderRadius = "10%";
+		box1.style.width = "300px";
+		box1.style.height = "300px";
+
+		btn1.addEventListener("click", function(){
+			const bgColors = ["yellow", "red", "blue", "green"];
+			let num = parseInt(box1.dataset.num);
+			num++;
+			num = num % 4;
+			box1.style.backgroundColor = bgColors[num];
+			box1.dataset.num = num;
+		})
+
+	</script>
+</body>
+</html>
