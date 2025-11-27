@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>요소 추가 연습 예제</title>
+</head>
+<body>
+	<h1>요소 추가 연습 예제</h1>
+	<form action="">
+		<input type="text" id="text">
+		<button id="btn">등록</button>
+	</form>
+	<ul id="list">
+
+	</ul>
+	<script>
+		/* 
+		내용을 입력하고 엔터를 치거나 등록 버튼을 클릭하면 입력한 내용이 리스트에 추가되도록 구현
+		- creatElement, creatTextNode, append, prepend, after, before를 활용하여 구현
+
+		추가 기능
+		li태그를 클릭하면 li태그를 삭제하는 기능을 구현
+		*/
+		const form = document.querySelector("form");
+		const btn1 = document.querySelector("#btn");
+		const input = document.querySelector("#text");
+		const list = document.querySelector("#list");
+
+		form.addEventListener("submit", function(e){
+			e.preventDefault();
+			let text = input.value.trim();
+			if(text == ""){
+				alert("내용을 입력하세요.");
+				return;
+			}
+			let li = createElement("li", text);
+			
+			li.classList.add("item");
+
+			list.append(li);
+			input.value = "";
+		})
+
+		list.addEventListener("click", function(e){
+			if(e.target.classList.contains("item")){
+				e.target.remove();
+			}
+		})
+		
+		function createElement(tagName, text){
+			// 요소 생성
+			let el = document.createElement(tagName);
+			if(text){
+				// 요소에 들어갈 텍스트 노드 생성
+				let textNode = document.createTextNode(text);
+				// 요소에 텍스트 추가
+				el.append(textNode);
+			}
+			return el;
+		}
+
+	</script>
+</body>
+</html>
