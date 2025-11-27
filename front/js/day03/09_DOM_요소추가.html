@@ -7,10 +7,10 @@
 </head>
 <body>
 	<h1>요소 추가 예제</h1>
-	<button id= "btn1">리스트 안, 앞에 추가</button>
-	<button id= "btn2">리스트 안, 끝에 추가</button>
-	<button id= "btn3">리스트 앞에 추가</button>
-	<button id= "btn4">리스트 뒤에 추가</button>
+	<button id= "btn1">prepend</button>
+	<button id= "btn2">append</button>
+	<button id= "btn3">before</button>
+	<button id= "btn4">after</button>
 	<hr>
 	<ul id="list">
 		<li>1</li>
@@ -47,7 +47,7 @@
 		const list = document.querySelector("#list");
 
 		btn1.addEventListener("click", function(){
-			let li = createElement("p", "노드 추가")
+			let li = createElement("li", "노드 추가")
 			list.prepend(li);
 		});
 		// 자식 뒤
