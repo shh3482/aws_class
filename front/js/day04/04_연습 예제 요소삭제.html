@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>요소 삭제 예제</title>
+</head>
+<body>
+	<h1>요소 삭제 예제</h1>
+	<ul>
+		<li>
+			<span>사과</span>
+			<button class="del-btn">X</button>
+		</li>
+		<li>
+			<span>바나나</span>
+			<button class="del-btn">X</button>
+		</li>
+		<li>
+			<span>딸기</span>
+			<button class="del-btn">X</button>
+		</li>
+	</ul>
+	<script>
+		const btns = document.querySelectorAll(".del-btn");
+
+		// btns.forEach(btn=>{
+		// 	btn.addEventListener("click", function(){
+		// 		btn.parentElement.remove();
+		// 	})
+		// })
+
+		btns.forEach(function(btn){
+			btn.addEventListener("click", function(){
+				btn.parentElement.remove();
+			})
+		})
+
+		//위 function이랑 동일한 방식으로 작동함
+		// for(i = 0; i<delbtns.length; i++){
+		// 	let btn = delBtns[i];
+		// }
+
+	</script>
+</body>
+</html>
