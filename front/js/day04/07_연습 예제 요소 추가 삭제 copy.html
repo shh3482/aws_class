@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>연습 예제 요소 추가 삭제</title>
+</head>
+<body>
+	<h1>존경하는 위인 추가하기</h1>
+	<form action="" id="form">
+		<input type="text" id="input">
+		<button type="submit" id="btn1">등록</button>
+	</form>
+	<ul class="list">
+		<li>
+			<span class="title">이순신</span>
+			<button class="btn-mod">수정</button>
+			<button class="btn-del">X</button>
+			<a href=""></a>
+		</li>
+	</ul>
+	
+	<script>
+		const inputText = document.querySelector("#input");
+		const btn1 = document.querySelector("#btn1");
+		const fixBtns = document.querySelectorAll(".btn-mod")
+		const delBtns = document.querySelectorAll(".btn-del");
+		const list = document.querySelector(".list");
+		const form = document.querySelector("#form");
+
+		form.addEventListener("submit", function(e){
+			e.preventDefault();
+			let text = inputText.value;
+			text = text.trim();
+			if(text=""){
+				alert("위인을 입력하세요!")
+				inputText.value = "";
+				return;
+			}
+			let li = document.createElement("li");
+			let span = document.createElement("span");
+			let textNode = document.createTextNode(inputText.value + " ");
+			let fixBtn = document.createElement("button");
+			let fix = document.createTextNode("수정");
+			fixBtn.append(fix);
+			fixBtn.classList.add("btn-mod");
+			fixBtn.addEventListener("click", function(){
+				let el = textNode;
+				let text = prompt("수정할 내용을 입력하세요.", el.textContent)
+				if(text){
+					el.textContent = text + " ";
+				}
+			})
+			let delBtn = document.createElement("button");
+			let X = document.createTextNode("X");
+			delBtn.append(X);
+			delBtn.classList.add("btn-del");
+			delBtn.addEventListener("click", function(){
+			delBtn.parentElement.remove();
+			})
+			span.append(textNode)
+			li.append(span);
+			li.append(fixBtn);
+			li.append(delBtn);
+			list.append(li);
+			inputText.value = "";
+		})
+
+		fixBtns.forEach(btn=>{
+			btn.addEventListener("click", function(){
+				const name = document.querySelector(".title");
+				let text = prompt("수정할 내용을 입력하세요.", name.textContent)
+				if(text){
+					name.textContent = text + " ";
+				}
+			})
+		})
+
+		delBtns.forEach(btn=>{
+			btn.addEventListener("click", function(){
+				btn.parentElement.remove();
+			})
+		})
+		/* 
+		// X버튼이나 li 태그에 이벤트를 등록하면 새로 추가된 li에는 이벤트가 발생하지 않음
+		// 그래서 추가 되거나 사라지지 않는 ul태그에 이벤트를 등록하고,
+		// 이벤트가 최초로 발생한 요소가 X버튼인지 확인
+		list.addEventListener("click", function(e){
+			let el = e.target; // 이벤트가 발생한 요소를 el에 저장
+			// 이벤트가 발생한 요소에 btn-del 클래스가 있으면 => X버튼을 누르면
+			if(el.classList.contains("btn-del")){
+				el.parentElement.remove();
+			}
+		})
+		*/
+	</script>
+</body>
+</html>
