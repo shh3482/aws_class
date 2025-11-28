@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>저장 삭제 테스트</title>
+	<!-- 
+	1.정보를 저장
+		- 배열 객체를 문자열로 전환
+	2.정보를 불러오기
+		- 문자열을 배열 객체로 전환
+	3.정보를 삭제하기
+		- 배열 객체로 전환된 값을 제거
+	-->
+</head>
+<body>
+	<h1>테스트</h1>
+	<form action="" class="form">
+		<input type="text" placeholder="입력하세요" class="input">
+		<button class="btn">등록</button>
+	</form>
+	<ul class="list">
+	</ul>
+
+		<script>
+			const list = document.querySelector(".list");
+			const form = document.querySelector(".form");
+			const inputText = document.querySelector(".input");
+			const regBtn = document.querySelector(".btn");
+			const li = document.createElement("li");
+			const Xbtn = document.createElement("button");
+			const span = document.createElement("span");
+			const Xbtns = document.querySelectorAll(".del");
+			const X = document.createTextNode("X");
+
+			form.addEventListener("submit", function(e){
+				e.preventDefault();
+				let text = inputText.value;
+				text = text.trim();
+				if(text == ""){
+					alert("값을 입력해야합니다!");
+					inputText = ""
+					return;
+				}
+				
+				let textNode = document.createTextNode(inputText.value + " ");
+
+				Xbtn.append(X);
+				Xbtn.classList.add("del");
+				Xbtn.addEventListener("click", function(){
+					Xbtn.parentElement.remove();
+				})
+				span.append(textNode);
+				li.append(span);
+				li.append(Xbtn);
+				list.append(li);
+
+				inputText.value = "";
+			})
+
+			Xbtns.forEach(btn=>{
+				btn.addEventListener("click", function(){
+					btn.parentElement.remove();
+				})
+			})
+			
+
+		</script>
+
+</body>
+</html>
