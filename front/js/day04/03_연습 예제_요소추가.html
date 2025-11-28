@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>요소 추가 연습 예제</title>
+</head>
+<body>
+	<h1>존경하는 위인 추가하기</h1>
+	<form action="" id="form">
+		<input type="text" id="input">
+		<button type="submit" id="btn1">등록</button>
+	</form>
+	<ul class="list">
+
+	</ul>
+	<script>
+		const text1 = document.querySelector("#input");
+		const form1 = document.querySelector("#form");
+		const list1 = document.querySelector(".list");
+
+		//리스너 뒤에 (a,b)일때 a는 어떤 기능을, b는 function 이름과 같이 지어주고
+		//다른곳에 function.이름 넣어서 통합적으로 관리 가능.
+		form1.addEventListener("submit", function(e){
+			e.preventDefault();
+			let text = text1.value;
+			text = text.trim();
+			if(text == ""){
+				alert("문구를 입력하세요!")
+				text1.value = "";
+				return;
+			}
+			//list1.innerHTML += `<li>${text}</li>`
+
+			//태그+텍스트는 밑과 같이 분리해서 만든후 합치는식으로 작동함
+			let li = document.createElement("li")
+			let textNode = document.createTextNode(text);
+			li.append(textNode);
+			list1.append(li);
+			text1.value = "";
+		})
+		//e.preventDefault(), trim(), innerHTML 기억할것!!!
+
+	</script>
+</body>
+</html>
