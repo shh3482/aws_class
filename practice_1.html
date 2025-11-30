@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>practice_1</title>
+    <style>
+      /* 인터넷 페이지 배경색 */
+      .page {
+        background-color: #a2d7ce;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* 회원가입 박스 상단바 박스*/
+      .sign-up-form-container {
+        position: relative;
+        width: 575px;
+        height: 400px;
+        margin-top: 100px;
+      }
+
+      /* 회원가입 박스 상단바*/
+      .sign-up-form-topBar {
+        position: absolute;
+        background-color: #026976;
+        width: 100%;
+        height: 100%;
+        border-radius: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        margin-top: 25px;
+        align-items: flex-start;
+        z-index: 1;
+      }
+
+      /* 회원가입 박스 상단 제목*/
+      .sign-up-form-topBar .title {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        font-size: 50px;
+        font-weight: 750;
+        color: #f8fefd;
+      }
+      /* 회원가입 박스 상단바 부제목*/
+      .sign-up-form-topBar .text {
+        position: absolute;
+        top: 21%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        font-size: 15px;
+        font-weight: 250;
+        color: #f8fefd;
+      }
+
+      /* 회원가입 박스 */
+      .sign-up-form {
+        position: absolute;
+        background-color: #ecefef;
+        width: 100%;
+        height: 400px;
+        display: flex;
+        flex-direction: row;
+        margin-top: 150px;
+        border-radius: 25px;
+        align-items: center;
+        justify-content: left;
+        font-weight: bold;
+        z-index: 2;
+      }
+
+      /* 회원가입 박스 안에 있는 구성 요소, 좌측은 명칭 우측은 입력란 */
+      .list-text {
+        display: flex;
+        flex-direction: column;
+        margin-top: -20px;
+        gap: 23px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #239faf;
+      }
+      .list-input {
+        display: flex;
+        flex-direction: column;
+        margin-top: -20px;
+        gap: 10px;
+      }
+
+      /* li태그의 스타일 제거 */
+      li {
+        list-style: none;
+      }
+
+      /* 입력란 스타일 */
+      input {
+        width: 150px;
+        height: 20px;
+        padding: 5px 10px;
+        border: 2px solid #bfbfbf;
+        border-radius: 25px;
+        outline: none;
+        margin-left: -25px;
+      }
+
+      /* 입력란 애니메이션 효과 키프레임*/
+      @keyframes inputGlow {
+        0% {
+          box-shadow: 0 0 5px #8ed2ff;
+          border-color: #8ed2ff;
+        }
+        25% {
+          box-shadow: 0 0 10px #5ddfe9;
+          border-color: #5ddfe9;
+        }
+        50% {
+          box-shadow: 0 0 15px #53ee8f;
+          border-color: #53ee8f;
+        }
+        75% {
+          box-shadow: 0 0 10px #5ddfe9;
+          border-color: #5ddfe9;
+        }
+        100% {
+          box-shadow: 0 0 5px #8ed2ff;
+          border-color: #8ed2ff;
+        }
+      }
+
+      /* 입력란 애니메이션 효과 호버&선택시 적용*/
+      input:hover,
+      .language-dropdown:hover,
+      .language-dropdown:focus {
+        animation: inputGlow 5s ease-in-out infinite;
+      }
+
+      /* 언어 변경 드랍다운 버튼 (기능 미구현)*/
+      .language-dropdown {
+        position: absolute;
+        top: 82.5px;
+        right: 15px;
+        padding: 5px 25px 5px 10px;
+        border-radius: 25px;
+        border: none;
+        font-size: 14px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' xmlns='http://www.w3.org/2000/svg'><path d='M2 4l4 4 4-4' stroke='%23666' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 7.5px center;
+      }
+
+      /* 언어 변경 드랍다운 버튼 선택시 스타일 적용*/
+      .language-dropdown:focus {
+        outline: none;
+      }
+
+      /* 제목 같은거 마우스로 드래그해서 선택되는거 방지기능 */
+      .userSelectNone {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* 회원가입 버튼 스타일 적용*/
+      .sign-up-button {
+        background-color: #4fa98f;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+        position: absolute;
+        left: 50%;
+        bottom: -135px;
+        transform: translateX(-50%);
+        padding: 10px 25px;
+        border-radius: 25px;
+        border: none;
+        cursor: pointer;
+        z-index: 3;
+        transition: all 0.15s ease-in-out;
+        box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.2);
+      }
+      .sign-up-button:hover {
+        transform: translateX(-50%) scale(0.95);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .sign-up-button:active {
+        transform: translateX(-50%) scale(0.9);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 안내문구 스타일 적용*/
+      .input-hint {
+        position: absolute;
+        left: 160px;
+        height: 100%;
+        display: flex;
+        margin-top: 5px;
+        margin-left: 2.5px;
+        align-items: center;
+        color: #026976;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .list-input li:hover .input-hint {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      /* 입력값이 조건을 충족하지 않을 때 */
+      .input-error {
+        opacity: 1;
+        transform: translateX(0);
+        color: #d83333;
+      }
+      /* 입력값이 조건을 충족 할 때 */
+      .input-success {
+        opacity: 1;
+        transform: translateX(0);
+        color: #3cd833;
+      }
+      /* 입력값이 조건을 충족 할 때 입력란의 스타일 적용 */
+      input.valid {
+        animation: none !important;
+        border-color: #3cd833;
+        box-shadow: 0 0 8px #3cd833;
+        transition: all 0.5s;
+      }
+      /* 입력값이 조건을 충족 못할 때 입력란의 스타일 적용 */
+      input.unValid {
+        animation: none !important;
+        border-color: #d83333;
+        box-shadow: 0 0 8px #d83333;
+        transition: all 0.5s;
+      }
+      
+      /* 주소란 넓이에 맞게 설명문구 위치도 조정 */
+      #addressHint {
+        left: 260px;
+      }
+      
+      /* 오버레이 전체 */
+      #signupOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      }
+    
+      /* 메시지 박스 */
+      #signupMessage {
+        text-align: center;
+        color: #fff;
+        font-size: 20px;
+      }
+      
+      /* 로딩 스피너 */
+      #loadingSpinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #fff;
+        border-top: 5px solid #026976;
+        border-radius: 50%;
+        margin: 20px auto;
+        animation: spin 1s linear infinite;
+        display: none;
+      }
+      
+      @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+      }
+
+      /* 완료 메시지와 버튼 */
+      #completionMessage {
+        font-size: 24px;
+        margin-bottom: 20px;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      #goHomeBtn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      background-color: #4fa98f;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    </style>
+  </head>
+  <body class="page">
+    <div class="sign-up-form-container">
+      <div class="sign-up-form-topBar userSelectNone">
+        <ul>
+          <li class="title">Sign Up</li>
+          <li class="text">저희 사이트에 오신 것을 환영합니다!</li>
+        </ul>
+        <select class="language-dropdown">
+          <option value="ko" selected>한국어</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="sign-up-form">
+        <ul class="list-text userSelectNone">
+          <li>
+            <label for="id">아이디</label>
+          </li>
+          <li>
+            <label for="pwd">비밀번호</label>
+          </li>
+          <li>
+            <label for="pwdCheck">비밀번호 확인</label>
+          </li>
+          <li>
+            <label for="name">이름</label>
+          </li>
+          <li>
+            <label for="email">이메일</label>
+          </li>
+          <li>
+            <label for="address">주소</label>
+          </li>
+          <li>
+            <label for="phoneNum">연락처</label>
+          </li>
+        </ul>
+
+        <ul class="list-input">
+          <li style="position: relative">
+            <input type="text" id="id" placeholder="아이디를 입력하세요" />
+            <span class="input-hint" id="idHint"
+              >영문 소문자 + 숫자, 4~16자</span
+            >
+          </li>
+          <li style="position: relative">
+            <input
+              type="password"
+              id="pwd"
+              placeholder="비밀번호를 입력하세요"
+            />
+            <span class="input-hint" id="pwdHint"
+              >영문 대소문자 + 숫자 + 특수문자, 10~16자</span
+            >
+          </li>
+          <li style="position: relative">
+            <input
+              type="password"
+              id="pwdCheck"
+              placeholder="비밀번호를 입력하세요"
+            />
+            <span class="input-hint" id="pwdCheckHint"
+              >비밀번호를 동일하게 입력하세요</span
+            >
+          </li>
+          <li style="position: relative">
+            <input type="text" id="name" placeholder="이름을 입력하세요" />
+            <span class="input-hint" id="nameHint">이름을 입력하세요.</span>
+          </li>
+          <li style="position: relative">
+            <input type="email" id="email" placeholder="이메일을 입력하세요" />
+            <span class="input-hint" id="emailHint">이메일을 입력하세요.</span>
+          </li>
+          <li style="position: relative">
+            <input
+              type="text"
+              id="address"
+              style="width: 250px"
+              placeholder="주소를 입력하세요"
+            />
+            <span class="input-hint" id="addressHint">주소를 입력하세요.</span>
+          </li>
+          <li style="position: relative">
+            <input
+              type="text"
+              id="phoneNum"
+              placeholder="연락처를 입력하세요"
+            />
+            <span class="input-hint" id="phoneNumHint"
+              >연락처를 입력하세요.</span
+            >
+          </li>
+        </ul>
+      </div>
+      <button class="sign-up-button">회원가입</button>
+
+    <script>
+      //id 입력란 조건에 따라 다르게 표시하는 기능
+      const idInput = document.getElementById("id");
+      const idHint = document.getElementById("idHint");
+
+      const pwdInput = document.getElementById("pwd");
+      const pwdHint = document.getElementById("pwdHint");
+
+      const pwdCheckInput = document.getElementById("pwdCheck");
+      const pwdCheckHint = document.getElementById("pwdCheckHint");
+
+      const nameInput = document.getElementById("name");
+      const nameHint = document.getElementById("nameHint");
+
+      const emailInput = document.getElementById("email");
+      const emailHint = document.getElementById("emailHint");
+
+      const addressInput = document.getElementById("address");
+      const addressHint = document.getElementById("addressHint");
+
+      const phoneNumInput = document.getElementById("phoneNum");
+      const phoneNumHint = document.getElementById("phoneNumHint");
+
+      /*
+      [chatGPT 도움]
+      "/.../" : 정규식을 감싸는 기호
+
+      ^ : 문자열의 시작을 의미
+      
+      [a-z0-9] : 허용할 문자 범위
+        - a~z + 0~9 범위만 허용
+
+      {4,16} : 바로 앞에 있는 문자 집합이 최소 4번, 최대 16번 반복되어야 함.
+
+      $ : 문자열의 끝을 의미
+        - 즉, 전체 문자열이 a~z, 0~9만 있고 길이가 4~16 인 경우만 통과
+
+      regex.test에서 test()는 정규식(RegExp) 객체의 기본 메서드
+      - 사용 예시 :  regex.test(검사할 문자열)
+      - 반환값 : true / false
+
+      예시 : (?=.*[a-z])
+        - (?= ...) : 뒤에 있는 전체 문자열을 검사해서, 여기 안에 적힌 조건을 반드시 포함해야 한다
+        - .*[] : []안에 있는 요소를 반드시 1개 이상 포함 시켜야 한다 
+        - [^ ] : []안에 ^가 있을시, 뒤에 있는 요소들을 제외한것들을 뜻한다
+      */
+      const idRegex = /^(?=.*[a-z])(?=.*\d)[a-z0-9]{4,16}$/;
+      const pwdRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,16}$/;
+      const nameRegex = /^(?!.*\d)[가-힣a-zA-Z\s]{1,20}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const addressRegex = /^[a-z]{10,50}$/;
+      const phoneNumRegex = /^(\d{3}-?\d{4}-?\d{4})$/;
+      // \d : 숫자를 뜻함, -? : 는 -가 포함되거나 포함안되어도 괜찮다는 뜻
+
+      // 아이디
+      idInput.addEventListener("input", () => {
+        const value = idInput.value;
+        // 값이 없을 때
+        if (!value) {
+          idHint.textContent = "영문 소문자 + 숫자, 4~16자.";
+          idHint.className = "input-hint";
+          idInput.classList.remove("valid");
+          idInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (idRegex.test(value)) {
+          idHint.textContent = "사용 가능한 아이디입니다.";
+          idHint.className = "input-hint input-success";
+          idInput.classList.add("valid");
+          idInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          idHint.textContent = "올바르지 않은 아이디입니다.";
+          idHint.className = "input-hint input-error";
+          idInput.classList.remove("valid");
+          idInput.classList.add("unValid");
+        }
+      });
+      // 입력란 호버 시
+      idInput.addEventListener("hover", () => {
+        if (!idInput.value || !idRegex.test(idInput.value)) {
+          idHint.textContent = "영문 소문자 + 숫자, 4~16자";
+          idHint.className = "input-hint input-error";
+          idInput.classList.remove("valid");
+          idInput.classList.remove("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      idInput.addEventListener("focus", () => {
+        if (idInput.value == "") {
+          idHint.textContent = "영문 소문자 + 숫자, 4~16자";
+          idHint.className = "input-hint";
+          idInput.classList.remove("valid");
+          idInput.classList.remove("unValid");
+        } else if (!idInput.value || !idRegex.test(idInput.value)) {
+          idHint.textContent = "올바르지 않은 아이디입니다.";
+          idHint.className = "input-hint input-error";
+          idInput.classList.remove("valid");
+          idInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      idInput.addEventListener("blur", () => {
+        if (!idInput.value) {
+          idHint.textContent = "영문 소문자 + 숫자, 4~16자";
+          idHint.className = "input-hint";
+          idInput.classList.remove("valid");
+          idInput.classList.remove("unValid");
+        }
+      });
+
+      // 비밀번호
+      pwdInput.addEventListener("input", () => {
+        const value = pwdInput.value;
+        // 값이 없을 때
+        if (!value) {
+          pwdHint.textContent = "영문 대소문자 + 숫자 + 특수문자, 10~16자";
+          pwdHint.className = "input-hint";
+          pwdInput.classList.remove("valid");
+          pwdInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (pwdRegex.test(value)) {
+          pwdHint.textContent = "사용 가능한 비밀번호입니다.";
+          pwdHint.className = "input-hint input-success";
+          pwdInput.classList.add("valid");
+          pwdInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          pwdHint.textContent = "올바르지 않은 비밀번호입니다.";
+          pwdHint.className = "input-hint input-error";
+          pwdInput.classList.remove("valid");
+          pwdInput.classList.add("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      pwdInput.addEventListener("focus", () => {
+        if (pwdInput.value == "") {
+          pwdHint.textContent = "영문 대소문자 + 숫자 + 특수문자, 10~16자";
+          pwdHint.className = "input-hint";
+          pwdInput.classList.remove("valid");
+          pwdInput.classList.remove("unValid");
+        } else if (!pwdInput.value || !pwdRegex.test(pwdInput.value)) {
+          pwdHint.textContent = "올바르지 않은 비밀번호입니다.";
+          pwdHint.className = "input-hint input-error";
+          pwdInput.classList.remove("valid");
+          pwdInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      pwdInput.addEventListener("blur", () => {
+        if (!pwdInput.value) {
+          pwdHint.textContent = "영문 대소문자 + 숫자 + 특수문자, 10~16자";
+          pwdHint.className = "input-hint";
+          pwdInput.classList.remove("valid");
+          pwdInput.classList.remove("unValid");
+        }
+      });
+
+      // 비밀번호 재확인
+      pwdCheckInput.addEventListener("input", () => {
+        const value = pwdCheckInput.value;
+        // 값이 없을 때
+        if (!value) {
+          pwdCheckHint.textContent = "비밀번호를 동일하게 입력하세요.";
+          pwdCheckHint.className = "input-hint";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (
+          pwdCheckInput.value === pwdInput.value &&
+          pwdRegex.test(value)
+        ) {
+          pwdCheckHint.textContent = "비밀번호가 일치합니다.";
+          pwdCheckHint.className = "input-hint input-success";
+          pwdCheckInput.classList.add("valid");
+          pwdCheckInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else if (
+          (pwdCheckInput.value === pwdInput.value && !pwdInput.value) ||
+          !pwdRegex.test(pwdInput.value)
+        ) {
+          pwdCheckHint.textContent = "올바르지 않은 비밀번호입니다.";
+          pwdCheckHint.className = "input-hint input-error";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.add("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          pwdCheckHint.textContent = "비밀번호가 일치하지 않습니다.";
+          pwdCheckHint.className = "input-hint input-error";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.add("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      pwdCheckInput.addEventListener("focus", () => {
+        if (pwdCheckInput.value == "") {
+          pwdCheckHint.textContent = "비밀번호를 동일하게 입력하세요.";
+          pwdCheckHint.className = "input-hint";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.remove("unValid");
+        } else if (
+          !pwdCheckInput.value ||
+          !pwdCheckRegex.test(pwdCheckInput.value)
+        ) {
+          pwdCheckHint.textContent = "비밀번호가 일치하지 않습니다.";
+          pwdCheckHint.className = "input-hint input-error";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      pwdCheckInput.addEventListener("blur", () => {
+        if (!pwdCheckInput.value) {
+          pwdCheckHint.textContent = "비밀번호를 동일하게 입력하세요.";
+          pwdCheckHint.className = "input-hint";
+          pwdCheckInput.classList.remove("valid");
+          pwdCheckInput.classList.remove("unValid");
+        }
+      });
+
+      // 이름
+      nameInput.addEventListener("input", () => {
+        const value = nameInput.value;
+        // 값이 없을 때
+        if (!value) {
+          nameHint.textContent = "이름을 입력하세요.";
+          nameHint.className = "input-hint";
+          nameInput.classList.remove("valid");
+          nameInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (nameRegex.test(value)) {
+          nameHint.textContent = "사용 가능한 이름입니다.";
+          nameHint.className = "input-hint input-success";
+          nameInput.classList.add("valid");
+          nameInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          nameHint.textContent = "사용 불가한 이름입니다.";
+          nameHint.className = "input-hint input-error";
+          nameInput.classList.remove("valid");
+          nameInput.classList.add("unValid");
+        }
+      });
+      // 입력란 호버 시
+      nameInput.addEventListener("hover", () => {
+        if (!nameInput.value || !nameRegex.test(nameInput.value)) {
+          nameHint.textContent = "이름을 입력하세요.";
+          nameHint.className = "input-hint input-error";
+          nameInput.classList.remove("valid");
+          nameInput.classList.remove("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      nameInput.addEventListener("focus", () => {
+        if (nameInput.value == "") {
+          nameHint.textContent = "이름을 입력하세요.";
+          nameHint.className = "input-hint";
+          nameInput.classList.remove("valid");
+          nameInput.classList.remove("unValid");
+        } else if (!nameInput.value || !nameRegex.test(nameInput.value)) {
+          nameHint.textContent = "사용 불가한 이름입니다.";
+          nameHint.className = "input-hint input-error";
+          nameInput.classList.remove("valid");
+          nameInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      nameInput.addEventListener("blur", () => {
+        if (!nameInput.value) {
+          nameHint.textContent = "이름을 입력하세요.";
+          nameHint.className = "input-hint";
+          nameInput.classList.remove("valid");
+          nameInput.classList.remove("unValid");
+        }
+      });
+
+      // 이메일
+      emailInput.addEventListener("input", () => {
+        const value = emailInput.value;
+        // 값이 없을 때
+        if (!value) {
+          emailHint.textContent = "이메일을 입력하세요.";
+          emailHint.className = "input-hint";
+          emailInput.classList.remove("valid");
+          emailInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (emailRegex.test(value)) {
+          emailHint.textContent = "사용 가능한 이메일입니다.";
+          emailHint.className = "input-hint input-success";
+          emailInput.classList.add("valid");
+          emailInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          emailHint.textContent = "사용 불가한 이메일입니다.";
+          emailHint.className = "input-hint input-error";
+          emailInput.classList.remove("valid");
+          emailInput.classList.add("unValid");
+        }
+      });
+      // 입력란 호버 시
+      emailInput.addEventListener("hover", () => {
+        if (!emailInput.value || !emailRegex.test(emailInput.value)) {
+          emailHint.textContent = "이메일을 입력하세요.";
+          emailHint.className = "input-hint input-error";
+          emailInput.classList.remove("valid");
+          emailInput.classList.remove("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      emailInput.addEventListener("focus", () => {
+        if (emailInput.value == "") {
+          emailHint.textContent = "이메일을 입력하세요.";
+          emailHint.className = "input-hint";
+          emailInput.classList.remove("valid");
+          emailInput.classList.remove("unValid");
+        } else if (!emailInput.value || !emailRegex.test(emailInput.value)) {
+          emailHint.textContent = "사용 불가한 이메일입니다.";
+          emailHint.className = "input-hint input-error";
+          emailInput.classList.remove("valid");
+          emailInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      emailInput.addEventListener("blur", () => {
+        if (!emailInput.value) {
+          emailHint.textContent = "이메일을 입력하세요.";
+          emailHint.className = "input-hint";
+          emailInput.classList.remove("valid");
+          emailInput.classList.remove("unValid");
+        }
+      });
+
+      // 주소
+      addressInput.addEventListener("input", () => {
+        const value = addressInput.value;
+        // 값이 없을 때
+        if (!value) {
+          addressHint.textContent = "주소를 입력하세요.";
+          addressHint.className = "input-hint";
+          addressInput.classList.remove("valid");
+          addressInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (addressRegex.test(value)) {
+          addressHint.textContent = "사용 가능한 주소입니다.";
+          addressHint.className = "input-hint input-success";
+          addressInput.classList.add("valid");
+          addressInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          addressHint.textContent = "올바르지 주소를 입력하세요.";
+          addressHint.className = "input-hint input-error";
+          addressInput.classList.remove("valid");
+          addressInput.classList.add("unValid");
+        }
+      });
+      // 입력란 호버 시
+      addressInput.addEventListener("hover", () => {
+        if (!addressInput.value || !addressRegex.test(addressInput.value)) {
+          addressHint.textContent = "주소를 입력하세요";
+          addressHint.className = "input-hint input-error";
+          addressInput.classList.remove("valid");
+          addressInput.classList.remove("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      addressInput.addEventListener("focus", () => {
+        if (addressInput.value == "") {
+          addressHint.textContent = "주소를 입력하세요";
+          addressHint.className = "input-hint";
+          addressInput.classList.remove("valid");
+          addressInput.classList.remove("unValid");
+        } else if (!addressInput.value || !addressRegex.test(addressInput.value)) {
+          addressHint.textContent = "올바르지 주소를 입력하세요.";
+          addressHint.className = "input-hint input-error";
+          addressInput.classList.remove("valid");
+          addressInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      addressInput.addEventListener("blur", () => {
+        if (!addressInput.value) {
+          addressHint.textContent = "주소를 입력하세요";
+          addressHint.className = "input-hint";
+          addressInput.classList.remove("valid");
+          addressInput.classList.remove("unValid");
+        }
+      });
+
+      // 연락처
+      phoneNumInput.addEventListener("input", () => {
+        const value = phoneNumInput.value;
+        // 값이 없을 때
+        if (!value) {
+          phoneNumHint.textContent = "연락처를 입력하세요.";
+          phoneNumHint.className = "input-hint";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.remove("unValid");
+        }
+        // 값이 참일 때
+        else if (phoneNumRegex.test(value)) {
+          phoneNumHint.textContent = "사용 가능한 번호입니다.";
+          phoneNumHint.className = "input-hint input-success";
+          phoneNumInput.classList.add("valid");
+          phoneNumInput.classList.remove("unValid");
+        }
+        // 값이 거짓일 때
+        else {
+          phoneNumHint.textContent = "사용 불가한 번호입니다.";
+          phoneNumHint.className = "input-hint input-error";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.add("unValid");
+        }
+      });
+      // 입력란 호버 시
+      phoneNumInput.addEventListener("hover", () => {
+        if (!phoneNumInput.value || !phoneNumRegex.test(phoneNumInput.value)) {
+          phoneNumHint.textContent = "연락처를 입력하세요.";
+          phoneNumHint.className = "input-hint input-error";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.remove("unValid");
+        }
+      });
+      // 입력란 포커스 시
+      phoneNumInput.addEventListener("focus", () => {
+        if (phoneNumInput.value == "") {
+          phoneNumHint.textContent = "연락처를 입력하세요.";
+          phoneNumHint.className = "input-hint";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.remove("unValid");
+        } else if (!phoneNumInput.value || !phoneNumRegex.test(phoneNumInput.value)) {
+          phoneNumHint.textContent = "사용 불가한 번호입니다.";
+          phoneNumHint.className = "input-hint input-error";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.add("unValid");
+        }
+      });
+      // 포커스 아웃 시
+      phoneNumInput.addEventListener("blur", () => {
+        if (!phoneNumInput.value) {
+          phoneNumHint.textContent = "연락처를 입력하세요.";
+          phoneNumHint.className = "input-hint";
+          phoneNumInput.classList.remove("valid");
+          phoneNumInput.classList.remove("unValid");
+        }
+      });
+
+      // 회원가입 버튼
+      const signUpButton = document.querySelector(".sign-up-button");
+
+      // 회원가입 버튼 기능 구현
+      signUpButton.addEventListener("click", () => {
+        // 각 입력란이 유효하면 참, 아니면 거짓
+        const inputs = [idInput, pwdInput, pwdCheckInput, nameInput, emailInput, phoneNumInput, addressInput];
+        const allSuccess = inputs.every(input => input.classList.contains("valid"));
+        if (allSuccess) {
+          alert("회원이 되신걸 축하드립니다!");
+          signupOverlay.style.display = "flex";
+          setTimeout(() => signupOverlay.style.opacity = "1", 10);
+        } else {
+          alert("모든 입력란을 올바르게 작성해주세요.");
+        }
+      });
+      
+    </script>
+  </body>
+</html>
