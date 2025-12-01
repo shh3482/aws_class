@@ -2,7 +2,7 @@ package day01;
 
 import java.util.Scanner;
 
-public class EX11_if1 {
+public class EX11_If1 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
