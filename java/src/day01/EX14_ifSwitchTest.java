@@ -2,7 +2,7 @@ package day01;
 
 import java.util.Scanner;
 
-public class EX14_ifSwitchTest {
+public class EX14_IfSwitchTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
