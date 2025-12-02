@@ -11,6 +11,8 @@ public class HW02_Star {
 		int curRow;
 		int curCol;
 		int a;
+		int b;
+		int c;
 		
 		/*  *****
 		 *  *****
@@ -18,6 +20,7 @@ public class HW02_Star {
 		 *  *****
 		 *  *****
 		 */
+		
 		for(curRow = 1; curRow <= row; curRow++) {
 			for(curCol = 1; curCol <= col; curCol++) {
 				System.out.print("*");
@@ -25,8 +28,7 @@ public class HW02_Star {
 			System.out.println();
 		}
 		System.out.println();
-		
-		
+
 		
 		/*  *
 		 *  **
@@ -36,17 +38,15 @@ public class HW02_Star {
 		 */
 		row = 5;
 		col = 5;
-		target = 0;
-		a = 4;
+		a = 1;
 		for(curRow = 1; curRow <= row; curRow++) {
 			for(curCol = 1; curCol <= col; curCol++) {
-				target++;
-				if (target > a) {
+				if (curCol <= a) {
 					System.out.print("*");
 				}
 			}
+			a++;
 			System.out.println();
-			a--;
 		}
 		System.out.println();
 		
@@ -60,15 +60,20 @@ public class HW02_Star {
 		 */
 		row = 5;
 		col = 5;
+		a = 4;
 		for(curRow = 1; curRow <= row; curRow++) {
 			for(curCol = 1; curCol <= col; curCol++) {
-				System.out.print("*");
+				if (curCol <= a) {
+					System.out.print(" ");
+				}
+				else {
+					System.out.print("*");
+				}
 			}
+			a--;
 			System.out.println();
 		}
 		System.out.println();
-		
-		
 		
 		/*       *
 		 * 		***
@@ -78,10 +83,83 @@ public class HW02_Star {
 		 */
 		row = 5;
 		col = 10;
+		a = 5;
+		b = 0;
 		for(curRow = 1; curRow <= row; curRow++) {
 			for(curCol = 1; curCol <= col; curCol++) {
-				System.out.print("*");
+				if (curCol <= a) {
+					System.out.print(" ");
+				}
+				else if (curCol > col - a + 1) {
+					System.out.print(" ");
+				}
+				else {
+					System.out.print("*");
+				}
 			}
+			a--;
+			System.out.println();
+		}
+		System.out.println();
+		
+		/* **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * **************************************************
+		 * 50 * 21
+		 */ 
+		col = 50;
+		row = 21;
+		a = 25;
+		b = 1;
+		c = 35;
+		for(curRow = 1; curRow <= row; curRow++) {
+			for(curCol = 1; curCol <= col; curCol++) {
+				if (curCol <= a && curRow <= 7) {
+					System.out.print(" ");
+				}
+				else if (curCol > col - a + 1 && curRow <= 7) {
+					System.out.print(" ");
+				}
+				else if (curCol <= b && curRow <= 12 && curRow > 8
+						|| curCol >= col - b && curRow <= 12 && curRow > 8) {
+					System.out.print(" ");
+				}
+				else if (curCol <= b && curRow <= row && curRow > 12
+						|| curCol >= col - b && curRow <= row && curRow > 12
+						|| curCol < col - c && curRow <= row && curRow > 15
+						|| curCol >= col + c && curRow <= row && curRow > 15
+						) {
+					System.out.print(" ");
+				}
+				else {
+					System.out.print("*");
+				}
+			}
+			a--;
+			if (curCol > b && curRow <= 12 && curRow > 8) {
+				b += 3;
+			}
+			else if(curCol > b && curRow <= row && curRow > 12) {
+				b -= 1;
+				c -= 4;
+			}
+			
 			System.out.println();
 		}
 		System.out.println();
