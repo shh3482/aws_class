@@ -9,14 +9,18 @@ public class HW01_LCM {
 		 * A와 B의 공배수 : A와 B의 배수들 중 공통으로 있는 수
 		 * A와 B의 최소 공배수 : A와 B의 공배수 중 가장 작은 수
 		 */
-		int num1 = 2;
-		int num2 = 4;
-		for(int i = 1; i <= num1 * num2 ; i++) {
-			if(i == num1 * num2) {
-				System.out.println(num1 + " 와 " + num2 + " 의 최소 공배수는 " + i + " 입니다.");
+		int num1 = 150;
+		int num2 = 200;
+
+		for(int i = num1; i <= num1 * num2 ; i++) {
+			if(i % num1 == 0 && i % num2 == 0 ) {
+				System.out.println(i);
 				break;
 			}
 		}
+		
+		//System.out.println(i);
+		//System.out.println(num1 + " 와 " + num2 + " 의 최소 공배수는 " + i + " 입니다.");
 	}
 
 }
