@@ -167,7 +167,7 @@ public class HW02_Star {
 //		System.out.println();
 		
 		col = 50;
-		row = 20;
+		row = 21;
 		a = 25;
 		b = 1;
 		c = 25;
@@ -186,9 +186,9 @@ public class HW02_Star {
 					// 우중 빈칸
 					|| (curCol >= col - b && curRow <= 12 && curRow > 8)
 					// 좌하 빈칸
-					|| (curCol <= b && curRow > 12)
+					|| (curCol <= b && curRow <= row && curRow > 12)
 					// 우하 빈칸
-					|| (curCol >= col - b && curRow > 12)
+					|| (curCol >= col - b && curRow <= row && curRow > 12)
 					)
 					{
 					System.out.print(" ");
