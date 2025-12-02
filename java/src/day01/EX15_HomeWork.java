@@ -18,35 +18,26 @@ public class EX15_HomeWork {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("성적을 입력하세요:");
 		int score = scan.nextInt();
-		boolean isA = score >= 90 && score <= 109 ? true : false;
-		boolean isB = score >= 80 && score <= 89 ? true : false;
-		boolean isC = score >= 70 && score <= 79 ? true : false;
-		boolean isD = score >= 60 && score <= 69 ? true : false;
-		boolean isF = score >= 50 && score <= 59 ? true : false;
-		char grade;
-
 		
-		
-		switch(score) {
-			case isA:
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+		switch(score / 10) {
+			case 9, 10:
+				System.out.println("당신의 학점은 A 입니다.");
 				break;
-			case 'B':
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+			case 8:
+				System.out.println("당신의 학점은 B 입니다.");
 				break;
-			case 'C':
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+			case 7:
+				System.out.println("당신의 학점은 C 입니다.");
 				break;
-			case 'D':
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+			case 6:
+				System.out.println("당신의 학점은 D 입니다.");
 				break;
-			case 'F':
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+			case 5, 4, 3, 2, 1, 0:
+				System.out.println("당신의 학점은 F 입니다.");
 				break;
 			default:
-				System.out.println("당신의 학점은 " + grade + " 입니다.");
+				System.out.println("잘못된 성적입니다.");
 		}
-		System.out.println("당신의 학점은 " + grade + " 입니다.");
 	}
 
 }
