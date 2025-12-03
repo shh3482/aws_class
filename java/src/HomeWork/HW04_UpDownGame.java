@@ -1,5 +1,7 @@
 package HomeWork;
 
+import java.util.Random;
+
 public class HW04_UpDownGame {
 
 	public static void main(String[] args) {
@@ -16,6 +18,11 @@ public class HW04_UpDownGame {
 		 * 정답입니다.
 		 * 
 		 */
+		
+		Random random = new Random();
+		// min 이상 max+1 미만의 정수를 랜덤으로 뽑아줌
+		int r2 = random.nextInt(min, max+1);
+		System.out.println(r2);
 	}
 
 }
