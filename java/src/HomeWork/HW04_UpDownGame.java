@@ -19,10 +19,6 @@ public class HW04_UpDownGame {
 		 * 
 		 */
 		
-		Random random = new Random();
-		// min 이상 max+1 미만의 정수를 랜덤으로 뽑아줌
-		int r2 = random.nextInt(min, max+1);
-		System.out.println(r2);
 	}
 
 }
