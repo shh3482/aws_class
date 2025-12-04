@@ -11,19 +11,13 @@ public class HW07_Lotto {
 		 */
 		
 		//랜덤수 뽑기, 이프문으로 중복못하게 해서 컨티뉴 써서 스킵하기
-		//System.out.println(pickNum);
-		//System.out.println(lotto[0]);
-		//pickNum = random.nextInt(min, max+1);
-		
+
 		int [] lotto = new int[6];
-		int min = 1, max = 8, count = 0,
-			num1 = 0, num2 = 0, num3 = 0,
-			num4 = 0, num5 = 0, num6 = 0;
+		int min = 1, max = 45;
 		
 		Random random = new Random();
 		int pickNum = random.nextInt(min, max+1);
 		
-		int [] array = new int[6];
 		int i = 0;
 		
 		for(i = 0; i <= 5; ) {
@@ -33,9 +27,12 @@ public class HW07_Lotto {
 			   pickNum != lotto[2] && pickNum != lotto[3] &&
 			   pickNum != lotto[4] && pickNum != lotto[5] ) {
 				lotto[i] = pickNum;
-				System.out.println(lotto[i]);
+				System.out.println("추첨된 번호는 " + lotto[i] + " 입니다.");
 				i++;
 			}
 		}
+		System.out.println("당신의 당첨 번호는 : ");
+		System.out.println(lotto[0] + " " + lotto[1] + " " + lotto[2] + " " + lotto[3] + " " + lotto[4] + " " + lotto[5] );
+		System.out.println();
 	}
 }
