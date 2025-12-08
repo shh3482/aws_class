@@ -35,8 +35,8 @@ public class Ex01_Class {
 		Point p2 = new Point(1,2);
 		p2.print();
 		
-		
 	}
+
 }
 //2차원 평면에서 점의 위치를 나타내는 클래스
 class Point{
@@ -45,9 +45,11 @@ class Point{
 	//메서드
 	void print() {
 		System.out.println("(" + x + "," + y + ")");
+		
 	}
 	
-	//생성자
+	// 생성자 <- 생성자를 만들면 메인에서 새로 만들지를 못함,
+	// 그래서 메인에서 0,0 으로 초기화 시키던가 생성자를 만들지않고 메인에서 작업하든가 선택!
 	Point(int x1, int y1) {
 		x = x1;
 		y = y1;
