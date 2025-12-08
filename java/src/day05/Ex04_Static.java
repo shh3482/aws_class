@@ -34,7 +34,7 @@ public class Ex04_Static {
 		 * 
 		 */
 		//HYCar를 이용하여 객체를 만들기전에 company를 호출할 수 있음
-		System.out.println(HYCar.company);
+		System.out.println(HYCar.company + "\n");
 		
 		HYCar car1 = new HYCar("아반떼");
 		car1.print();
@@ -58,7 +58,7 @@ class HYCar{
 	}
 	public void print() {
 		System.out.println("제조사 : " + company);
-		System.out.println("차명 : " + name);
+		System.out.println("차명 : " + name + "\n");
 	}
 }
 
