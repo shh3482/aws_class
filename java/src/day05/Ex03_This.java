@@ -13,6 +13,17 @@ public class Ex03_This {
 		 * - 생성자에서 다른 생성자를 이용하여 초기화 할 때 사용
 		 * - 생성자에서 첫번째 줄에 this()를 이용 => 안그러면 에러가 발생할 수 있음
 		 */
+		Point2 p2 = new Point2(1,2);
+		p2.print();
+		
+		System.out.println(p2.getX());
+		System.out.println(p2.getY());
+		System.out.println(p2.getClass());
+		
+		p2.setX(5);
+		p2.setY(4);
+		System.out.println(p2.getX());
+		System.out.println(p2.getY());
 	}
 }
 class Point2{
