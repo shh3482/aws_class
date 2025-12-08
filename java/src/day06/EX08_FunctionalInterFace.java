@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 public class EX08_FunctionalInterFace {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		/* 라이브러리가 제공하는 함수형 인터페이스
 		 * - 모두 제네릭 인터페이스
 		 * Consumer : 매개변수 O, 리턴 X, 주로 출력문 담당
@@ -22,18 +21,28 @@ public class EX08_FunctionalInterFace {
 		list.add(new Student(2, 1, 1, "임꺽정"));
 		list.add(new Student(3, 1, 1, "홍가네"));
 		
-		Predicate<Student> p = (student){
+		//모든 학생 조회
+		Predicate<Student> p = (student)->{
 			return true;
-		}
+		};
+		printStudent(list, p);
 		printStudent(list, s->true);
-		
-		printStudent(List, s->s.getGrade() == 1 && s.getClassNum() == 1){
-			
-		}
+		//1학년 1반 학생을 조회
+		System.out.println("------------------");
+		//Predicate 인터페이스의 test 메서드를 구현하여 객체를 생성하여 매개변수로 넘겨줌
+		printStudent(list, s->s.getGrade() == 1 && s.getClassNum() == 1);
+		//1학년 학생을 조회
+		System.out.println("------------------");
+		printStudent(list, s->s.getGrade() == 1);
+		//2학년 학생을 조회
+		System.out.println("------------------");
+		printStudent(list, s->s.getGrade() == 2);
+		//1번 학생을 조회
+		System.out.println("------------------");
+		printStudent(list, s->s.getNum() == 1);
 	}
 	
-	
-	public static void printStudent(ArrayList<Student>list, Predicate<Student> p) {
+	public static void printStudent(ArrayList<Student> list, Predicate<Student> p) {
 		for(Student tmp : list) {
 			if(p.test(tmp)) {
 				System.out.println(tmp);
