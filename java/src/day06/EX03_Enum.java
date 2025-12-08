@@ -1,0 +1,33 @@
+package day06;
+
+public class EX03_Enum {
+
+	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		/* enum 285페이지
+//		 * - 열거형
+//		 * - 왜 사용?
+//		 *   - 비슷한 유형의 리터럴을 모아서 사용하기 위해
+//		 *   - 상수 여러개를 따로 선언해서 사용하기 보다 하나로 묶어서 사용하기 위해
+//		 *   
+//		 *   - 사용 방법
+//		 *     enum 열거형명{이름1, 이름2, 이름3...}
+//		 *     - 이름1은 0, 이름2는 1
+//		 * 
+//		 * 5 : 리터럴
+//		 * final int MAX = 10;
+//		 * fical double PI = 3.14...
+//		 * 
+//		 * int num = MAX;
+//		 * int num = 10;
+//		 * 
+//		 */
+//		SEASON season = SEASON.SPRING;
+//		
+//		switch(seson) {
+//		case Sprig: System.out.println("봄입니다");
+//		break;
+//		}
+	}
+
+}
