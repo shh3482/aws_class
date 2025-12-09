@@ -5,60 +5,40 @@ public class Tetris {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		//□ ■ ▣ ┏ ━ ┓ ┗ ┛ ┃
+		// □ ■ ▣ ┏ ━ ┓ ┗ ┛ ┃ ██
+		
+		/*
+		 *  1. 게임을 실행시킨다. (실행전에 콘솔 창을 게임 전체 사이즈에 맞춘다.)
+		 */
+		
 
 		int col = 10;
-		int row = 12;
-		int curCol = 0;
-		int curRow = 0;
-		
-		// 좌 상
-		if(curCol == 0 && curRow == 0) {
-			System.out.print("┏━");
-		}
-		
-		// 상
-		for(curCol = 1; curCol < col; curCol++) {
-			System.out.print("━━");
-		}
-		
-		// 우 상
-		if(curCol == col && curRow == 0) {
-			System.out.println("━┓");
-		}
-		
-		// 좌 우
-		for(curRow = 0; curRow < row; curRow++) {
-			System.out.print("┃");
-			for (curCol = 0; curCol < col; curCol++) {
-				System.out.print("  ");
-				
-				if(curCol == 9) {
-					curCol = 11;
-					System.out.print("asd");
-				}
-			}
-			System.out.println("┃");
-			
-		}
-		
-		// 좌 하
-		if(curRow == row) {
-			System.out.print("┗━");
-		}
-		
-		// 하
-		for(curCol = 1; curCol < col; curCol++) {
-			System.out.print("━━");
-		}
-		
-		// 좌 하
-		if(curRow == row) {
-			System.out.print("━┛");
-		}
-		
-		// 다음 블록 문구
-		
-	}
+        int row = 12;
+        
+        // 상단 테두리
+        System.out.print("┏");
+        for (int i = 0; i < col; i++) {
+            System.out.print("━━");
+        }
+        System.out.println("┓");
+
+        // 중간 테두리
+        for (int r = 0; r < row; r++) {
+            System.out.print("┃");
+            for (int c = 0; c < col; c++) {
+                System.out.print("  ");
+            }
+            System.out.println("┃");
+        }
+
+        // 하단 테두리
+        System.out.print("┗");
+        for (int i = 0; i < col; i++) {
+            System.out.print("━━");
+        }
+        System.out.println("┛");
+    }
+	
+	
 }
 
