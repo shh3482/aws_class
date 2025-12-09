@@ -1,0 +1,40 @@
+package day07;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class EX07_NetworkClient {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 
+		 * 
+		 */
+		String ip = "192.168.0.35";
+		int port = 5000;
+		
+		try(Socket socket = new Socket(ip, port)){
+			Scanner scan = new Scanner(System.in);
+			System.out.println("클라리언트 : ");
+		String msg = scan.nextLine();
+		
+		ObjectOutputStream oos 
+		 = new ObjectOutputStream(socket.getOutputStream());
+		 oos.writeUTF(msg);
+		 oos.flush();
+		 
+		 ObjectInputStream ois
+		 = new ObjectInputStream(socket.getInputStream());
+		 
+		 String str = ois.readUTF();
+			
+			
+			System.out.println("서버 : " + str);
+		}catch(Exception e) {
+			System.err.println("클라이언트에서 예외 발생");
+		}
+	}
+
+}
