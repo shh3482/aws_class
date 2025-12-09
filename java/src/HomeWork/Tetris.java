@@ -32,8 +32,14 @@ public class Tetris {
 			System.out.print("┃");
 			for (curCol = 0; curCol < col; curCol++) {
 				System.out.print("  ");
+				
+				if(curCol == 9) {
+					curCol = 11;
+					System.out.print("asd");
+				}
 			}
 			System.out.println("┃");
+			
 		}
 		
 		// 좌 하
@@ -50,6 +56,8 @@ public class Tetris {
 		if(curRow == row) {
 			System.out.print("━┛");
 		}
+		
+		// 다음 블록 문구
 		
 	}
 }
