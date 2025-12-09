@@ -6,18 +6,24 @@ import Utility.ColorPool;
 
 public class SampleGame_0 {
 
-	static Scanner sc = new Scanner(System.in);
+    static Scanner sc = new Scanner(System.in);
 
-    // 캐릭터 정보
     static class Character {
         String name;
+        String job;
         int maxHP;
         int hp;
         int codeLength;
         double critMultiplier;
 
-        Character(String name, int hp, int codeLength, double crit) {
+        boolean firstAttack = true;
+        boolean healOnTurnEnd = false;
+        boolean damageReduce = false;
+        double damageReduceRate = 1.0;
+        
+        Character(String name, String job, int hp, int codeLength, double crit) {
             this.name = name;
+            this.job = job;
             this.maxHP = hp;
             this.hp = hp;
             this.codeLength = codeLength;
@@ -27,72 +33,130 @@ public class SampleGame_0 {
 
     public static void main(String[] args) {
 
-        Character player = selectCharacter("Player");
-        Character enemy = selectCharacter("Enemy");
+        System.out.print("\n플레이어 1님의 이름을 입력하세요: ");
+        String name1 = sc.nextLine();
+
+        System.out.print("\n플레이어 2님의 이름을 입력하세요: ");
+        String name2 = sc.nextLine();
+
+        Character player1 = selectCharacter(name1);
+        Character player2 = selectCharacter(name2);
 
         System.out.println("\n=== 배틀 시작! ===");
 
-        while (player.hp > 0 && enemy.hp > 0) {
-            printStatus(player, enemy);
+        while (player1.hp > 0 && player2.hp > 0) {
 
-            System.out.println("\n▶ Player 턴!");
-            attack(player, enemy);
+            printStatus(player1, player2);
 
-            if (enemy.hp <= 0) break;
+            System.out.println("\n▶ " + player1.name + " 턴!");
+            attack(player1, player2);
+            if (player2.hp <= 0) break;
 
-            System.out.println("\n▶ Enemy 턴!");
-            attack(enemy, player);
+            System.out.println("\n▶ " + player2.name + " 턴!");
+            attack(player2, player1);
         }
 
         System.out.println("\n=== 게임 종료 ===");
-        System.out.println(player.hp > 0 ? "Player 승리!" : "Enemy 승리!");
+        System.out.println(player1.hp > 0 ? player1.name + " 승리!" : player2.name + " 승리!");
     }
 
-    // 직업 선택 기능
-    static Character selectCharacter(String who) {
-    	System.out.println("\n========================");
-        System.out.println(" " + who + " 캐릭터를 선택하세요.");
-        System.out.println("1. 전사 (HP150, 숫자3개)");
-        System.out.println("2. 마법사 (HP90, 숫자4개)");
-        System.out.println("3. 도적 (HP100, 크리티컬 2배)");
+    static Character selectCharacter(String playerName) {
+
+        System.out.println("\n=============================");
+        System.out.println("\n = " + playerName + " 님의 직업을 선택해주세요! = ");
+        System.out.println("\n=============================");
+
+        System.out.println("\n1.전사");
+        System.out.println("  매우 높은 체력을 지닌 안정적인 직업");
+        System.out.println("  특성: 50% 확률로 받은 피해를 20% 감소시킵니다.");
+        System.out.println("  [HP: 200] [ATK: 2] [CRI: 1.3X]");
+
+        System.out.println("\n2.도적");
+        System.out.println("  높은 치명타 피해량으로 적을 제압하는 직업.");
+        System.out.println("  특성: 치명타 적중시 2배의 피해를 줍니다.");
+        System.out.println("  [HP: 80] [ATK: 3] [CRI: 2.0X]");
+
+        System.out.println("\n3.사제");
+        System.out.println("  균형잡힌 능력치와 회복 능력을 지닌 안정적인 직업.");
+        System.out.println("  특성: 턴 종료시 5의 체력을 회복합니다.");
+        System.out.println("  [HP: 100] [ATK: 3] [CRI: 1.2X]");
+
+        System.out.println("\n4.마법사");
+        System.out.println("  체력이 매우 낮지만 공격 기회가 많습니다.");
+        System.out.println("  [HP: 50] [ATK: 4] [CRI: 1.5X]");
+
+        System.out.println("\n=============================");
 
         int sel;
+
         while (true) {
             System.out.print("번호 입력: ");
+
+            // 입력이 잘못될 경우 대비한 예외 처리
+            while (!sc.hasNextInt()) {
+                System.out.println("숫자만 입력하세요!");
+                sc.next();
+            }
+
             sel = sc.nextInt();
-            if (sel >= 1 && sel <= 3) break;
+            sc.nextLine();   // ★ 버퍼 정리 매우 중요!
+
+            if (sel >= 1 && sel <= 4) break;
+            System.out.println("※ 1~4 중에서 선택해주세요.");
         }
 
         switch (sel) {
-            case 1: return new Character("전사", 150, 3, 1.0);
-            case 2: return new Character("마법사", 90, 4, 1.0);
-            default: return new Character("도적", 100, 3, 2.0);
+            case 1: return new Character(playerName, "전사", 200, 2, 1.3);
+            case 2: return new Character(playerName, "도적", 80, 3, 2.0);
+            case 3: return new Character(playerName, "사제", 100, 3, 1.2);
+            case 4: return new Character(playerName, "마법사", 50, 4, 1.5);
         }
+
+        // 절대로 여기 내려오지 않음
+        throw new IllegalStateException("직업 선택 오류!");
     }
 
-    // 체력 바
+
     static void printStatus(Character p, Character e) {
         System.out.println("\n-------------------------------");
-        System.out.println("Player: " + p.name + " " + hpBar(p));
-        System.out.println("Enemy : " + e.name + " " + hpBar(e));
+        System.out.println(p.name + " (" + p.job + ") : " + hpBar(p));
+        System.out.println(e.name + " (" + e.job + ") : " + hpBar(e));
         System.out.println("-------------------------------");
     }
 
     static String hpBar(Character c) {
         int bars = (int)((double)c.hp / c.maxHP * 10);
         StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < 10; i++) sb.append(i < bars ? ColorPool.RED + "■" : "□");
+        for (int i = 0; i < 10; i++)
+            sb.append(i < bars ? ColorPool.RED + "■" + ColorPool.RESET : "□");
         sb.append("] " + c.hp + "/" + c.maxHP);
         return sb.toString();
     }
 
-    // 공격 로직
     static void attack(Character attacker, Character defender) {
 
         String code = generateCode(attacker.codeLength);
 
-        System.out.print("공격 숫자 입력 (" + attacker.codeLength + "자리): ");
-        String input = sc.next();
+        sc.nextLine();
+
+        System.out.print("공격 숫자 입력 (" + attacker.codeLength + "개, 예: 1 3 5): ");
+
+        String[] tokens;
+
+        while (true) {
+            String line = sc.nextLine().trim();
+
+            tokens = line.split("\\s+");
+
+            if (tokens.length == attacker.codeLength) break;
+
+            System.out.println("※ 정확히 " + attacker.codeLength + "개의 숫자를 입력해야 합니다!");
+            System.out.print("다시 입력: ");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String t : tokens) sb.append(t);
+        String input = sb.toString();
 
         int exact = 0;
         int partial = 0;
@@ -126,12 +190,16 @@ public class SampleGame_0 {
 
         System.out.println("▶ " + damage + " 데미지!");
     }
-
+    
     static String generateCode(int len) {
         Random r = new Random();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < len; i++) sb.append(r.nextInt(10));
+        for (int i = 0; i < len; i++) {
+            sb.append(r.nextInt(10));
+        }
         return sb.toString();
     }
+
 }
+
 
