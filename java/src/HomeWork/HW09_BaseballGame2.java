@@ -47,7 +47,6 @@ public class HW09_BaseballGame2 {
 		String name = "";
 		int count = 0;;
 		int rank = 0;
-		int playerCount = 0;
 		final char EXIT = '3';
 		char menu;
 		Scanner scan = new Scanner(System.in);
@@ -139,7 +138,7 @@ public class HW09_BaseballGame2 {
 		int strike = 0, ball = 0;
 		int p1Count = 0;
 		int p2Count = 0;
-		playerCount = 0;
+		int playerCount = 0;
 		
 		System.out.println(yellow + "\n⚾지금부터 야구 게임을 시작하겠습니다!⚾");
 		SoundPlayer.playSound("sounds/win.wav");
