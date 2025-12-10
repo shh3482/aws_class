@@ -1,5 +1,6 @@
 package HomeWork;
 
+import java.awt.Color;
 import java.util.*;
 
 import Utility.ColorPool;
@@ -33,10 +34,10 @@ public class SampleGame_0 {
 
     public static void main(String[] args) {
 
-        System.out.print("\n플레이어 1님의 이름을 입력하세요: ");
+        System.out.print(ColorPool.BRIGHT_RED +"\n플레이어 1님의 이름을 입력하세요: " + ColorPool.RESET);
         String name1 = sc.nextLine();
 
-        System.out.print("\n플레이어 2님의 이름을 입력하세요: ");
+        System.out.print(ColorPool.BRIGHT_BLUE +"\n플레이어 2님의 이름을 입력하세요: " + ColorPool.RESET);
         String name2 = sc.nextLine();
 
         Character player1 = selectCharacter(name1);
@@ -48,11 +49,11 @@ public class SampleGame_0 {
 
             printStatus(player1, player2);
 
-            System.out.println("\n▶ " + player1.name + " 턴!");
+            System.out.println("\n ▶ " + player1.name + " 턴!");
             attack(player1, player2);
             if (player2.hp <= 0) break;
 
-            System.out.println("\n▶ " + player2.name + " 턴!");
+            System.out.println("\n ▶ " + player2.name + " 턴!");
             attack(player2, player1);
         }
 
@@ -62,35 +63,35 @@ public class SampleGame_0 {
 
     static Character selectCharacter(String playerName) {
 
-        System.out.println("\n=============================");
-        System.out.println("\n = " + playerName + " 님의 직업을 선택해주세요! = ");
-        System.out.println("\n=============================");
+        System.out.println(ColorPool.YELLOW +"\n=============================");
+        System.out.println(ColorPool.BRIGHT_RED +"\n = " + ColorPool.RESET + playerName + ColorPool.BRIGHT_RED + " 님의 직업을 선택해주세요! = ");
+        System.out.println(ColorPool.YELLOW +"\n=============================");
 
         System.out.println("\n1.전사");
         System.out.println("  매우 높은 체력을 지닌 안정적인 직업");
-        System.out.println("  특성: 50% 확률로 받은 피해를 20% 감소시킵니다.");
+        //System.out.println("  특성: 50% 확률로 받은 피해를 20% 감소시킵니다.");
         System.out.println("  [HP: 200] [ATK: 2] [CRI: 1.3X]");
 
         System.out.println("\n2.도적");
         System.out.println("  높은 치명타 피해량으로 적을 제압하는 직업.");
-        System.out.println("  특성: 치명타 적중시 2배의 피해를 줍니다.");
+        //System.out.println("  특성: 치명타 적중시 2배의 피해를 줍니다.");
         System.out.println("  [HP: 80] [ATK: 3] [CRI: 2.0X]");
 
         System.out.println("\n3.사제");
         System.out.println("  균형잡힌 능력치와 회복 능력을 지닌 안정적인 직업.");
-        System.out.println("  특성: 턴 종료시 5의 체력을 회복합니다.");
+        //System.out.println("  특성: 턴 종료시 5의 체력을 회복합니다.");
         System.out.println("  [HP: 100] [ATK: 3] [CRI: 1.2X]");
 
         System.out.println("\n4.마법사");
-        System.out.println("  체력이 매우 낮지만 공격 기회가 많습니다.");
+        //System.out.println("  체력이 매우 낮지만 공격 기회가 많습니다.");
         System.out.println("  [HP: 50] [ATK: 4] [CRI: 1.5X]");
 
-        System.out.println("\n=============================");
+        System.out.println("\n============================="+ ColorPool.RESET);
 
         int sel;
 
         while (true) {
-            System.out.print("번호 입력: ");
+            System.out.print("\n번호 입력: ");
 
             // 입력이 잘못될 경우 대비한 예외 처리
             while (!sc.hasNextInt()) {
@@ -99,7 +100,7 @@ public class SampleGame_0 {
             }
 
             sel = sc.nextInt();
-            sc.nextLine();   // ★ 버퍼 정리 매우 중요!
+            sc.nextLine();
 
             if (sel >= 1 && sel <= 4) break;
             System.out.println("※ 1~4 중에서 선택해주세요.");
@@ -112,7 +113,6 @@ public class SampleGame_0 {
             case 4: return new Character(playerName, "마법사", 50, 4, 1.5);
         }
 
-        // 절대로 여기 내려오지 않음
         throw new IllegalStateException("직업 선택 오류!");
     }
 
