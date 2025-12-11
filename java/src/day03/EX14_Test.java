@@ -55,6 +55,7 @@ class Student{
 		phoneNum = phoneNum1;
 		name = name1;
 				
-	}
+		}
 
-}}
+	}
+}
