@@ -230,9 +230,9 @@ public class HW09_BaseballGame2 {
 		        
 		        // 순위권시 저장기능 구현
 		        // 만약에 랭킹1 or 랭킹2 or 랭킹3 or 랭킹4 or 랭킹5 보다 플레이어의 카운트가 낮을 시, 순위권 등록이 가능하다.
-		        if(player[10].count >= playerCount) {
-		        	addRanker(null, playerCount, secondTrunColor, playerCount, scan);
-		        }
+//		        if(player[10].count >= playerCount) {
+//		        	addRanker(null, playerCount, secondTrunColor, playerCount, scan);
+//		        }
 		        
 		        try {
 		            Thread.sleep(3000);
