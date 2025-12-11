@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src = "index.js"></script>
+	<style>
+			.page {
+        display: flex;
+        justify-content: center;
+      }
+
+			li {
+        list-style: none;
+      }
+
+      .box-container {
+        position: relative;
+        width: 575px;
+        height: 600px;
+        margin-top: 100px;
+				background-color: #348a96;
+				border-radius: 25px;
+				display: flex;
+				justify-content: center;
+      }
+			
+			.title{
+				position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        font-size: 35px;
+        font-weight: 500;
+        color: #f8fefd;
+				margin-top: 10px;
+			}
+
+			.box-container2 {
+				/* background-color: red; */
+				position: absolute;
+				width: 100%;
+				height: 30%;
+				top: 12.5%;
+				margin: 0;
+				border-radius: 25px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 1;
+			}
+			
+			.memo-box{
+				position: relative;
+				margin-top: 15%;
+        left: 50%;
+				width: 400px;
+				height: 120px;
+        transform: translateX(-65%);
+        font-size: 15px;
+        font-weight: 500;
+				padding: 15px 20px;
+        border-radius: 15px;
+        border: none;
+				outline: none;
+        box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.2);
+				z-index: 1;
+			}
+
+			.add-button {
+        position: relative;
+        background-color: #4fa98f;
+				color: #f8fefd;
+				top: -70px;
+				width: 80px;
+				height: 150px;
+        font-size: 15px;
+        font-weight: 500;
+        transform: translateX(-15%);
+        padding: 10px 5px;
+        border-radius: 15px;
+        border: none;
+				outline: none;
+        transition: all 0.1s ease-in-out;
+        box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.2);
+				z-index: 3;
+      }
+      .add-button:active {
+        transform: translateX(-20%) scale(0.95);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      @keyframes inputGlow {
+        0% {
+          box-shadow: 0 0 5px #8ed2ff;
+          border-color: #8ed2ff;
+        }
+        25% {
+          box-shadow: 0 0 10px #5ddfe9;
+          border-color: #5ddfe9;
+        }
+        50% {
+          box-shadow: 0 0 15px #53ee8f;
+          border-color: #53ee8f;
+        }
+        75% {
+          box-shadow: 0 0 10px #5ddfe9;
+          border-color: #5ddfe9;
+        }
+        100% {
+          box-shadow: 0 0 5px #8ed2ff;
+          border-color: #8ed2ff;
+        }
+      }
+
+      input:hover,
+      .memo-box:hover,
+      .memo-box:focus {
+        animation: inputGlow 5s ease-in-out infinite;
+      }
+
+			.box-container3 {
+				position: absolute;
+				width: 540px;
+				height: 50%;
+				top: 45%;
+				margin: 0;
+				border-radius: 25px;
+				display: flex;
+				justify-content: baseline;
+				align-items: flex-start;
+			}
+
+			.text-box{
+				position: absolute;
+				background-color: white;
+				top: -10px;
+				left: 0%;
+				width: 500px;
+				height: auto;
+				padding: 10px 20px;
+				margin: 0;
+				border-radius: 25px;
+			}
+
+			.del{
+				z-index: 10;
+			}
+
+	</style>
+</head>
+<body class="page">
+
+	<div class="box-container">
+		<ul>
+			<li>
+				<span class = "title">메모패드 📝</span>
+			</li>
+		</ul>
+		<div >
+		</div>
+		<div class = "box-container2">
+			<form class = "form">
+				<ul>
+					<li>
+						<textarea class = "memo-box" type="text" placeholder="메모를 입력하세요..."></textarea>
+						<button class = "add-button">추가</button>
+					</li>
+				</ul>
+			</div>
+			<div class="box-container3">
+				<ul class="list">
+					
+				</ul>
+			</div>
+			</form>
+	</div>
+
+	<script>
+		  const list = document.querySelector(".list");
+			const form = document.querySelector(".form");
+			const inputText = document.querySelector(".memo-box");
+			const regBtn = document.querySelector(".add-button");
+			const li = document.createElement("li");
+			const Xbtn = document.createElement("button");
+			const span = document.createElement("span");
+			const Xbtns = document.querySelectorAll(".del");
+			const X = document.createTextNode("X");
+
+			form.addEventListener("submit", function(e){
+				e.preventDefault();
+				let text = inputText.value;
+				text = text.trim();
+				if(text == ""){
+					alert("값을 입력해야합니다!");
+					inputText = ""
+					return;
+				}
+				
+				let textNode = document.createTextNode(inputText.value + " ");
+
+				Xbtn.append("삭제");
+				Xbtn.classList.add("del");
+				Xbtn.addEventListener("click", function(){
+					Xbtn.parentElement.remove();
+				})
+				span.append(textNode);
+				span.classList.add("text-box");
+				li.append(span);
+				li.append(Xbtn);
+				list.append(li);
+				list.append("");
+				inputText.value = "";
+			})
+			list.append(li);
+			input.value = "";
+
+			Xbtns.forEach(btn=>{
+				btn.addEventListener("click", function(){
+					btn.parentElement.remove();
+				})
+			})
+	</script>
+</body>
+</html>
