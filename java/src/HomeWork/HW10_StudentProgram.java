@@ -77,26 +77,28 @@ public class HW10_StudentProgram {
 	}
 	
 	public static void printMenu() {
-		System.out.println(ColorPool.RESET +"===============메뉴===============");
+		System.out.println(ColorPool.RESET +"==========📚 학생 관리 메뉴==========\n");
 		System.out.print(ColorPool.BRIGHT_RED + "1. 학생 등록");
 		System.out.print("  ");
 		System.out.print("2. 학생 삭제");
 		System.out.print("  ");
-		System.out.println("3. 학생 조회");
+		System.out.println("3. 학생 조회\n");
 		
 		System.out.print(ColorPool.BRIGHT_GREEN + "4. 과목 등록");
 		System.out.print("  ");
 		System.out.print("5. 과목 삭제");
 		System.out.print("  ");
-		System.out.println("6. 과목 조회");
+		System.out.println("6. 과목 조회\n");
 		
 		System.out.print(ColorPool.BRIGHT_BLUE + "7. 성적 추가");
 		System.out.print("  ");
 		System.out.print("8. 성적 삭제");
 		System.out.print("  ");
-		System.out.println("9. 화면 종료");
+		System.out.println("9. 화면 종료\n");
 		System.out.println(ColorPool.RESET + "=================================\n");
-		System.out.print("메뉴 입력 : ");
+		System.out.print("메뉴 선택 (1~9) ▶ ");
+		
+		//System.out.println("⚠ 잘못된 메뉴입니다. 다시 입력하세요.");
 	}
 
 }
