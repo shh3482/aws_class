@@ -91,7 +91,10 @@ insert into score(st_code,sj_code,score) values (11,1,50), (11,2,100);
 insert into score(st_code,sj_code,score) values (14,1,100), (14,1,50);
 select * from student;
 
-
+# 1학년 1반에 새로운 학생이 전학을 왔다. 이때 필요한 쿼리를 작성
+# 이름은 가나다. 번호는 3번
+insert into student(grade, class, num, name) values(1,1,3,"가나다");
+select * from student where grade =1;
 
 
 
