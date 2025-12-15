@@ -56,8 +56,6 @@ function playCard(index) {
 function battle() {
   if (gameOver) return;
 
-  useSelectedCard(); // ⭐ 카드 먼저 사용
-
   disableButtons();
 
   enemy.hp -= player.atk;
@@ -70,6 +68,7 @@ function battle() {
       player.hp -= enemy.atk;
       renderStatus();
       showMessage("적이 반격했다!");
+      shake("playerImg");
     }
 
     checkGameOver();
@@ -112,10 +111,18 @@ function showMessage(text) {
 
 // 흔들림 연출
 function shake(id) {
-  const el = document.getElementById(id);
-  el.style.transform = "translateX(-10px)";
-  setTimeout(() => (el.style.transform = "translateX(10px)"), 100);
-  setTimeout(() => (el.style.transform = "translateX(0)"), 200);
+  if (id == player){
+    const el = document.getElementById(id);
+    el.style.transform = "translateX(-10px)";
+    setTimeout(() => (el.style.transform = "translateX(+10px)"), 100);
+    setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+  }
+  else{
+    const el = document.getElementById(id);
+    el.style.transform = "translateX(+10px)";
+    setTimeout(() => (el.style.transform = "translateX(-10px)"), 100);
+    setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+  }
 }
 
 // 버프 목록
@@ -162,7 +169,6 @@ function createCards(count = 0) {
 
     card.appendChild(visual);
 
-    // ⭐ 클릭 시 즉시 사용
     card.onclick = () => useCard(card, cardData);
 
     hand.appendChild(card);
