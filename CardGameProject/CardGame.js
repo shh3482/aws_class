@@ -1,3 +1,4 @@
+
 // 스테이터스
 let player = { hp: 2, maxHp: 2, atk: 1 };
 let enemy = { hp: 2, maxHp: 2, atk: 2 };
@@ -61,7 +62,7 @@ function battle() {
   enemy.hp -= player.atk;
   renderStatus();
   showMessage("플레이어가 공격했다!");
-  shake("enemyImg");
+  shake2("enemyImg");
 
   setTimeout(() => {
     if (enemy.hp > 0) {
@@ -111,18 +112,17 @@ function showMessage(text) {
 
 // 흔들림 연출
 function shake(id) {
-  if (id == player){
-    const el = document.getElementById(id);
-    el.style.transform = "translateX(-10px)";
+  const el = document.getElementById(id);
+  el.style.transform = "translateX(-10px)";
     setTimeout(() => (el.style.transform = "translateX(+10px)"), 100);
     setTimeout(() => (el.style.transform = "translateX(0)"), 100);
-  }
-  else{
-    const el = document.getElementById(id);
-    el.style.transform = "translateX(+10px)";
+}
+
+function shake2(id) {
+  const el = document.getElementById(id);
+  el.style.transform = "translateX(+10px)";
     setTimeout(() => (el.style.transform = "translateX(-10px)"), 100);
     setTimeout(() => (el.style.transform = "translateX(0)"), 100);
-  }
 }
 
 // 버프 목록
