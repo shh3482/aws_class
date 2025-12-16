@@ -12,33 +12,51 @@
       <div class="game-container">
         <div class="player-panel">
           <div class="character-image">
+
             <img id="playerImg" src="assets/Sera_Idle.gif" alt="player" />
+
             <div class="hp-bar-container">
+
               <div class="hp-bar">
                 <div id="playerHp" class="hp-fill"></div>
               </div>
-              <p>
-                HP: <span id="playerHpText"></span> | ATK:
-                <span id="playerAtk"></span>
-              </p>
-            </div>
-          </div>
 
-          <div class="status-panel"></div>
+              <div class="hp-text">
+                HP: <span id="playerHpText"></span>
+              </div>
+
+            </div>
+            
+            <div class="status-panel">
+              <li>공격력: <span id="playerAtk"></span></li>
+              <li>방어력: <span id="playerAtk"></span></li>
+            </div>
+
+          </div>
         </div>
 
         <div class="enemy-panel">
           <div class="character-image">
-            <img id="enemyImg" src="assets/Sera_Idle.gif" alt="player" />
+
+            <img id="enemyImg" src="assets/Boss_Idle.gif" alt="player" />
+
             <div class="hp-bar-container">
+
               <div class="hp-bar">
                 <div id="enemyHp" class="hp-fill enemy"></div>
               </div>
-              <p>
-                HP: <span id="enemyHpText"></span> | ATK:
-                <span id="enemyAtk"></span>
-              </p>
+
+              <div class="hp-text">
+                HP: <span id="enemyHpText"></span>
+              </div>
+
             </div>
+
+            <!-- <div class="status-panel">
+              <li>공격력: <span id="enemyAtk"></span></li>
+              <li>방어력: <span id="enemyAtk"></span></li>
+            </div> -->
+
           </div>
           <div class="status-panel"></div>
         </div>
@@ -53,6 +71,7 @@
 
     <p id="battleLog"></p>
 
-    <script src="CardGame.js"></script>
+    <script src="CardGame.js">
+    </script>
   </body>
 </html>
