@@ -1,7 +1,11 @@
-
 // 스테이터스
-let player = { hp: 2, maxHp: 2, atk: 1 };
-let enemy = { hp: 2, maxHp: 2, atk: 2 };
+let player = { hp: 1000, maxHp: 100, atk: 10 };
+let enemy = { hp: 100, maxHp: 100, atk: 10 };
+
+// 기본 설정
+player.hp = player.maxHp;
+enemy.hp = enemy.maxHp;
+
 let stage = 1;
 let energy = 1;
 
@@ -16,7 +20,7 @@ function renderStatus() {
   document.getElementById(
     "playerHpText"
   ).innerText = `${player.hp} / ${player.maxHp}`;
-  document.getElementById("playerAtk").innerText = player.atk;
+  // document.getElementById("playerAtk").innerText = player.atk;
 
   const playerHpPercent = (player.hp / player.maxHp) * 100;
   document.getElementById("playerHp").style.width = `${playerHpPercent}%`;
@@ -25,7 +29,7 @@ function renderStatus() {
   document.getElementById(
     "enemyHpText"
   ).innerText = `${enemy.hp} / ${enemy.maxHp}`;
-  document.getElementById("enemyAtk").innerText = enemy.atk;
+  // document.getElementById("enemyAtk").innerText = enemy.atk;
 
   const enemyHpPercent = (enemy.hp / enemy.maxHp) * 100;
   document.getElementById("enemyHp").style.width = `${enemyHpPercent}%`;
@@ -72,11 +76,33 @@ function battle() {
       shake("playerImg");
     }
 
-    checkGameOver();
+    //checkGameOver();
 
     setTimeout(() => {
       enableButtons();
       showMessage("다음 턴");
+    }, 1000);
+  }, 1000);
+}
+
+// 기본 공격
+function basicAttack() {
+  if (gameOver) return;
+
+  disableButtons();
+
+  setTimeout(() => {
+    if (enemy.hp > 0) {
+      enemy.hp -= player.atk;
+      renderStatus();
+      showMessage("플레이어가 공격했다!");
+      shake2("enemyImg");
+    }
+
+    checkGameOver();
+
+    setTimeout(() => {
+      enableButtons();
     }, 1000);
   }, 1000);
 }
@@ -114,15 +140,15 @@ function showMessage(text) {
 function shake(id) {
   const el = document.getElementById(id);
   el.style.transform = "translateX(-10px)";
-    setTimeout(() => (el.style.transform = "translateX(+10px)"), 100);
-    setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+  setTimeout(() => (el.style.transform = "translateX(+5px)"), 200);
+  setTimeout(() => (el.style.transform = "translateX(0)"), 100);
 }
 
 function shake2(id) {
   const el = document.getElementById(id);
   el.style.transform = "translateX(+10px)";
-    setTimeout(() => (el.style.transform = "translateX(-10px)"), 100);
-    setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+  setTimeout(() => (el.style.transform = "translateX(-5px)"), 200);
+  setTimeout(() => (el.style.transform = "translateX(0)"), 100);
 }
 
 // 버프 목록
@@ -144,11 +170,32 @@ function hitEffect(id) {
 }
 
 // 카드 데이터
+/*
+  일반 카드:
+
+    - 이름: 기본 공격
+      타입: 공격 카드
+      효과: 적에게 공격력의 100% 만큼 피해를 줍니다.
+
+    - 이름: 막기
+      타입: 방어 카드
+      효과: 다음으로 받는 피해를 50% 감소시킵니다.
+
+    - 이름: 회복
+      타입: 유틸 카드
+      효과: 최대 체력의 10% 만큼 자신의 체력을 회복합니다.
+
+    - 이름: 힘 모으기
+      타입: 버프 카드
+      효과: 다음으로 사용하는 공격카드의 피해량을 50% 증가시킵니다.
+
+*/
+
 const cardPool = [
-  { name: "공격력 +1" },
-  { name: "체력 +1" },
-  { name: "공격력 +2" },
-  { name: "체력 +2" },
+  { name: "기본 공격" },
+  { name: "막기" },
+  { name: "회복" },
+  { name: "힘 모으기" },
 ];
 
 // 카드 생성
@@ -192,20 +239,25 @@ function useCard(card, cardData) {
 
 function applyCardEffect(name) {
   switch (name) {
-    case "공격력 +1":
-      player.atk += 1;
+
+    case "기본 공격":
+      basicAttack();
       break;
+
     case "체력 +1":
       player.maxHp += 1;
       player.hp += 1;
       break;
+
     case "공격력 +2":
       player.atk += 2;
       break;
+
     case "체력 +2":
       player.maxHp += 2;
       player.hp += 2;
       break;
+
   }
 
   renderStatus();

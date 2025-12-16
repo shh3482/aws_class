@@ -20,19 +20,40 @@ body {
   width: 900px;
   min-width: 900px;
   height: 600px;
-  background: #2a2a2a;
-  border: 3px solid #444;
+  background: #2e2e2e;
+  border: 3px solid #535353;
   border-radius: 25px;
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
 }
 
+.player-panel {
+  left: 25px;
+  position: absolute;
+  /* background-color: #ff9800; */
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  width: 400px;
+  height: 300px;
+}
+
+.enemy-panel {
+  right: 25px;
+  position: absolute;
+  /* background-color: #ff9800; */
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  width: 400px;
+  height: 300px;
+}
+
 .character-image {
   position: absolute;
   width: 300px;
   height: 300px;
-  background-color: #4caf50;
   z-index: 3;
 }
 
@@ -42,14 +63,18 @@ body {
 }
 
 .hp-bar-container {
-  margin-top: 8px; /* 이미지와 간격 */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: -100px; /* 이미지와 간격 */
 }
 
 .hp-bar {
-  width: 200px;
-  height: 10px;
-  background: gray;
-  border-radius: 5px;
+  width: 120px;
+  height: 17px;
+  background: rgba(41, 38, 38, 0.75);
+  border-radius: 10px;
+  border: 2.5px solid #dad4c9;
   overflow: hidden;
   margin: 0 auto;
 }
@@ -64,6 +89,12 @@ body {
   background: #e53935;
 }
 
+.hp-text {
+  position: absolute;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
 .hit {
   filter: brightness(0.5) sepia(1) hue-rotate(-50deg);
 }
@@ -74,6 +105,32 @@ body {
 
 .enemy-panel .character-image {
   right: 50px;
+}
+
+.player-panel .character-image .status-panel {
+  position: absolute;
+  /* background-color: #858585; */
+  box-sizing: border-box;
+  left: 70%;
+  top: 40%;
+  width: 60px;
+  height: 70px;
+  font-size: 12px;
+  line-height: 20px;
+  list-style: none;
+}
+
+.enemy-panel .character-image .status-panel {
+  position: absolute;
+  /* background-color: #858585; */
+  box-sizing: border-box;
+  right: 70%;
+  top: 40%;
+  width: 60px;
+  height: 70px;
+  font-size: 12px;
+  line-height: 20px;
+  list-style: none;
 }
 
 #cardHand {
