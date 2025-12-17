@@ -100,14 +100,13 @@ BEGIN
     DECLARE _CODE CHAR(6);
     DECLARE _ID VARCHAR(13);
     
-    # SQL 예외가 발생하면 롤백
-    declare exit handler for sqlexception
-    begin
-		rollback;
-	end;
-    
-    # 트랜젹션 시작
-    start transaction;
+    # SQL예외가 발생하면 롤백 
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+		ROLLBACK;
+	END;
+    # 트랜잭션 시작 
+    START TRANSACTION;
     
     SET _AMOUNT = (SELECT AMOUNT FROM CART WHERE NUM = CART_NUM);
     SET _CODE = (SELECT CODE FROM CART WHERE NUM = CART_NUM);
@@ -127,98 +126,96 @@ BEGIN
     
     # CART 테이블에서 해당 장바구니 삭제 
     DELETE FROM CART WHERE NUM = CART_NUM;
-    commit;
+    COMMIT;
 END $$
 DELIMITER ;
 
 CALL BUY_CART(3, "경기도");
+CALL BUY_CART(5, "제주도");
 # ACC001을 1개 구매
 # ACC001 제고가 7개로 변경 
 # 장바구니 3번이 삭제 
 
-/*
-프로시저에서 사용하는 문법
+/* 
+프로시저에서 사용하는 문법 
 1. 변수 선언
-	- 변수 선언은 begin 밑에 모아 놓음
-    - 선언 방법은
-		- declare 변수명 타입 [default 초기값];
+ - 변수선언은 BEGIN 밑에 모아 놓음 
+ - 선언 방법 
+   DECLARE 변수명 타입 [DEFAULT 초기값];
 2. 변수값 수정
-	- =은 기본 비교 연산이기 때문에 set을 이용하여 수정
-		set 변수명 = 값;
-        set 변수명 = (select 쿼리);
-3. 조건문 if
-	if 조건식 then
-		실행문;
-	elseif 조건식 then
-		실행문;
-	else
-		실행문;
-	end if;
-4. 조건문 case
-	case 변수
-		when 값 then
-			실행문;
-		when 값2 then
-			실행문;
-		else
-			실행문;
-	end case;
-5. 반복문 while
-	while 조건식 do
-		실행문;
-	end while;
-6. 반복문 repeat
-	repeat
-		실행문;
-	until 조건식
-    end repeat;
-7. 반복문 cursor
-	- 검색 결과를 반복문으로 활용할 때 사용
-    declare 변수a boolean default false; #반복을 멈출지말지를 결정하는 변수
-    declare 커서 cursor for select 컬럼1, 컬럼2, ... from 테이블명 [where절];
-    # 더이상 할 내용이 없으면 변수a를 true로 변경
-    declare continue handler for not found set 변수a = true;
-    open 커서;
-    루프 : loop
-    fetch 커서 into 변수1, 변수2, ...;
-    if 변수a then
-		leave 루프;
-	end if;
+ - =은 기본 비교연산이기 때문에 SET을 이용하여 수정 
+   SET 변수명 = 값;
+   SET 변수명 = (SELECT 쿼리);
+3. 조건문 IF
+  IF 조건식 THEN
+	실행문;
+  ELSEIF 조건식 THEN
+    실행문; 
+  ELSE 
     실행문;
-    end loop;
-    close 커서;
+  END IF;
+4. 조건문 CASE 
+  CASE 변수
+	WHEN 값 THEN
+	  실행문;
+	WHEN 값2 THEN
+      실행문;
+	ELSE
+	  실행문;
+  END CASE;
+5. 반복문 WHILE 
+  WHILE 조건식 DO
+	실행문;
+  END WHILE;
+6. 반복문 REPEAT 
+  REPEAT
+    실행문;
+  UNTIL 조건식 
+  END REPEAT;
+7. 반복문 CURSOR
+ - 검색 결과를 반복문으로 활용할 때 사용 
+  DELCARE 변수A BOOLEAN DEFAULT FALSE; #반복을 멈출지말지를 결정하는 변수 
+  DECLARE 커서 CURSOR FOR SELECT 컬럼1, 컬럼2, ... FROM 테이블명 [WHERE절];
+  # 더이상 할 내용이 없으면 변수A를 TRUE로 변경 
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET 변수A = TRUE; 
+  OPEN 커서;
+  루프 : LOOP
+  FETCH 커서 INTO 변수1, 변수2, ...;
+  IF 변수A THEN
+	LEAVE 루프;
+  END IF;
+  실행문; 
+  END LOOP;
+  CLOSE 커서; 
+  
 */
 
-drop procedure if exists print_product;
-delimiter $$
-create procedure print_product()
-begin
-	declare _done boolean default false; # 커서를 멈추기 위한 변수
-    declare _title varchar(50); #제목
-    declare _price int; #가격
+DROP PROCEDURE IF EXISTS PRINT_PRODUCT;
+DELIMITER $$
+CREATE PROCEDURE PRINT_PRODUCT()
+BEGIN
+	DECLARE _DONE BOOLEAN DEFAULT FALSE; # 커서를 멈추기 위한 변수 
+    DECLARE _TITLE VARCHAR(50); #제목 
+    DECLARE _PRICE INT; #가격 
     
-    declare _cursor cursor for select title, price from product;
-    declare continue handler for not found set _done = true;
-	
-    open _cursor;
-    product_loop : loop
-		# 커서에서 꺼내서 _title, _price 에 넣어줌
-		fetch _cursor into _title, _price;
-        # 꺼내올게 없으면 루프 종료
-        if _done then
-			leave product_loop;
-		end if;
-        select _title, _price;
-    end loop;
-    close _cursor;
-end $$
-delimiter ;
+    DECLARE _CURSOR CURSOR FOR SELECT TITLE, PRICE FROM PRODUCT;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET _DONE = TRUE;
+    
+    OPEN _CURSOR;
+    PRODUCT_LOOP : LOOP
+		# 커서에서 꺼내서 _TITLE, _PRICE에 넣어줌 
+		FETCH _CURSOR INTO _TITLE, _PRICE;
+        # 꺼내올게 없으면 루프 종료 
+        IF _DONE THEN
+			LEAVE PRODUCT_LOOP;
+		END IF;
+        SELECT _TITLE, _PRICE;
+    END LOOP;
+    CLOSE _CURSOR;
+END $$
+DELIMITER ;
 
-call print_product();
-
-
-
-
+CALL PRINT_PRODUCT();
 
 
 
