@@ -42,3 +42,5 @@ delete from cart where id = "abc123" and code = "ACC002";
 # 수량 감소 
 update product set amount = amount - 1 where code = "ACC001";
 update product set amount = amount - 1 where code = "ACC002";
+
+

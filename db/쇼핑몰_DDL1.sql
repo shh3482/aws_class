@@ -54,11 +54,3 @@ create table if not exists buy(
     constraint fk_bu_us foreign key(id) references user(id),
     constraint fk_bu_pr foreign key(code) references product(code)
 );
-
-
-
-
-
-
-
-
