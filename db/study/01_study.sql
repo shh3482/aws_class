@@ -79,6 +79,75 @@ ON student.student_id = enrollment.student_id;
 
 SHOW TABLES;
 
+-- 🧩 SQL 워크벤치 연습문제 세트 2 (기초)
+-- 1단계: 데이터베이스 & 테이블 생성
+-- 문제 1
+-- 다음 조건을 만족하는 데이터베이스 school을 생성하고 사용하세요.
+-- 기존에 school 데이터베이스가 있으면 삭제
+-- 새로 생성 후 USE school
+
+DROP TABLE IF EXISTS `school`;
+
+CREATE TABLE `school` (
+	`school_id`	int	primary key
+);
+use school;
+
+
+-- 문제 2
+-- 다음 조건을 만족하는 **교수 테이블 professor**를 만드세요.
+-- 컬럼명	조건
+-- professor_id	정수, 기본키
+-- name	문자열(20자 이내), NULL 불가
+-- major	문자열(30자)
+-- hire_year	정수
+
+-- 2단계: INSERT (데이터 추가)
+-- 문제 3
+-- professor 테이블에 아래 교수 3명을 추가하세요.
+-- professor_id	name	major	hire_year
+-- 1	Park	Computer Science	2018
+-- 2	Choi	Mathematics	2020
+-- 3	Jung	Physics	2015
+
+-- 3단계: SELECT 기초
+-- 문제 4
+-- 아래 조건에 맞는 SQL을 작성하세요.
+-- 1️⃣ 모든 교수 정보를 조회하세요.
+-- 2️⃣ 교수 이름(name)과 전공(major)만 조회하세요.
+-- 3️⃣ 2019년 이후에 채용된 교수만 조회하세요.
+
+-- 4단계: 정렬 + 조건
+-- 문제 5
+-- 교수 정보를 채용년도(hire_year) 기준 오름차순으로 조회하세요.
+
+-- 5단계: 두 번째 테이블 생성
+-- 문제 6
+-- 다음 조건을 만족하는 **강의 테이블 lecture**를 만드세요.
+-- 컬럼명	조건
+-- lecture_id	정수, 기본키
+-- professor_id	정수
+-- lecture_name	문자열(30자)
+-- room	문자열(10자)
+
+-- 6단계: 데이터 추가 (연결 데이터)
+-- 문제 7
+-- lecture 테이블에 아래 강의 정보를 추가하세요.
+-- lecture_id	professor_id	lecture_name	room
+-- 1	1	Database	A101
+-- 2	1	Operating System	B202
+-- 3	2	Calculus	C303
+
+-- 7단계: JOIN 기초
+-- 문제 8
+-- 교수 이름과 그 교수가 담당하는 강의 이름을 함께 조회하세요.
+-- 조건
+-- JOIN 사용
+-- 교수 이름, 강의 이름만 출력
+
+-- 문제 9
+-- 강의를 담당하지 않은 교수도 모두 조회하되,
+-- 강의가 없으면 강의 이름은 NULL로 표시되도록 하세요.
 
 
 
