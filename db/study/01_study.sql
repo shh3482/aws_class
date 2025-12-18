@@ -91,8 +91,7 @@ DROP TABLE IF EXISTS `school`;
 CREATE TABLE `school` (
 	`school_id`	int	primary key
 );
-use school;
-
+-- use school;
 
 -- 문제 2
 -- 다음 조건을 만족하는 **교수 테이블 professor**를 만드세요.
@@ -102,24 +101,48 @@ use school;
 -- major	문자열(30자)
 -- hire_year	정수
 
+create table `professor` (
+	`professor_id` int primary key,
+    `name` varchar(20) not null,
+    `major` varchar(30),
+    `hire_year` int
+);
+use professor;
+
 -- 2단계: INSERT (데이터 추가)
 -- 문제 3
 -- professor 테이블에 아래 교수 3명을 추가하세요.
 -- professor_id	name	major	hire_year
--- 1	Park	Computer Science	2018
--- 2	Choi	Mathematics	2020
--- 3	Jung	Physics	2015
+-- 1 Park	Computer Science	2018
+insert into professor (professor_id, name, major, hire_year)
+values (1, 'Park', 'Computer Science', '2018');
+-- 2 Choi	Mathematics	2020
+insert into professor (professor_id, name, major, hire_year)
+values (2, 'Choi', 'Mathematics', '2020');
+-- 3 Jung	Physics	2015
+insert into professor (professor_id, name, major, hire_year)
+values (3, 'Jung', 'Physics', '2015');
 
 -- 3단계: SELECT 기초
 -- 문제 4
 -- 아래 조건에 맞는 SQL을 작성하세요.
--- 1️⃣ 모든 교수 정보를 조회하세요.
--- 2️⃣ 교수 이름(name)과 전공(major)만 조회하세요.
--- 3️⃣ 2019년 이후에 채용된 교수만 조회하세요.
+-- 1️ 모든 교수 정보를 조회하세요.
+select *
+from professor;
+-- 2️ 교수 이름(name)과 전공(major)만 조회하세요.
+select name, major
+from professor;
+-- 3️ 2019년 이후에 채용된 교수만 조회하세요.
+select *
+from professor
+where hire_year >= 2019;
 
 -- 4단계: 정렬 + 조건
 -- 문제 5
 -- 교수 정보를 채용년도(hire_year) 기준 오름차순으로 조회하세요.
+select *
+from professor
+order by hire_year;
 
 -- 5단계: 두 번째 테이블 생성
 -- 문제 6
@@ -129,6 +152,9 @@ use school;
 -- professor_id	정수
 -- lecture_name	문자열(30자)
 -- room	문자열(10자)
+create table (
+
+)
 
 -- 6단계: 데이터 추가 (연결 데이터)
 -- 문제 7
