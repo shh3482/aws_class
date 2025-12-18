@@ -152,9 +152,12 @@ order by hire_year;
 -- professor_id	정수
 -- lecture_name	문자열(30자)
 -- room	문자열(10자)
-create table (
-
-)
+create table `lecture`(
+	`lecture_id` int primary key,
+    `professor_id` varchar(20) not null,
+    `lecture_name` varchar(30),
+    `room` int
+);
 
 -- 6단계: 데이터 추가 (연결 데이터)
 -- 문제 7
