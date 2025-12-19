@@ -317,6 +317,51 @@ right join professor
 on pr_num = st_pr_num
 group by pr_num;
 
+# 홍길동 (2025160001) 학생이 이수한 총 학점을 조회
+# 이수는 성적이 PASS 이거나 F가 아니거나 NULL이 아니면 계산
+select sum(sj_point)
+from course
+# 학점이 필요한데 학점은 subject에 있어서 course가 subject에 연결되기 위해 중간에 lecture를 join
+join lecture
+on co_lt_num = lt_num
+join subject
+on sj_code = lt_sj_code
+where co_st_num = '2025160001'
+# and !(co_score = 'F' or co_score = 'Fail');
+and co_score not in('F', 'FAIL') # 성적이 나왔지만 이수 못함
+and co_score is not null; # 학기 진행 중
+
+# co_st_num 이 2025160001 이고, 성적에 조건이 PASS 이거나 F가 아니거나 NULL이 아니면 계산 
+# course->lecture->subject 으로 join
+
+# 학생별 총 이수학점을 조회
+# 이수는 성적이 PASS 이거나 F가 아니거나 NULL이 아니면 계산
+select st_num, st_name, ifnull(sum(sj_point),0)
+from (select * from course
+where co_score not in('F', 'FAIL')
+and co_score is not null) C
+join lecture
+on co_lt_num = lt_num
+join subject
+on sj_code = lt_sj_code
+right join student
+on st_num = co_st_num
+group by st_num;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
