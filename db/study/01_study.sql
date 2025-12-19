@@ -16,8 +16,8 @@ DROP TABLE IF EXISTS `student`;
 
 CREATE TABLE `student` (
 	`student_id`	int	primary key,
-    `name`			char(20) not null,
-    `department`	char(30),
+    `name`			varchar(20) not null,
+    `department`	varchar(30),
     `admission_year`int
 );
 
@@ -42,7 +42,7 @@ values (2, "Lee", "Mathematics", 2022);
 select * from student;
 
 -- 2️ 학과(department)만 조회하세요.
-select department from student group by department;
+select distinct department from student;
 
 -- 3️ 2023년에 입학한 학생만 조회하세요.
 select * from student where admission_year = 2023;
@@ -63,7 +63,7 @@ select * from student order by admission_year desc;
 CREATE TABLE `enrollment` (
 	`enrollment_id`	int	primary key,
     `student_id`	int,
-    `course_name`	char(30),
+    `course_name`	varchar(30),
     `section`		int
 );
 
@@ -86,12 +86,10 @@ SHOW TABLES;
 -- 기존에 school 데이터베이스가 있으면 삭제
 -- 새로 생성 후 USE school
 
-DROP TABLE IF EXISTS `school`;
+DROP database IF EXISTS school;
 
-CREATE TABLE `school` (
-	`school_id`	int	primary key
-);
--- use school;
+CREATE database school;
+use school;
 
 -- 문제 2
 -- 다음 조건을 만족하는 **교수 테이블 professor**를 만드세요.
@@ -100,14 +98,13 @@ CREATE TABLE `school` (
 -- name	문자열(20자 이내), NULL 불가
 -- major	문자열(30자)
 -- hire_year	정수
-
+drop table if exists `professor`;
 create table `professor` (
 	`professor_id` int primary key,
     `name` varchar(20) not null,
     `major` varchar(30),
     `hire_year` int
 );
-use professor;
 
 -- 2단계: INSERT (데이터 추가)
 -- 문제 3
@@ -115,13 +112,13 @@ use professor;
 -- professor_id	name	major	hire_year
 -- 1 Park	Computer Science	2018
 insert into professor (professor_id, name, major, hire_year)
-values (1, 'Park', 'Computer Science', '2018');
+values (1, 'Park', 'Computer Science', 2018);
 -- 2 Choi	Mathematics	2020
 insert into professor (professor_id, name, major, hire_year)
-values (2, 'Choi', 'Mathematics', '2020');
+values (2, 'Choi', 'Mathematics', 2020);
 -- 3 Jung	Physics	2015
 insert into professor (professor_id, name, major, hire_year)
-values (3, 'Jung', 'Physics', '2015');
+values (3, 'Jung', 'Physics', 2015);
 
 -- 3단계: SELECT 기초
 -- 문제 4
@@ -152,11 +149,13 @@ order by hire_year;
 -- professor_id	정수
 -- lecture_name	문자열(30자)
 -- room	문자열(10자)
+drop table if exists `lecture`;
 create table `lecture`(
 	`lecture_id` int primary key,
-    `professor_id` varchar(20) not null,
+    `professor_id` int,
     `lecture_name` varchar(30),
-    `room` int
+    `room` varchar(10),
+    FOREIGN KEY (professor_id) REFERENCES professor(professor_id)
 );
 
 -- 6단계: 데이터 추가 (연결 데이터)
@@ -166,6 +165,13 @@ create table `lecture`(
 -- 1	1	Database	A101
 -- 2	1	Operating System	B202
 -- 3	2	Calculus	C303
+insert into lecture (lecture_id, professor_id, lecture_name, room)
+values 
+(1,1,"Database","A101"),
+(2,1,"Operating System","B202"),
+(3,2,"Calculus","C303");
+
+select * from lecture;
 
 -- 7단계: JOIN 기초
 -- 문제 8
@@ -173,10 +179,86 @@ create table `lecture`(
 -- 조건
 -- JOIN 사용
 -- 교수 이름, 강의 이름만 출력
+select professor.name, lecture_name
+from lecture
+join professor
+on lecture.professor_id = professor.professor_id;
+
+select * from professor;
+
 
 -- 문제 9
 -- 강의를 담당하지 않은 교수도 모두 조회하되,
 -- 강의가 없으면 강의 이름은 NULL로 표시되도록 하세요.
+select professor.name, lecture_name
+from lecture
+right join professor
+on lecture.professor_id = professor.professor_id;
+
+select * from professor;
+
+-- 1️⃣ LEFT JOIN + WHERE 함정
+-- 문제 1
+-- 모든 교수를 조회하되,
+-- 강의를 하나도 담당하지 않은 교수의 이름만 조회하세요.
+select professor.name, lecture_name
+from lecture
+right join professor
+on lecture.professor_id = professor.professor_id
+and lecture_name = null;
+
+-- 문제 2
+-- 모든 교수를 조회하되,
+-- "Database" 강의를 담당하지 않은 교수만 조회하세요.
+-- (다른 강의는 담당할 수 있음)
+
+-- 문제 3
+-- 모든 교수를 조회하되,
+-- 강의를 담당하고 있으면 강의 이름을 표시하고,
+-- 없으면 NULL로 표시하세요.
+-- (교수 이름 + 강의 이름 출력)
+
+
+-- 2️⃣ COUNT + GROUP BY
+-- 문제 4
+-- 각 교수별로
+-- 담당 강의 수를 조회하세요.
+-- (강의가 없는 교수도 포함)
+
+-- 문제 5
+-- 강의를 2개 이상 담당하는 교수의
+-- 이름과 강의 수를 조회하세요.
+
+-- 문제 6
+-- 각 학과별로
+-- 학생 수를 조회하세요.
+
+-- 문제 7
+-- 각 입학년도별로
+-- 학생 수를 조회하되,
+-- 학생 수가 2명 이상인 년도만 조회하세요.
+
+
+
+-- 3️⃣ 서브쿼리 기초
+-- 문제 8
+-- 가장 먼저 채용된 교수의
+-- 이름과 채용년도를 조회하세요.
+
+-- 문제 9
+-- 강의를 담당한 적이 있는 교수만 조회하세요.
+-- (JOIN 금지)
+
+-- 문제 10
+-- 강의를 담당하지 않은 교수만 조회하세요.
+-- (JOIN 금지)
+
+-- 문제 11
+-- 2개 이상의 강의를 담당한 교수만 조회하세요.
+-- (서브쿼리 사용)
+
+
+
 
 
 
