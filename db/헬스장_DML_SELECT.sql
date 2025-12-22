@@ -125,9 +125,49 @@ using(class_id)
 right join member using(member_ID)
 group by member_id;
 
+# Study #
+# 강좌별 수강 신청 인원 수를 조회하되, 신청자가 없는 강좌도 모두 출력하시오.
+select class.name '강좌명', ifnull(count(enrollment_id),0) '신청 인원 수'
+from enrollment
+right join class
+using (class_id)
+group by class_id;
 
+# 회원별로 수강 신청한 강좌 개수를 조회하시오.
+# (수강 신청을 안 한 회원도 0으로 출력)
+select m.name '회원명', ifnull(count(enrollment_id),0) '신청한 강좌 수'
+from member m
+left join enrollment e
+using(member_id)
+group by member_id;
 
+# 사물함별 사용 상태를 조회하시오.
+# (회원이 사용 중이면 '사용중', 아니면 '사용가능')
+select location '구역',
+if (m.locker_id, "사용중","사용가능") '사용 상태'
+from locker l
+left join member m 
+using (locker_id);
 
+# 결제가 완료된 수강 신청만 기준으로 강좌별 총 매출액을 조회하시오.
+# (결제된 수강 신청이 없는 강좌도 0으로 출력)
+select c.name, ifnull(count(e.enrollment_id) * c.fee,0) as total_sales
+from class c
+left join enrollment e
+using(class_id)
+group by c.class_id;
+
+# 오늘 날짜 기준으로 강좌별 출석한 회원 수를 조회하시오.
+# (출석자가 없는 강좌도 포함)
+select c.name, count(attendance_id)
+from (
+select *
+from attendance
+where date(check_in_time) = '2025-12-22'
+)a
+right join class c
+using (class_id)
+group by class_id;
 
 
 
