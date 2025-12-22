@@ -88,7 +88,9 @@ insert into class (name,capacity,fee,trainer_id)
 values
 ("크로스핏 초급반",30,50000,1); 
 
-
+#Study#
+insert into member(name,contact,locker_ID)
+values('가나다','000-0000-0000',10);
 
 
 
