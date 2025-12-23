@@ -201,37 +201,51 @@ select * from professor;
 -- 문제 1
 -- 모든 교수를 조회하되,
 -- 강의를 하나도 담당하지 않은 교수의 이름만 조회하세요.
-select professor.name, lecture_name
-from lecture
-right join professor
-on lecture.professor_id = professor.professor_id
-and lecture_name = null;
+select professor.name
+from professor
+left join lecture
+using(professor_id)
+where lecture_id is null;
 
 -- 문제 2
 -- 모든 교수를 조회하되,
 -- "Database" 강의를 담당하지 않은 교수만 조회하세요.
 -- (다른 강의는 담당할 수 있음)
-
--- 문제 3
--- 모든 교수를 조회하되,
--- 강의를 담당하고 있으면 강의 이름을 표시하고,
--- 없으면 NULL로 표시하세요.
--- (교수 이름 + 강의 이름 출력)
-
+select *
+from professor p
+where p.professor_id
+not in (
+select professor_id
+from lecture
+where lecture_name = "Database"
+and professor_id is not null
+);
 
 -- 2️⃣ COUNT + GROUP BY
 -- 문제 4
 -- 각 교수별로
 -- 담당 강의 수를 조회하세요.
 -- (강의가 없는 교수도 포함)
+select p.name, count(lecture_id)
+from professor p
+left join lecture
+using (professor_id)
+group by p.professor_id;
 
 -- 문제 5
 -- 강의를 2개 이상 담당하는 교수의
 -- 이름과 강의 수를 조회하세요.
+select p.name, count(lecture_id)
+from professor p
+left join lecture
+using (professor_id)
+group by p.professor_id
+having count(lecture_id) >= 2;
 
 -- 문제 6
 -- 각 학과별로
 -- 학생 수를 조회하세요.
+
 
 -- 문제 7
 -- 각 입학년도별로
