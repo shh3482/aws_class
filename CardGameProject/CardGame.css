@@ -239,6 +239,33 @@ body {
   }
 }
 
+@keyframes hitFlash {
+  0% {
+    filter: none;
+  }
+  15% {
+    filter:
+      brightness(2.5)
+      contrast(2);
+  }
+  40% {
+    filter:
+      invert(0.15)
+      sepia(1)
+      saturate(8)
+      contrast(2.2)
+      hue-rotate(-15deg);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+.hit {
+  animation: hitFlash 0.25s ease;
+  will-change: filter;
+}
+
 .card.cast .card-visual {
   animation: cardCastUp 0.9s ease-out forwards;
   pointer-events: none;

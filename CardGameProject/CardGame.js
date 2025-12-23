@@ -66,17 +66,17 @@ function battle() {
   enemy.hp -= player.atk;
   renderStatus();
   showMessage("플레이어가 공격했다!");
-  shake2("enemyImg");
+  shake("enemyImg", -1);   // 적은 왼쪽으로 밀림
+  hitEffect("enemyImg");
 
   setTimeout(() => {
     if (enemy.hp > 0) {
       player.hp -= enemy.atk;
       renderStatus();
       showMessage("적이 반격했다!");
-      shake("playerImg");
+      shake("playerImg", 1); // 플레이어는 오른쪽
+      hitEffect("playerImg");
     }
-
-    //checkGameOver();
 
     setTimeout(() => {
       enableButtons();
@@ -96,7 +96,8 @@ function basicAttack() {
       enemy.hp -= player.atk;
       renderStatus();
       showMessage("플레이어가 공격했다!");
-      shake2("enemyImg");
+      shake("enemyImg", -1);
+      hitEffect("enemyImg");
     }
 
     checkGameOver();
@@ -137,18 +138,40 @@ function showMessage(text) {
 }
 
 // 흔들림 연출
-function shake(id) {
+function shake(id, dir = 1) {
   const el = document.getElementById(id);
-  el.style.transform = "translateX(-10px)";
-  setTimeout(() => (el.style.transform = "translateX(+5px)"), 200);
-  setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+  if (!el) return;
+
+  el.style.transform = `translateX(${dir * -10}px)`;
+
+  setTimeout(() => {
+    el.style.transform = `translateX(${dir * 5}px)`;
+  }, 100);
+
+  setTimeout(() => {
+    el.style.transform = "translateX(0)";
+  }, 200);
 }
 
-function shake2(id) {
+// 피격시 색변화
+function hitEffect(id) {
   const el = document.getElementById(id);
-  el.style.transform = "translateX(+10px)";
-  setTimeout(() => (el.style.transform = "translateX(-5px)"), 200);
-  setTimeout(() => (el.style.transform = "translateX(0)"), 100);
+
+  el.classList.remove("hit");
+
+  // 강제로 다시 인식시키기
+  void el.offsetWidth;
+
+  el.classList.add("hit");
+
+  // 애니메이션 끝나면 제거
+  el.addEventListener(
+    "animationend",
+    () => {
+      el.classList.remove("hit");
+    },
+    { once: true }
+  );
 }
 
 // 버프 목록
@@ -162,12 +185,6 @@ function hpUp() {
   console.log("플레이어 체력 증가:", player);
 }
 
-// 피격 이펙트
-function hitEffect(id) {
-  const el = document.getElementById(id);
-  el.classList.add("hit");
-  setTimeout(() => el.classList.remove("hit"), 200);
-}
 
 // 카드 데이터
 /*
