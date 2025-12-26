@@ -111,7 +111,6 @@ public class regex_1 {
 				+ Pattern.matches(urlRegex, url));
 		
 	}
-
 	
 	
 	
