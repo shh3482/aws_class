@@ -27,8 +27,8 @@ public class MainController {
 	 * - void이면 url이 리턴됨.
 	 * - 리턴 값을 이용하여 연결할 화면을 찾음 */
 	public String main(Model model,
-		@RequestParam(name="role", defaultValue="GUEST") String role) {
-		log.info("메인 페이지 : " + role);
+		@RequestParam(name="role", defaultValue="GUEST") String role1) {
+		log.info("메인 페이지 : " + role1);
 		
 		//th:each를 활용할 샘플 데이터
 		ArrayList<Human> list = new ArrayList<Human>();
@@ -38,7 +38,7 @@ public class MainController {
 		
 		model.addAttribute("화면에서 사용할 이름", "데이터");
 		model.addAttribute("data", "홍길동");
-		model.addAttribute("role", role);
+		model.addAttribute("role", role1);
 		model.addAttribute("list", list);
 		model.addAttribute("date", new Date());//java.util.Date
 		return "index";
