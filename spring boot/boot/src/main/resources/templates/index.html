@@ -32,11 +32,11 @@
 		</form>
 		<hr>
 		<h1>th:if, unless, switch, case</h1>
-		<h2 th:if="${role1 == 'GUEST'}">게스트 입니다.</h2>
-		<h2 th:if="${role1 == 'USER'}">사용자 입니다.</h2>
-		<h2 th:if="${role1 == 'ADMIN'}">관리자 입니다.</h2>
-		<h2 th:unless="${role1 == 'ADMIN'}">관리자가 아닙니다.</h2>
-		<th:block th:switch="${role1}">
+		<h2 th:if="${role == 'GUEST'}">게스트 입니다.</h2>
+		<h2 th:if="${role == 'USER'}">사용자 입니다.</h2>
+		<h2 th:if="${role == 'ADMIN'}">관리자 입니다.</h2>
+		<h2 th:unless="${role == 'ADMIN'}">관리자가 아닙니다.</h2>
+		<th:block th:switch="${role}">
 			<h2 th:case="'GUEST'">게스트 입니다.</h2>
 			<h2 th:case="'USER'">사용자 입니다.</h2>
 			<h2 th:case="'ADMIN'">관리자 입니다.</h2>
