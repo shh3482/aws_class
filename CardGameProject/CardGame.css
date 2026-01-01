@@ -26,6 +26,12 @@ body {
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  touch-action: manipulation;
 }
 
 .player-panel {
@@ -95,16 +101,12 @@ body {
   margin-top: 4px;
 }
 
-.hit {
-  filter: brightness(0.5) sepia(1) hue-rotate(-50deg);
-}
-
 .player-panel .character-image {
-  left: 50px;
+  left: 40px;
 }
 
 .enemy-panel .character-image {
-  right: 50px;
+  right: 40px;
 }
 
 .player-panel .character-image .status-panel {
@@ -243,19 +245,39 @@ body {
   0% {
     filter: none;
   }
-  15% {
+
+  20% {
     filter:
-      brightness(2.5)
-      contrast(2);
+      brightness(3)
+      saturate(0);
   }
-  40% {
+
+  35% {
     filter:
-      invert(0.15)
-      sepia(1)
-      saturate(8)
-      contrast(2.2)
-      hue-rotate(-15deg);
+      brightness(3)
+      saturate(0);
   }
+
+  55% {
+    filter:
+      brightness(1.4)
+      saturate(5)
+      hue-rotate(-45deg);
+  }
+
+  75% {
+    filter:
+      brightness(1.4)
+      saturate(5)
+      hue-rotate(-45deg);
+  }
+
+  90% {
+    filter:
+      brightness(2)
+      saturate(0);
+  }
+
   100% {
     filter: none;
   }
@@ -270,3 +292,4 @@ body {
   animation: cardCastUp 0.9s ease-out forwards;
   pointer-events: none;
 }
+
