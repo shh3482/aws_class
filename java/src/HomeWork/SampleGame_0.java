@@ -116,7 +116,6 @@ public class SampleGame_0 {
         throw new IllegalStateException("직업 선택 오류!");
     }
 
-
     static void printStatus(Character p, Character e) {
         System.out.println("\n-------------------------------");
         System.out.println(p.name + " (" + p.job + ") : " + hpBar(p));

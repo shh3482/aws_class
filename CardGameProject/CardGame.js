@@ -1,111 +1,111 @@
 // 스테이터스
-let player = { hp: 1000, maxHp: 100, atk: 10 };
-let enemy = { hp: 100, maxHp: 100, atk: 10 };
-
-// 기본 설정
-player.hp = player.maxHp;
-enemy.hp = enemy.maxHp;
+let player = {
+  hp: 100,
+  maxHp: 100,
+  tempAtk: 0,
+  block: false,
+  powerUp: false,
+};
+let enemy = {
+  hp: 100,
+  maxHp: 100,
+  atk: 10,
+};
 
 let stage = 1;
-let energy = 1;
-
+let gameOver = false;
+let energy = 10;
 let handCards = [];
 
-// 기타
-let gameOver = false;
+const playerHpEl = document.getElementById("playerHp");
+const enemyHpEl = document.getElementById("enemyHp");
+const logEl = document.getElementById("battleLog");
+
+// 이미지 끌림 방지
+document.addEventListener("dragstart", (e) => {
+  e.preventDefault();
+});
+
+// 초기 설정
+player.hp = player.maxHp;
+enemy.hp = enemy.maxHp;
+player.block = false;
+player.evade = false;
+player.powerUp = false;
+player.tempAtk = 0;
+
+function showMessage(text) {
+  logEl.innerText = text;
+}
 
 // 상태 출력
 function renderStatus() {
-  // 플레이어
-  document.getElementById(
-    "playerHpText"
-  ).innerText = `${player.hp} / ${player.maxHp}`;
-  // document.getElementById("playerAtk").innerText = player.atk;
+  document.getElementById("playerHpText").innerText =
+    `${player.hp} / ${player.maxHp}`;
+  document.getElementById("enemyHpText").innerText =
+    `${enemy.hp} / ${enemy.maxHp}`;
 
-  const playerHpPercent = (player.hp / player.maxHp) * 100;
-  document.getElementById("playerHp").style.width = `${playerHpPercent}%`;
-
-  // 적
-  document.getElementById(
-    "enemyHpText"
-  ).innerText = `${enemy.hp} / ${enemy.maxHp}`;
-  // document.getElementById("enemyAtk").innerText = enemy.atk;
-
-  const enemyHpPercent = (enemy.hp / enemy.maxHp) * 100;
-  document.getElementById("enemyHp").style.width = `${enemyHpPercent}%`;
+  playerHpEl.style.width = `${(player.hp / player.maxHp) * 100}%`;
+  enemyHpEl.style.width = `${(enemy.hp / enemy.maxHp) * 100}%`;
 }
 
-// 카드 출력
-function renderCards() {
-  const div = document.getElementById("cards");
-  div.innerHTML = "";
-
-  cards.forEach((card, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = `${card.name} (코스트 ${card.cost})`;
-    btn.onclick = () => playCard(index);
-    div.appendChild(btn);
-  });
+// 피해 주기
+function dealDamage(target, amount) {
+  target.hp = Math.max(0, target.hp - amount);
 }
 
-// 카드 사용
-function playCard(index) {
-  const card = cards[index];
-  if (energy < card.cost) return alert("에너지 부족!");
-  energy -= card.cost;
-  card.use();
-  renderStatus();
+// 체력 회복
+function heal(target, amount) {
+  target.hp = Math.min(target.maxHp, target.hp + amount);
 }
 
-// 전투 로직
-function battle() {
-  if (gameOver) return;
+// 적의 공격
+function enemyAttack() {
+  let damage = enemy.atk;
 
-  disableButtons();
+  if (player.block) {
+    damage = Math.floor(damage * 0.5);
+    player.block = false;
+  }
 
-  enemy.hp -= player.atk;
-  renderStatus();
-  showMessage("플레이어가 공격했다!");
-  shake("enemyImg", -1);   // 적은 왼쪽으로 밀림
+  dealDamage(player, damage);
+  shake("playerImg", 1);
+  hitEffect("playerImg");
+}
+
+// 카드 피해주기
+function dealCardDamage(target, baseDamage, options = {}) {
+  let damage = baseDamage;
+
+  if (player.powerUp) {
+    damage = Math.floor(damage * 1.5);
+    player.powerUp = false;
+  }
+
+  damage += player.tempAtk;
+
+  if (options.selfDamage) {
+    dealDamage(player, options.selfDamage);
+  }
+
+  dealDamage(target, damage);
+  shake("enemyImg", -1);
   hitEffect("enemyImg");
-
-  setTimeout(() => {
-    if (enemy.hp > 0) {
-      player.hp -= enemy.atk;
-      renderStatus();
-      showMessage("적이 반격했다!");
-      shake("playerImg", 1); // 플레이어는 오른쪽
-      hitEffect("playerImg");
-    }
-
-    setTimeout(() => {
-      enableButtons();
-      showMessage("다음 턴");
-    }, 1000);
-  }, 1000);
+  renderStatus();
 }
 
-// 기본 공격
-function basicAttack() {
-  if (gameOver) return;
-
-  disableButtons();
+// 턴 종료
+function endTurn() {
+  if (enemy.hp <= 0) {
+    showMessage("승리!");
+    return;
+  }
 
   setTimeout(() => {
-    if (enemy.hp > 0) {
-      enemy.hp -= player.atk;
-      renderStatus();
-      showMessage("플레이어가 공격했다!");
-      shake("enemyImg", -1);
-      hitEffect("enemyImg");
-    }
-
+    enemyAttack();
+    renderStatus();
     checkGameOver();
-
-    setTimeout(() => {
-      enableButtons();
-    }, 1000);
-  }, 1000);
+  }, 600);
 }
 
 // 게임 패배 조건 체크
@@ -174,66 +174,115 @@ function hitEffect(id) {
   );
 }
 
-// 버프 목록
-function atkUp() {
-  player.atk++;
-  console.log("플레이어 공격력 증가:", player);
-}
-
-function hpUp() {
-  player.hp++;
-  console.log("플레이어 체력 증가:", player);
-}
-
-
 // 카드 데이터
 /*
-  일반 카드:
+  일반 카드 목록 (총 25종)
 
-    - 이름: 기본 공격
-      타입: 공격 카드
-      효과: 적에게 공격력의 100% 만큼 피해를 줍니다.
+  =========================
+  공격 카드 ()
+  =========================
+  이름: 검격
+  비용: 1
+  효과: 적에게 피해를 5 줍니다.
 
-    - 이름: 막기
-      타입: 방어 카드
-      효과: 다음으로 받는 피해를 50% 감소시킵니다.
+  이름: 치명적인 일격
+  비용: 2
+  효과: 적에게 피해를 10 주며, 2턴간 [취약]을 부여합니다.
+  (취약: 모든 공격으로 부터 받는 피해가 1 증가합니다.)
 
-    - 이름: 회복
-      타입: 유틸 카드
-      효과: 최대 체력의 10% 만큼 자신의 체력을 회복합니다.
+  이름: 연속 베기
+  비용: 1
+  효과: 적에게 피해를 3만큼 3회 줍니다.
 
-    - 이름: 힘 모으기
-      타입: 버프 카드
-      효과: 다음으로 사용하는 공격카드의 피해량을 50% 증가시킵니다.
+  이름: 섬멸
+  비용: 1
+  효과: 적 전체에게 피해를 7 줍니다.
+
+  이름: 강탈
+  비용: 1
+  효과: 적에게 피해를 8 주며, 카드를 1장 드로우 합니다.
+
+  이름: 마력탄
+  비용: 1
+  효과: 적에게 피해를 4 주며, 적이 [실드]를 보유시 8의 피해를 줍니다.
+
+  =========================
+  방어 카드 ()
+  =========================
+  이름: 막기
+  비용: 1
+  효과: [실드]를 5 획득합니다.
+
+  =========================
+  유틸 카드 ()
+  =========================
+  이름: 마나 충전
+  비용: 0
+  효과: 마나를 1 획득합니다.
+  (사용 후 소멸됩니다.)
+
+  =========================
+  버프 카드 ()
+  =========================
+  이름: 예리한 칼날
+  비용: 0
+  효과: 1턴간 모든 공격카드의 피해량이 1 증가합니다.
+  (사용 후 소멸됩니다.)
+
+  이름: 절대방어
+  비용: 0
+  효과: 1턴간 받는 피해를 모두 무효시킵니다.
+  (사용 후 소멸됩니다.)
 
 */
 
 const cardPool = [
-  { name: "기본 공격" },
-  { name: "막기" },
-  { name: "회복" },
-  { name: "힘 모으기" },
+  // =========================
+  // 공격 카드 (10)
+  // =========================
+  {
+    name: "기본 공격",
+    type: "attack",
+    cost: 1,
+    damage: 6,
+    desc: "적에게 6 피해",
+    effect: () => dealCardDamage(enemy, 6),
+  },
+
+  // =========================
+  // 방어 카드 (5)
+  // =========================
+  
+  // =========================
+  // 유틸 카드 (5)
+  // =========================
+
+  // =========================
+  // 버프 카드 (5)
+  // =========================
+  
 ];
 
 // 카드 생성
-function createCards(count = 0) {
+function createCards(count = 5) {
   const hand = document.getElementById("cardHand");
   hand.innerHTML = "";
   handCards = [];
 
   for (let i = 0; i < count; i++) {
-    const cardData = cardPool[Math.floor(Math.random() * cardPool.length)];
+    const data = cardPool[Math.floor(Math.random() * cardPool.length)];
 
     const card = document.createElement("div");
     card.className = "card";
 
     const visual = document.createElement("div");
     visual.className = "card-visual";
-    visual.textContent = cardData.name;
+    visual.textContent = `${data.name} (${data.cost})`;
 
     card.appendChild(visual);
-
-    card.onclick = () => useCard(card, cardData);
+    card.onclick = () => {
+      useCard(card, data);
+    };
 
     hand.appendChild(card);
     handCards.push(card);
@@ -242,42 +291,46 @@ function createCards(count = 0) {
   arrangeCards(handCards);
 }
 
-function useCard(card, cardData) {
-  applyCardEffect(cardData.name);
+function drawCards(count = 1) {
+  const hand = document.getElementById("cardHand");
+  for (let i = 0; i < count; i++) {
+    const data = cardPool[Math.floor(Math.random() * cardPool.length)];
+    const card = document.createElement("div");
+    card.className = "card";
+    const visual = document.createElement("div");
+    visual.className = "card-visual";
+    visual.innerText = `${data.name} (${data.cost})`;
+    card.appendChild(visual);
 
-  card.classList.add("cast");
+    card.onclick = () => {
+      if (energy < data.cost || gameOver) return;
+      energy -= data.cost;
+      data.effect();
+      card.remove();
+      renderStatus();
+    };
 
-  setTimeout(() => {
-    card.remove();
-    handCards = handCards.filter((c) => c !== card);
-    arrangeCards(handCards);
-  }, 500);
+    hand.appendChild(card);
+  }
 }
 
-function applyCardEffect(name) {
-  switch (name) {
-
-    case "기본 공격":
-      basicAttack();
-      break;
-
-    case "체력 +1":
-      player.maxHp += 1;
-      player.hp += 1;
-      break;
-
-    case "공격력 +2":
-      player.atk += 2;
-      break;
-
-    case "체력 +2":
-      player.maxHp += 2;
-      player.hp += 2;
-      break;
-
+function useCard(cardEl, cardData) {
+  if (energy < cardData.cost) {
+    showMessage("에너지 부족!");
+    return;
   }
 
+  energy -= cardData.cost;
+  cardData.effect();
   renderStatus();
+
+  cardEl.classList.add("cast");
+
+  setTimeout(() => {
+    cardEl.remove();
+    handCards = handCards.filter(c => c !== cardEl);
+    arrangeCards(handCards);
+  }, 500);
 }
 
 // 카드 정렬
@@ -293,17 +346,6 @@ function arrangeCards(cards) {
     card.style.setProperty("--y", `${Math.pow(Math.abs(offset), 1.6) * 12}px`);
     card.style.setProperty("--r", `${angle}deg`);
   });
-}
-
-function getTargetPosition(isEnemy) {
-  const targetImg = document.getElementById(isEnemy ? "enemyImg" : "playerImg");
-  const rect = targetImg.getBoundingClientRect();
-
-  // 컨테이너 기준으로 좌표 계산
-  return {
-    x: rect.left + rect.width / 2 - window.innerWidth / 2 + "px",
-    y: rect.top - 100 + "px",
-  };
 }
 
 // ===== 시작 =====
