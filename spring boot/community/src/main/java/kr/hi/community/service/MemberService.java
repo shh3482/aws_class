@@ -3,6 +3,7 @@ package kr.hi.community.service;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,9 @@ public class MemberService {
 	@Autowired
 	MemberDAO memberDAO;
 	
-	//@Autowired
-	BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+	@Autowired
+	@Lazy
+	BCryptPasswordEncoder pwEncoder;// = new BCryptPasswordEncoder();
 	
 	public boolean signup(MemberDTO member) {
 		// TODO Auto-generated method stub
