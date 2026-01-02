@@ -1,7 +1,5 @@
 package kr.hi.boot.model.vo;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
