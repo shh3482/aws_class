@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content" class="container">
+		<h2>게시글 작성</h2>
+		<form action="">
+			<div class="mb-3 mt-3">
+				<label for="title" class="form-label">제목:</label> <input type="text"
+					class="form-control" id="title" placeholder="제목을 입력하세요."
+					name="title">
+			</div>
+			<div class="mb-3 mt-3">
+				<label for="board" class="form-label">게시판:</label> <select
+					class="form-control" id="board" name="board">
+					<option th:each="board : ${list}" th:text="${board.bo_name}"
+					th:value="${board.bo_num}"></option>
+				</select>
+			</div>
+			<div class="mb-3 mt-3">
+				<label for="content" class="form-label">내용:</label> <textarea
+					class="form-control" id="content" name="content" rows="15">
+					</textarea>
+			</div>
+			<button class="btn btn-outline-success col-12">게시글 등록</button>
+		</form>
+	</main>
+</body>
+</html>
