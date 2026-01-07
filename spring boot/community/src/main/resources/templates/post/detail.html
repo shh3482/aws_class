@@ -25,6 +25,18 @@
 				<div class="form-control" style="min-height: 300px;"
 					th:text="${post.po_content}"></div>
 			</div>
+			<form
+			th:action="@{/post/update/{num}(num=${post.po_num})}"
+			th:if="${#authentication.name == post.po_me_id}"
+			method="get">
+				<button class="btn btn-outline-warning">게시글 수정</button>
+			</form>
+			<form
+			th:action="@{/post/delete/{num}(num=${post.po_num})}"
+			th:if="${#authentication.name == post.po_me_id}"
+			method="post">
+				<button class="btn btn-outline-danger">게시글 삭제</button>
+			</form>
 		</div>
 		<div th:if="${post == null}">
 			<h1>삭제되거나 등록되지 않은 게시글입니다.</h1>

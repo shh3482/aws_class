@@ -10,22 +10,12 @@
 <body >
 	<main layout:fragment="content" class="container">
 		<h1>게시글 등록</h1>
-		<form action="/post/insert" method="post">
+		<form action="/post/update" method="get">
 			<div class="mb-3 mt-3">
 				<label for="title" class="form-label">제목:</label> 
 				<input
 					type="text" class="form-control" id="title"
 					placeholder="제목을 입력하세요." name="title">
-			</div>
-			<div class="mb-3 mt-3">
-				<label for="board" class="form-label">게시판:</label> 
-				<select
-					class="form-control" id="board" name="board">
-					<!--/* option 태그들을 서버에서 보내준 게시판으로 변경해야 함 */-->
-					<option th:each="board : ${list}" 
-						th:text="${board.bo_name}"
-						th:value="${board.bo_num}"></option>
-				</select>
 			</div>
 			<div class="mb-3 mt-3">
 				<label for="content" class="form-label">내용:</label> 
@@ -34,7 +24,8 @@
 					placeholder="내용을 입력하세요." name="content"
 					rows="15"></textarea>
 			</div>
-			<button class="btn btn-outline-success col-12">게시글 등록</button>
+			<button class="btn btn-outline-success col-12"
+			th:action="@{/post/update2}>게시글 수정</button>
 		</form>
 	</main>
 </body>
