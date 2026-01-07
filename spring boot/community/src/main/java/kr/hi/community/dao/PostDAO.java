@@ -19,4 +19,5 @@ public interface PostDAO {
 	PostVO selectPost(@Param("num") int po_num);
 
 	ArrayList<BoardVO> selectBoardList();
+	
 }

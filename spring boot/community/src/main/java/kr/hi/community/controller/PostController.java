@@ -45,4 +45,5 @@ public class PostController {
 		return "/post/insert";
 	}
 	
+	
 }
