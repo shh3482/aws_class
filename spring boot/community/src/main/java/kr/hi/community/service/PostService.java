@@ -1,15 +1,20 @@
 package kr.hi.community.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.hi.community.dao.PostDAO;
 import kr.hi.community.model.dto.PostDTO;
 import kr.hi.community.model.util.Criteria;
 import kr.hi.community.model.util.CustomUser;
+import kr.hi.community.model.util.UploadFileUtils;
 import kr.hi.community.model.vo.BoardVO;
+import kr.hi.community.model.vo.FileVO;
 import kr.hi.community.model.vo.PostVO;
 
 @Service
@@ -17,6 +22,10 @@ public class PostService {
 
 	@Autowired
 	PostDAO postDAO;
+	
+	//application.properties에 있는 file.upload-dir에 있는 값을 가져와서 저장
+	@Value("${file.upload-dir}")
+	String uploadPath;
 
 	public ArrayList<PostVO> getPostList(Criteria cri) {
 		//다오에게 게시글 목록을 가져오라고 요청
@@ -55,7 +64,7 @@ public class PostService {
 	}
 	
 
-	public boolean insertPost(PostDTO post, CustomUser customUser) {
+	public boolean insertPost(PostDTO post, CustomUser customUser, List<MultipartFile> files) {
 		//게시글 정보 확인 => 입력 안된 값 있는지 확인해서 잘못된게 있으면 false를 반환
 		if( checkEmpty(post.getTitle()) || 
 			checkEmpty(post.getContent()) || 
@@ -72,11 +81,36 @@ public class PostService {
 		try {
 			//다오에게 게시글 정보를 주면서 등록하라고 시킴 
 			postDAO.insertPost(post);
-			return true;
+			
 		}catch (Exception e) {
 			//잘못된 게시판 번호를 입력한 경우 게시글 등록에 실패
 			e.printStackTrace();
 			return false;
+		}
+		
+		//첨부파일 목록이 없는 경우
+		if(files == null || files.isEmpty()) {
+			return true;
+		}
+		for(MultipartFile file : files) {
+			insertFile(post.getPostNum(),file);
+		}
+		return true;
+	}
+
+	private void insertFile(int postNum, MultipartFile file) {
+		// TODO Auto-generated method stub
+		try {
+			String fileName =
+					UploadFileUtils.uploadFile(uploadPath, file);
+			String oriFileName = file.getOriginalFilename();
+			
+			FileVO fileVo =
+					new FileVO(postNum,oriFileName,fileName);
+			postDAO.insertFile(fileVo);
+		}catch (Exception e) {
+			//잘못된 게시판 번호를 입력한 경우 게시글 등록에 실패
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -135,7 +169,29 @@ public class PostService {
 			return;
 			
 		}
+		// 게시글 번호를 이용하여 첨부파일 목록을 가져옴
+		List<FileVO> files = postDAO.selectFileList(po_num);
+		
+		for(FileVO file : files) {
+			deleteFile(file);
+		}
+		
+		// 게시글 삭제
 		postDAO.hidePost(po_num);
+			
+	}
+
+	private void deleteFile(FileVO file) {
+		// TODO Auto-generated method stub
+		if(file == null) {
+			return;
+		}
+		// 첨부파일 삭제
+		// 1. 실제 첨부파일을 삭제
+		UploadFileUtils.deleteFile(uploadPath, file.getFi_name());
+		// 2. DB에 있는 첨부파일 정보를 삭제
+		postDAO.deleteFile(file.getFi_num());
+
 	}
 
 	public void updatePost(int po_num, CustomUser customUser) {
@@ -150,5 +206,28 @@ public class PostService {
 		}
 		postDAO.updatePost(po_num);
 	}
+
+	public void postUpdatePost(int po_num, String po_title, String po_content, CustomUser customUser) {
+		if(customUser == null || customUser.getUsername() == null) {
+			return;
+		}
+		PostVO dbPost = postDAO.selectPost(po_num);
+		if(dbPost == null || !dbPost.getPo_me_id().equals(customUser.getUsername())) {
+			return;
+			
+		}
+		try {
+			postDAO.postUpdatePost(po_num, po_title, po_content);
+		}catch (Exception e) {
+			//수정하려는 게시판 명이 중복되면 예외 발생
+			e.printStackTrace();
+		}
+	}
+
+	public List<FileVO> getFileList(int po_num) {
+		// TODO Auto-generated method stub
+		return postDAO.selectFileList(po_num);
+	}
+	
 	
 }

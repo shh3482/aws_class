@@ -1,13 +1,14 @@
 package kr.hi.community.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
 import kr.hi.community.model.dto.PostDTO;
 import kr.hi.community.model.util.Criteria;
-import kr.hi.community.model.util.CustomUser;
 import kr.hi.community.model.vo.BoardVO;
+import kr.hi.community.model.vo.FileVO;
 import kr.hi.community.model.vo.PostVO;
 
 public interface PostDAO {
@@ -36,5 +37,14 @@ public interface PostDAO {
 	void hidePost(@Param("num")int po_num);
 
 	void updatePost(@Param("num")int po_num);
+
+	void postUpdatePost(@Param("num")int po_num, @Param("title")String po_title, @Param("content")String po_content);
+
+	void insertFile(@Param("file")FileVO fileVo);
+
+	List<FileVO> selectFileList(@Param("num")int po_num);
+
+	void deleteFile(@Param("num")int fi_num);
+
 
 }
