@@ -25,6 +25,15 @@
 				<div class="form-control" style="min-height: 300px;"
 					th:text="${post.po_content}"></div>
 			</div>
+			<div class="mb-3" th:if="${!files.isEmpty()}">
+				<label>첨부파일([[${files.size()}]])</label>
+				<a th:each="file : ${files}"
+				th:href="@{|/download/${file.fi_name}|}"
+				th:text="${file.fi_ori_name}"
+				class="form-control mb-3"
+				th:download="${file.fi_ori_name}"
+				></a>
+			</div>
 			<form
 			th:action="@{/post/update/{num}(num=${post.po_num})}"
 			th:if="${#authentication.name == post.po_me_id}"
