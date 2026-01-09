@@ -1,18 +1,25 @@
 package kr.hi.community.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.hi.community.model.dto.LikeDTO;
 import kr.hi.community.model.dto.PostDTO;
 import kr.hi.community.model.util.Criteria;
 import kr.hi.community.model.util.CustomUser;
@@ -113,6 +120,7 @@ public class PostController {
 		return "redirect:/post/list/" + post.getPo_bo_num();
 	}
 	
+	
 	@GetMapping("/post/update/{num}")
 	public String postUpdate(
 		@PathVariable("num")int po_num, Model model,
@@ -137,11 +145,56 @@ public class PostController {
 		// PostDTO post 를 써도 됨
 		@RequestParam("title")String po_title,
 		@RequestParam("content")String po_content,
-		@AuthenticationPrincipal CustomUser customUser) {
-		postService.postUpdatePost(po_num, po_title, po_content, customUser);
+		@AuthenticationPrincipal CustomUser customUser,
+		@RequestParam("files") List<MultipartFile> files,
+		@RequestParam(value = "delFileNums", required = false) List<Integer> delFileNums
+		) {
+		
+		postService.postUpdatePost(po_num, po_title, po_content, customUser, files, delFileNums);
+		
 		return "redirect:/post/detail/{num}";
 	}
 	
+	@PostMapping("/post/like")
+	@ResponseBody
+	public ResponseEntity<String> postLike(
+		@RequestBody LikeDTO like,
+		@AuthenticationPrincipal CustomUser customUser
+		) {
+		try {
+			String result = postService.updateLike(like, customUser);
+			postService.updateBoardLike(like.getPostNum());
+			return ResponseEntity.ok(result);			
+		}catch(Exception e) {
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/post/like/count/{num}")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> postLikeCount(
+		HashMap<String, Object> map,
+		@PathVariable("num")int postNum
+		){
+		int up = postService.getLikeCount(postNum,1);
+		int down = postService.getLikeCount(postNum,-1);
+		map.put("up",up);
+		map.put("down",down);
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	@GetMapping("/post/like/check/{num}")
+	public ResponseEntity<Integer> postLikeCheck(
+		@PathVariable("num")int postNum,
+		@AuthenticationPrincipal CustomUser customUser
+		){
+		int state = postService.getLikeState(postNum,customUser);
+		
+		return ResponseEntity.ok(state);
+	}
 }
 
 
