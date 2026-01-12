@@ -2,5 +2,27 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.hi.community.dao.CommentDAO">
-    
+    <insert id="insertComment">
+    	insert into comment(co_num, co_ori_num, co_po_num, co_me_id, co_content)
+    	<if test="coDto.coOriNum == 0">
+    	select
+    		ifnull(max(co_num),0) + 1,
+    		ifnull(max(co_num),0) + 1,
+    		#{coDto.postNum},
+    		#{coDto.id},
+    		#{coDto.content}
+    	from
+    		comment;
+    	</if> 
+    </insert>
+    <select id="selectCommentList" resultType="CommentVO">
+    	select * from comment
+    	where co_po_num = #{cri.postNum} 
+    	order by co_ori_num desc, co_num asc
+    	limit #{cri.pageStart}, #{cri.perPageNum}
+    </select>
+    <select id="selectCommentCount" resultType="int">
+    	select count(*) from comment
+    	where co_po_num = #{cri.postNum} 
+    </select>
 </mapper>

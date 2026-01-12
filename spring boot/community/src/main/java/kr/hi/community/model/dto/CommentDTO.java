@@ -7,4 +7,5 @@ public class CommentDTO {
 	String content;
 	int postNum;
 	int coOriNum;
+	String id;
 }
