@@ -64,7 +64,8 @@ public class PostController {
 	
 	@GetMapping("/post/detail/{num}")
 	public String postDetail(
-		@PathVariable("num")int po_num, Model model) {
+		@PathVariable("num")int po_num, Model model,
+		@AuthenticationPrincipal CustomUser customUser) {
 		//게시글 번호를 이용해서 조회수 증가
 		postService.updateView(po_num);
 		
@@ -81,6 +82,8 @@ public class PostController {
 		
 		//가져온 첨부파일 목록을 화면에 전달
 		model.addAttribute("files",files);
+		model.addAttribute("user",
+				customUser == null? "" : customUser.getUsername());
 		return "post/detail";
 	}
 	

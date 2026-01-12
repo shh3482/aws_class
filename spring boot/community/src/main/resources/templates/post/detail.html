@@ -62,22 +62,27 @@
 						</div>
 						<hr>
 						<div class="mt-3">댓글 내용</div>
+						<div class="mt-3">
+							<button class="btn-mod btn btn-outline-warning">수정</button>
+							<button class="btn-del btn btn-outline-danger">삭제</button>
+						</div>
 					</div>
 				</div>
-				<div class="comment-pagination"></div>
-				<ul class="pagination justify-content-center">
-					<li class="page-item"><a class="page-link"
-						href="javascript:void(0);">Previous</a></li>
-					<li class="page-item"><a class="page-link"
-						href="javascript:void(0);">1</a></li>
-					<li class="page-item"><a class="page-link"
-						href="javascript:void(0);">2</a></li>
-					<li class="page-item"><a class="page-link"
-						href="javascript:void(0);">Next</a></li>
-				</ul>
+				<div class="comment-pagination">
+					<ul class="pagination justify-content-center">
+						<li class="page-item"><a class="page-link"
+							href="javascript:void(0);">Previous</a></li>
+						<li class="page-item"><a class="page-link"
+							href="javascript:void(0);">1</a></li>
+						<li class="page-item"><a class="page-link"
+							href="javascript:void(0);">2</a></li>
+						<li class="page-item"><a class="page-link"
+							href="javascript:void(0);">Next</a></li>
+					</ul>
+				</div>
 				<div class="comment-input">
-					<form class="input-group">
-						<textarea class="form-control"></textarea>
+					<form class="input-group" onsubmit="insertComment(event)">
+						<textarea class="form-control" onfocus="checkLogin(this)"></textarea>
 						<button class="btn btn-outline-success">등록</button>
 					</form>
 				</div>
@@ -86,9 +91,27 @@
 		<div th:if="${post == null}">
 			<h1>삭제되거나 등록되지 않은 게시글입니다.</h1>
 		</div>
+		
+		<!-- 전역으로 사용하는 변수 모음 -->
 		<script type="text/javascript">
 		const upBtn = document.querySelector(".btn-up");
 		const downBtn = document.querySelector(".btn-down");
+		
+		const id = '[[${user}]]';
+		const postNum = [[${post.po_num}]];
+		const listContainer = document.querySelector(".comment-list");
+		const cri = {
+			page : 1,
+			postNum
+		}
+		const commentPagination = document.querySelector(".comment-pagination .pagination");
+		
+		</script>
+		
+		
+		
+		<!-- 추천, 비추천 -->
+		<script type="text/javascript">
 		async function setLike(postNum, state) {
 			const postData = {
 				// 보낼 데이터 채우기
@@ -147,7 +170,7 @@
 				console.error("예외 발생");
 			}
 		}
-		loadLikeBtns();
+		
 		
 		async function checkLike(){
 			const postNum = [[${post.po_num}]];
@@ -178,6 +201,148 @@
 		}
 		
 	</script>
+	
+		<!-- 댓글 -->
+		<script type="text/javascript">
+			function checkLogin(element){
+				
+				if(!id){
+					element.blur();
+					let res = confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하겠습니까?");
+					if(res){
+						location.href="/login";
+					}
+				}
+			}
+			
+			function insertComment(event){
+				event.preventDefault();
+				const commentInsertInputEl = 
+					document.querySelector(".comment-input textarea");
+				const content = commentInsertInputEl.value;
+				if(!content.trim()){
+					alert("댓글 내용을 입력하세요.")
+					return;
+				}
+				let comment = {
+					content,
+					postNum,
+				}
+				sendInsertComment(comment);
+				commentInsertInputEl.value = '';
+			}
+			
+			async function sendInsertComment(comment){
+				try{
+					const response = await fetch('/comment/insert',{
+						method : 'post',
+						headers : {
+							'Content-Type' : 'application/json'
+						},
+						body : JSON.stringify(comment)
+					});
+					const result = await response.text();
+					alert(result);
+					cri.page = 1;
+					getCommentList(cri);
+				}catch(error){
+					console.error("예외 발생");
+					console.error(error);
+				}
+			}
+			
+			async function getCommentList(cri){
+				try{
+					const response = await fetch(
+						`/comment/list`, {
+						method : 'post',
+						headers : {
+							'Content-Type' : 'application/json'
+						},
+						body : JSON.stringify(cri)
+					});
+					const result = await response.json();
+					drawCommentList(result.list);
+					drawCommentPagination(result.pm);
+				}catch(error){
+					console.log("예외 발생");
+					console.log(error);
+				}
+			}
+			function drawCommentList(list){
+				if(list.length == 0){
+					listContainer.innerHTML = `
+					<div class="form-control">등록된 댓글이 없습니다.</div>
+					`;
+					return;
+				}
+				let items = '';
+				for(comment of list){
+					
+					let btns = `
+					<div class="mt-3">
+						<button class="btn-mod btn btn-outline-warning">수정</button>
+						<button class="btn-del btn btn-outline-danger"
+						onclick = "deleteComment(${comment.co_num})">삭제</button>
+					</div>
+					`;
+					items +=`
+						<div class="comment-item form-control">
+						<div class="d-flex justify-content-between mb-3">
+							<div>${comment.co_me_id}</div>
+							<div>${comment.co_date}</div>
+						</div>
+						<hr>
+						<div class="mt-3">${comment.co_content}</div>
+						${comment.co_me_id == '[[${user}]]' ? btns : ''}
+					</div>
+					
+					`;
+				}
+				listContainer.innerHTML = items;
+				
+			}
+			function drawCommentPagination(pm){
+				let pagination = '';
+				
+				if(pm.prev){
+					pagination += `
+						<li onclick = "changePage(${pm.startPage - 1})"
+						class="page-item"><a class="page-link"
+						href="javascript:void(0);">이전</a></li>
+					`
+				}
+				for(i = pm.startPage; i <= pm.endPage; i++){
+					pagination += `
+						<li onclick = "changePage(${i})"
+						class="page-item ${pm.cri.page == i ? 'active' : ''}"><a class="page-link"
+						href="javascript:void(0);">${i}</a></li>
+					`
+				}
+				
+				if(pm.next){
+					pagination += `
+						<li onclick = "changePage(${pm.endPage + 1})"
+						class="page-item"><a class="page-link"
+						href="javascript:void(0);">다음</a></li>
+					`
+				}
+				commentPagination.innerHTML = pagination;
+			}
+			function changePage(page){
+				cri.page = page;
+				getCommentList(cri);
+			}
+			function deleteComment(coNum){
+				console.log(coNum);
+			}
+			
+		</script>
+		<!-- 화면이 처음 로딩될때 호출되는 함수 정리 -->
+		<script type="text/javascript">
+			getCommentList(cri);
+			loadLikeBtns();
+		</script>
 	</main>
 </body>
 </html>
