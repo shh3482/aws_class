@@ -6,8 +6,10 @@
     id에는 dao의 메서드명을 입력. 오타 발생시 예외가 발생
     ~~~(not found) 예외 발생  -->
     <select id="selectPostList" resultType="PostVO">
-    	select post.*, bo_name po_bo_name from post 
+    	select post.*, bo_name po_bo_name, ifnull(po_comment_count,0) po_comment_count
+    	from post 
     	join board on po_bo_num = bo_num
+    	left join (select co_po_num, count(*) po_comment_count from comment group by co_po_num)co on co_po_num = po_num
     	<!-- 삭제 안된 게시글을 조회 -->
     	where po_del = 'N'
     	<!-- 전체 게시판이 아닌 경우 -->

@@ -8,4 +8,5 @@ public class CommentDTO {
 	int postNum;
 	int coOriNum;
 	String id;
+	int coNum;
 }

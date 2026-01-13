@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +49,24 @@ public class CommentController {
 		map.put("pm", pm);
 		return ResponseEntity.ok(map);
 	}
+	
+	@PostMapping("/delete/{coNum}")
+	public ResponseEntity<String> delete(
+		@PathVariable("coNum") int coNum,
+		@AuthenticationPrincipal CustomUser customUser
+		) {
+		String result = commentService.deleteComment(coNum, customUser);
 
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/update")
+	public ResponseEntity<String> update(
+		@RequestBody CommentDTO dto,
+		@AuthenticationPrincipal CustomUser user
+		) {
+		String result = commentService.updateComment(dto, user);
+
+		return ResponseEntity.ok(result);
+	}
 }
