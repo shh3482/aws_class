@@ -4,16 +4,20 @@
 <mapper namespace="kr.hi.community.dao.CommentDAO">
     <insert id="insertComment">
     	insert into comment(co_num, co_ori_num, co_po_num, co_me_id, co_content)
-    	<if test="coDto.coOriNum == 0">
     	select
     		ifnull(max(co_num),0) + 1,
+    		
+    	<if test="coDto.coOriNum == 0">
     		ifnull(max(co_num),0) + 1,
+    	</if> 
+    	<if test="coDto.coOriNum != 0">
+    		#{coDto.coOriNum},
+    	</if> 
     		#{coDto.postNum},
     		#{coDto.id},
     		#{coDto.content}
     	from
     		comment;
-    	</if> 
     </insert>
     <select id="selectCommentList" resultType="CommentVO">
     	select * from comment
@@ -25,4 +29,25 @@
     	select count(*) from comment
     	where co_po_num = #{cri.postNum} 
     </select>
+    <update id="deleteComment">
+    	update
+    		comment
+    	set
+    		co_del = 'Y'
+    	where
+    		co_num = #{coNum}
+    </update>
+    <select id="selectComment" resultType="CommentVO">
+    	select 
+    		*
+    	from
+    		comment
+    	where
+    		co_num = #{coNum} and co_del = 'N'
+    </select>
+    <update id="updateComment">
+    	update comment
+    	set co_content = #{dto.content}
+    	where co_num = #{dto.coNum} and co_del = 'N'
+    </update>
 </mapper>

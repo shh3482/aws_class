@@ -49,4 +49,56 @@ public class CommentService {
 		int totalcount = commentDAO.selectCommentCount(cri);
 		return new PageMaker(3, cri, totalcount);
 	}
+
+	public String deleteComment(int coNum, CustomUser customUser) {
+		// TODO Auto-generated method stub
+		if (customUser == null || customUser.getUsername() == null) {
+			return "로그인이 필요한 서비스입니다.";
+		}
+
+		if(!isWriter(coNum,customUser)) {
+			return "작성자가 아닙니다.";
+		}
+		
+		boolean result = commentDAO.deleteComment(coNum);
+		
+		if(result) {
+			return "댓글을 삭제했습니다.";
+		}
+		return "댓글을 삭제하지 못했습니다.";
+//		try {
+//			commentDAO.deleteComment(coNum);
+//			return "댓글을 삭제했습니다.";
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return "댓글을 삭제하지 못했습니다.";
+//		}
+	}
+
+	public String updateComment(CommentDTO dto, CustomUser user) {
+		// TODO Auto-generated method stub
+		if (user == null || user.getUsername() == null) {
+			return "로그인이 필요한 서비스입니다.";
+		}
+		if (!isWriter(dto.getCoNum(),user)) {
+			return "작성자가 아닙니다.";
+		}
+		boolean result = commentDAO.updateComment(dto);
+		if(result) {
+			return "댓글을 수정했습니다.";
+		}
+		return "댓글을 수정하지 못했습니다.";
+	}
+	
+	private boolean isWriter(int coNum, CustomUser user) {
+		if (user == null || user.getUsername() == null) {
+			return false;
+		}
+		CommentVO comment = commentDAO.selectComment(coNum);
+		
+		if(comment == null || !comment.getCo_me_id().equals(user.getUsername())) {
+			return false;
+		}
+		return true;
+	}
 }
