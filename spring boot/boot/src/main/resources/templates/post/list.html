@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html 
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	layout:decorate="~{layout/layout.html}">
 <head>
@@ -11,6 +10,18 @@
 <body>
 	<main layout:fragment="content" class="container">
 		<h1>게시글 목록</h1>
+		<div class="d-flex my-5">
+			<a class="btn me-3"
+				th:classappend="${pm.cri.boNum == 0 ? 'btn-danger' : 'btn-outline-danger'}"
+				th:href="@{/post/list(boNum=0)}">전체
+			</a>
+			<a class="btn me-3"
+				th:classappend="${pm.cri.boNum == board.bo_num ? 'btn-dark' : 'btn-outline-dark'}"
+				th:each="board : ${board}"
+				th:href="@{/post/list(boNum=${board.bo_num})}">[[${board.bo_name}]]
+			</a>
+		</div>
+		
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -25,23 +36,35 @@
 			<tbody>
 				<tr th:each="post : ${list}">
 					<td th:text="${post.po_num}"></td>
-					<td>
-						<a 
-							th:href="@{/post/detail/{num}(num=${post.po_num})}"
-							th:text="${post.po_title}"
-						></a>
-					</td>
+					<td><a th:href="@{/post/detail/{num}(num=${post.po_num})}"
+						th:text="${post.po_title}"></a></td>
 					<td th:text="${post.po_me_id}"></td>
 					<td th:text="${post.po_date}"></td>
 					<td th:text="${post.po_up} + '/' + ${post.po_down}"></td>
 					<td th:text="${post.po_view}"></td>
 				</tr>
-				
+				<tr th:if="${list.isEmpty()}">
+					<th class="text-center" colspan="6">등록된 게시글이 없습니다.</th>
+				</tr>
 			</tbody>
 		</table>
-		<a 
-			sec:authorize="isAuthenticated()"
-			th:href="@{/post/insert}"
+		<ul class="pagination justify-content-center">
+			<li class="page-item"
+				th:if="${pm.prev}">
+			<a class="page-link"
+				th:if="pm.endPage != 0"
+				th:href="@{/post/list(page=${pm.startPage-1},boNum=${pm.cri.boNum})}">이전</a></li>
+			<li class="page-item"
+				th:classappend="${page == pm.cri.page ? 'active' : ''}"
+				th:each="page : ${#numbers.sequence(pm.startPage, pm.endPage)}">
+			<a class="page-link"
+				th:href="@{/post/list(page=${page},boNum=${pm.cri.boNum})}">[[${page}]]</a></li>
+			<li class="page-item"
+				th:if="${pm.next}">
+			<a class="page-link"
+				th:href="@{/post/list(page=${pm.endPage+1},boNum=${pm.cri.boNum})}">다음</a></li>
+		</ul>
+		<a sec:authorize="isAuthenticated()" th:href="@{/post/insert}"
 			class="btn btn-outline-success mt-3">게시글 등록</a>
 	</main>
 </body>

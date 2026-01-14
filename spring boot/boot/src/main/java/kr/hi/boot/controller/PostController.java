@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import kr.hi.boot.model.dto.PostDTO;
+import kr.hi.boot.model.util.Criteria;
 import kr.hi.boot.model.util.CustomUser;
+import kr.hi.boot.model.util.PageMaker;
+import kr.hi.boot.model.util.PostCriteria;
 import kr.hi.boot.model.vo.Board;
 import kr.hi.boot.model.vo.Post;
 import kr.hi.boot.service.PostService;
@@ -23,11 +26,15 @@ public class PostController {
 	PostService postService;
 	
 	@GetMapping("/post/list")
-	public String postList(Model model) {
-		//게시글 목록 전체를 가져오려고 함
-		ArrayList<Post> list = postService.getPostList();
-		//가져온 게시글 목록을 화면에 전달 
+	public String postList(Model model,
+		PostCriteria cri) {
+		cri.setPerPageNum(3);
+		ArrayList<Post> list = postService.getPostList(cri);
+		ArrayList<Board> board = postService.getBoardList();
+		PageMaker pm = postService.getPageMaker(cri);
 		model.addAttribute("list", list);
+		model.addAttribute("board", board);
+		model.addAttribute("pm", pm);
 		return "post/list";
 	}
 	
