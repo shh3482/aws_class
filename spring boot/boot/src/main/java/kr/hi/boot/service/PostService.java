@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import kr.hi.boot.dao.PostDAO;
 import kr.hi.boot.model.dto.PostDTO;
+import kr.hi.boot.model.util.Criteria;
 import kr.hi.boot.model.util.CustomUser;
+import kr.hi.boot.model.util.PageMaker;
 import kr.hi.boot.model.vo.Board;
 import kr.hi.boot.model.vo.Member;
 import kr.hi.boot.model.vo.Post;
@@ -19,7 +21,15 @@ public class PostService {
 	PostDAO postDAO;
 
 	public ArrayList<Board> getBoardList() {
-		return postDAO.getBoardList();
+		ArrayList<Board> list = postDAO.getBoardList();
+		// 게시판 목록을 반환
+		return list;
+	}
+	
+	public ArrayList<Post> getPostList(Criteria cri) {
+		ArrayList<Post> list = postDAO.getPostList(cri);
+		// 게시글 목록을 반환
+		return list;
 	}
 
 	public void insertBoard(String name) {
@@ -51,10 +61,6 @@ public class PostService {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public ArrayList<Post> getPostList() {
-		return postDAO.getPostList();
 	}
 
 	public Post getPost(int num) {
@@ -95,4 +101,16 @@ public class PostService {
 	public void updatePostView(int num) {
 		postDAO.updatePostView(num);
 	}
+
+
+	public PageMaker getPageMaker(Criteria cri) {
+		// TODO Auto-generated method stub
+		int displayPageNum = 3;
+		int count = postDAO.selectPostListCount(cri);
+		
+		PageMaker pm = new PageMaker(displayPageNum, cri, count);
+		return pm;
+	}
+
+
 }
