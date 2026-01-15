@@ -25,11 +25,44 @@
    		where
    			bo_num = #{num}
    	</update>
+   	<select id="getPostList" resultType="Post">
+   		select * from post 
+   		where 
+   			po_del = 'N'
+   			<!-- 게시판에 맞는 게시글 목록 조회 -->
+   			<if test="cri.boNum != 0">
+   			and po_bo_num = #{cri.boNum}
+   			</if>
+   			<!-- 검색 조건에 맞는 게시글 목록 조회 -->
+   			<choose>
+   				<!-- 전체 검색 -->
+   				<when test='cri.type == "A"'>
+   				and (
+   					po_title like concat('%', #{cri.search}, '%') or
+   					po_content like concat('%', #{cri.search}, '%') or
+   					po_me_id = #{cri.search}
+   				)
+   				</when>
+   				<!-- 제목+내용 검색 -->
+   				<when test='cri.type == "TC"'>
+   				and (
+   					po_title like concat('%', #{cri.search}, '%') or
+   					po_content like concat('%', #{cri.search}, '%') 
+   				)
+   				</when>
+   				<!-- 작성자 검색 -->
+   				<when test='cri.type == "W"'>
+   				and po_me_id = #{cri.search}
+   				</when>
+   			</choose>
+   		order by po_num desc
+   		limit #{cri.pageStart}, #{cri.perPageNum}
+   	</select>
    	<select id="getPost" resultType="Post">
    		select * from post where po_num = #{num}
    	</select>
-   	<select id="getBoardlist" resultType="Board" >
-   		select * from board
+   	<select id="getBoard" resultType="Board" >
+   		select * from board where bo_num = #{num}
    	</select>
    	<insert id="insertPost">
    		insert into post(po_title, po_content, po_me_id, po_bo_num)
@@ -40,24 +73,55 @@
    		update post set po_view = po_view + 1 
    		where po_num = #{num}
    	</update>
-   	<select id="getPostList" resultType="Post">
-   		select * from post
-   		where po_del = 'N'
-   		<if test="cri.boNum != 0">
-   		and po_bo_num = #{cri.boNum}
-   		</if>
-   		order by po_num desc
-   		limit #{cri.pageStart}, #{cri.perPageNum}
-   	</select>
    	<select id="selectPostListCount" resultType="int">
    		select count(*) from post 
-    	where po_del = 'N'
-    	<if test="cri.boNum != 0">
-   		and po_bo_num = #{cri.boNum}
-   		</if>
+   		where 
+   			po_del = 'N'
+   			<!-- 게시판 조건 -->
+	   		<if test="cri.boNum != 0">
+	   		and po_bo_num = #{cri.boNum}
+	   		</if>
+   			<!-- 검색 조건에 맞는 게시글 목록 조회 -->
+   			<choose>
+   				<!-- 전체 검색 -->
+   				<when test='cri.type == "A"'>
+   				and (
+   					po_title like concat('%', #{cri.search}, '%') or
+   					po_content like concat('%', #{cri.search}, '%') or
+   					po_me_id = #{cri.search}
+   				)
+   				</when>
+   				<!-- 제목+내용 검색 -->
+   				<when test='cri.type == "TC"'>
+   				and (
+   					po_title like concat('%', #{cri.search}, '%') or
+   					po_content like concat('%', #{cri.search}, '%') 
+   				)
+   				</when>
+   				<!-- 작성자 검색 -->
+   				<when test='cri.type == "W"'>
+   				and po_me_id = #{cri.search}
+   				</when>
+   			</choose>
    	</select>
+   	<update id="deletePost">
+   		<!-- 게시글 번호를 이용하여 게시글의 po_del를 Y로 수정하는 쿼리작성 -->
+   		update post
+   		set
+   			po_del = 'Y'
+   		where
+   			po_num = #{poNum}
+   	</update>
+   	<update id="updatePost">
+   		update Post
+   		set
+   			po_title = #{dto.title},
+   			po_content = #{dto.content}
+   		where
+   			po_del = 'N' and
+   			po_num = #{poNum}
+   	</update>
 </mapper>
-
 
 
 

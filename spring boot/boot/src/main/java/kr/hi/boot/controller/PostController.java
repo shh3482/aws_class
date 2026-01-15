@@ -19,6 +19,8 @@ import kr.hi.boot.model.vo.Board;
 import kr.hi.boot.model.vo.Post;
 import kr.hi.boot.service.PostService;
 
+import java.util.List;
+
 @Controller
 public class PostController {
 
@@ -27,14 +29,27 @@ public class PostController {
 	
 	@GetMapping("/post/list")
 	public String postList(Model model,
-		PostCriteria cri) {
+			//화면에서 보낸 페이지 정보를 가져옴
+			PostCriteria cri) {
+		//한페이지에 게시글 10개
 		cri.setPerPageNum(3);
+		
+		//서비스에게 현재 페이지 정보를 주면서 게시글 목록을 가져오려고 함
+		//게시글 목록 = 서비스야.게시글목록가져와(현재페이지정보);
 		ArrayList<Post> list = postService.getPostList(cri);
-		ArrayList<Board> board = postService.getBoardList();
+		
+		//서비스에게 현재 페이지 정보를 주면서 PageMaker 객체를 가져오라고 요청
+		//PageMaker객체 = 서비스야.PageMaker객체가져와(현재페이지정보);
 		PageMaker pm = postService.getPageMaker(cri);
+		
+		//- 서비스에게 게시판 목록 전체를 가져오라고 요청
+		//게시판목록 = 서비스야.게시판목록가져와()
+		List<Board> boardList = postService.getBoardList();
+		
+		//가져온 게시글 목록을 화면에 전달 
 		model.addAttribute("list", list);
-		model.addAttribute("board", board);
 		model.addAttribute("pm", pm);
+		model.addAttribute("bList", boardList);
 		return "post/list";
 	}
 	
@@ -68,7 +83,49 @@ public class PostController {
 		return "redirect:/post/list";
 	}
 	
+	@PostMapping("/post/delete/{num}")
+	public String postDelete(
+			//URL로 넘겨준 게시글 번호를 가져옴
+			@PathVariable("num")int poNum,
+			//로그인한 사용자 정보를 가져옴
+			@AuthenticationPrincipal CustomUser user) {
+		//서비스에게 게시글 번호와 사용자 정보를 주면서 삭제하라고 요청
+		//서비스야.게시글삭제해(게시글번호, 사용자정보);
+		postService.deletePost(poNum, user);
+		return "redirect:/post/list";
+	}
+	
+	@GetMapping("/post/update/{num}")
+	public String postUpdate(
+		Model model,
+		@PathVariable("num")int poNum) {
+		//포스트넘을 가져오기
+		Post post = postService.getPost(poNum);
+		//화면에 전달
+		model.addAttribute("post", post);
+		System.out.println(post);
+		return "post/update";
+	}
+	
+	@PostMapping("/post/update/{num}")
+	public String postUpdate(
+		//화면에 입력한거 가져오기
+		PostDTO dto,
+		@AuthenticationPrincipal CustomUser cUser,
+		@PathVariable("num")int poNum
+		) {
+		//가져온걸 서비스한테 넘겨줌
+		postService.updatePost(dto, cUser, poNum);
+		//화면에 전달
+		return "redirect:/post/detail/{num}";
+	}
 }
+
+
+
+
+
+
 
 
 
