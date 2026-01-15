@@ -12,8 +12,6 @@ import kr.hi.boot.model.vo.Post;
 public interface PostDAO {
 
 	ArrayList<Board> getBoardList();
-	
-	ArrayList<Post> getPostList(@Param("cri")Criteria cri);
 
 	boolean insertBoard(@Param("name")String name);
 
@@ -21,7 +19,7 @@ public interface PostDAO {
 
 	void updateBoard(@Param("num")int num, @Param("name")String name);
 
-	ArrayList<Post> getPostList();
+	ArrayList<Post> getPostList(@Param("cri")Criteria cri);
 
 	Post getPost(@Param("num")int num);
 
@@ -33,5 +31,8 @@ public interface PostDAO {
 
 	int selectPostListCount(@Param("cri")Criteria cri);
 
+	void deletePost(@Param("poNum")int poNum);
+
+	void updatePost(@Param("dto")PostDTO dto, @Param("poNum")int poNum);
 
 }
