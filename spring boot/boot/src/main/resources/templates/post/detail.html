@@ -29,19 +29,143 @@
 
 		<hr>
 		<a th:href="@{/post/list}" class="btn btn-outline-success mt-3">목록으로</a>
+
+		<hr>
+		<h1>댓글 목록</h1>
+		<!-- 댓글 목록 박스 -->
+		<div class="comments-container mt-3">
+			<!-- 댓글이 없는 경우 -->
+			<div class="comments-item">
+				<div class="comments-wrap form-control mb-3 text-center py-5">
+					등록된 댓글이 없습니다.</div>
+			</div>
+			<!-- 댓글 박스 -->
+			<div class="comments-item">
+				<div class="comments-wrap form-control mb-3">
+					<!-- 작성자와 작성일 -->
+					<div class="comments-header d-flex justify-content-between mt-3">
+						<div>아이디</div>
+						<div>2026.01.06. 09:47</div>
+					</div>
+					<hr>
+					<!-- 댓글 내용 -->
+					<pre class="comments-body">
+						댓글 내용입니다.
+						엔터가 잘 쳐지나요?
+					</pre>
+					<hr>
+					<!-- 수정,삭제,대댓글 버튼 -->
+					<div class="comments-footer">
+						<button class="btn btn-outline-dark">대댓글</button>
+						<button class="btn btn-outline-warning">수정</button>
+						<button class="btn btn-outline-danger">삭제</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 댓글 페이지네이션 박스 -->
+		<div class="comments-pagination-container">
+			<ul class="pagination justify-content-center">
+				<li class="page-item">
+					<a href="javascript:void(0);" class="page-link">이전</a>
+				</li>
+				<li class="page-item">
+					<a href="javascript:void(0);" class="page-link">1</a>
+				</li>
+				<li class="page-item">
+					<a href="javascript:void(0);" class="page-link">다음</a>
+				</li>
+			</ul>
+		</div>
+		
+		<!-- 댓글 등록 박스 -->
+		<hr>
+		<div class="comments-input-container">
+			<form class="input-group" onsubmit="insertComment(event, this)">
+				<textarea name="content" class="form-control"></textarea>
+				<button class="btn btn success">등록</button>
+			</form>
+		</div>
+		
+		<!-- 댓글등록 -->
+		<script type="text/javascript">
+			async function insertComment(event, el){
+				event.preventDefault();
+				const textareaEl = el.querySelector("[name=content]");
+				const content = textareaEl.value;
+				let obj = {
+						content,
+				};
+				try{
+					const response = await fetch(`/api/v1/posts/${postNum}/comments`,{
+						method: 'post',
+						headers: {
+							'Content-Type' : 'application/json'
+						},
+						body : JSON.stringify(obj)
+					});
+					if(response.ok){
+						const result = await response.text();
+						textareaEl.value = '';
+						getComments(1);
+						alert(result);
+					}
+					else{
+						const errorText = await
+						response.text();
+						alert("서버 오류: " + errorText);
+					}
+				}catch(error){
+					console.error(error);
+				}
+			}
+
+		</script>
+	
+		<!-- 댓글삭제 -->
+		<script type="text/javascript">
+			async function deleteComments(coNum){
+				try{
+					const response = await fetch(`/api/v1/posts/${postNum}/comments/${coNum}`,{
+						method : 'delete',
+						headers : {
+							
+						},
+					})
+					if (response.ok) {
+						const result = await response.text();
+						alert(result);
+						getComments();
+					} else {
+						console.error(error)
+					}
+					
+				}catch(error){
+					console.error(error);
+				}
+			}
+
+		</script>
 		
 		<!-- 화면에 댓글 목록 출력 -->
-
 		<!-- /post/detail 에 fetch url: /api/v1/posts/번호/comments get방식 -->
 		<script type="text/javascript">
-			async function getComments() {
-				const postNum = [[${post.po_num}]];
+		const postNum = [[${post.po_num}]];
+		let page = 1;
+		
+			async function getComments(currentPage) {
+				if(!currentPage){
+					currentPage = page;
+				}
 				try {
-					const response = await fetch(`/api/v1/posts/${postNum}/comments`);
+					const response = await fetch(`/api/v1/posts/${postNum}/comments?page=${currentPage}`);
 
 					if (response.ok) {
-						const comments = await response.json();
-						console.log(comments)
+						const result = await response.json();
+						const comments = result.list;
+						const pm = result.pm;
+						renderComments(comments);
+						renderPagination(pm);
 					} else {
 						const errorText = await
 						response.text();
@@ -53,8 +177,132 @@
 					alert("통신에 실패했습니다.");
 				}
 			}
+			function renderPagination(pm){
+				
+				let pagination = '';
+				const container
+					= document.querySelector('.comments-pagination-container>.pagination')
+				
+				/* 댓글이 없으면 페이지네이션 없앰 */
+				if(pm.endPage == 0){
+					container.innerHTML = '';
+					return;
+				}
+				/* 이전 페이지 활성화 */
+				if(pm.prev){
+					pagination += `
+						<li class="page-item" onclick="getComments(page=${pm.startPage - 1})">
+							<a href="javascript:void(0);" class="page-link">이전</a>
+						</li>
+					`
+				}
+				/* 숫자 페이지 */
+				for(i = pm.startPage; i <= pm.endPage; i++){
+					
+					/* 현재 페이지에 색상 추가*/
+					let active = '';
+					if(i == pm.cri.page){
+						active = 'active';
+					}
+					
+					pagination += `
+						<li class="page-item ${active}" onclick="getComments(page=${i})">
+							<a href="javascript:void(0);" class="page-link">${i}</a>
+						</li>
+					`
+				}
+				
+				/* 다음 페이지 활성화 */
+				if(pm.next){
+					pagination += `
+						<li class="page-item" onclick="getComments(page=${pm.endPage + 1})">
+							<a href="javascript:void(0);" class="page-link">다음</a>
+						</li>
+					`
+				}
+				container.innerHTML = pagination;
+			}
+			
+			function renderComments(comments){
+				const commentsContainer
+				= document.querySelector(".comments-container")
+				let commentsItems = '';
+				if(comments.length == 0){
+					commentsItems =
+						`
+						<div class="comments-item">
+							<div class="comments-wrap form-control mb-3 text-center py-5">
+								등록된 댓글이 없습니다.
+							</div>
+						</div>
+						`;
+					commentsContainer.innerHTML = commentsItems;
+					return;
+				}
+				for(comment of comments){
+					
+					let replyBtn = '';
+					let ps = '';
+					
+					
+					
+					if(comment.oriNum == comment.num){
+						replyBtn = `
+							<button class="btn btn-outline-dark">대댓글</button>
+						`;
+					}
+					else{
+						ps = 'ps-5';
+					}
+					
+					if(comment.del == 'Y'){
+						commentsItems += `
+							<div class="comments-item ${ps}">
+								<div class="comments-wrap form-control mb-3">
+								삭제된 댓글입니다.
+								</div>
+							</div>
+						`
+						commentsContainer.innerHTML = commentsItems;
+						continue;
+					}
+					
+					let udBtns = ''
+					if(comment.id == '[[${#authentication.name}]]'){
+						udBtns=`
+						<button class="btn btn-outline-warning">수정</button>
+						<button class="btn btn-outline-danger" onclick="deleteComments(${comment.num})">삭제</button>
+						`;
+					}
+					
+					commentsItems +=
+						`
+						<div class="comments-item ${ps}">
+							<div class="comments-wrap form-control mb-3">
+								<!-- 작성자와 작성일 -->
+								<div class="comments-header d-flex justify-content-between mt-3">
+									<div>${comment.id}</div>
+									<div>${comment.date}</div>
+								</div>
+								<hr>
+								<!-- 댓글 내용 -->
+								<pre class="comments-body">${comment.content}</pre>
+								<hr>
+								<!-- 수정,삭제,대댓글 버튼 -->
+								<div class="comments-footer">
+									${replyBtn}
+									${udBtns}
+								</div>
+							</div>
+						</div>
+						`;
+				}
+				commentsContainer.innerHTML = commentsItems;
+			}
 			getComments();
+			
 		</script>
+	
 	</main>
 </body>
 </html>
