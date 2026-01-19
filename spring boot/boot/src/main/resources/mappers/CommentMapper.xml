@@ -55,6 +55,13 @@
     	where
     		co_num = #{coNum} 
 	</update>
+	<update id="updateComment">
+		update comment
+    	set
+    		co_content = #{comment.content} 
+    	where
+    		co_num = #{coNum} 
+	</update>
 </mapper>
 
 

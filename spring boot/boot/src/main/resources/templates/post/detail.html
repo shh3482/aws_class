@@ -15,21 +15,29 @@
 			<div class="form-control" th:text="${post.po_view}"></div>
 			<div class="form-control" th:text="${post.po_date}"></div>
 		</div>
-		<pre class="form-control mt-3" th:text="${post.po_content}"
+		<!-- 추천버튼 추가 -->
+		<div class="mt-3">
+			<button class="btn btn-outline-success" onclick="like()">추천</button>
+		</div>
+		<!-- 게시글 내용 -->
+		<pre 
+			class="form-control mt-3" 
+			th:text="${post.po_content}"
 			style="min-height: 400px"></pre>
 		<!-- 게시글 삭제 버튼 -->
-		<form class="mt-3"
-			th:action="@{/post/delete/{num}(num=${post.po_num})}" method="post"
-			onsubmit="return confirm('게시글을 삭제하겠습니까?');"
+		<form class="mt-3" 
+			th:action="@{/post/delete/{num}(num=${post.po_num})}" 
+			method="post" onsubmit="return confirm('게시글을 삭제하겠습니까?');"
 			th:if="${#authentication.name == post.po_me_id}">
-			<button class="btn btn-danger">삭제</button>
+			<button class="btn btn-danger" >삭제</button>
 			<a th:href="@{/post/update/{num}(num=${post.po_num})}"
 				class="btn btn-warning">수정</a>
 		</form>
-
 		<hr>
-		<a th:href="@{/post/list}" class="btn btn-outline-success mt-3">목록으로</a>
-
+		<a 
+			th:href="@{/post/list}"
+			class="btn btn-outline-success mt-3">목록으로</a>
+		
 		<hr>
 		<h1>댓글 목록</h1>
 		<!-- 댓글 목록 박스 -->
@@ -37,7 +45,8 @@
 			<!-- 댓글이 없는 경우 -->
 			<div class="comments-item">
 				<div class="comments-wrap form-control mb-3 text-center py-5">
-					등록된 댓글이 없습니다.</div>
+					등록된 댓글이 없습니다.
+				</div>
 			</div>
 			<!-- 댓글 박스 -->
 			<div class="comments-item">
@@ -63,15 +72,19 @@
 				</div>
 			</div>
 		</div>
+		
 		<!-- 댓글 페이지네이션 박스 -->
 		<div class="comments-pagination-container">
 			<ul class="pagination justify-content-center">
+				<!-- 이전페이지 -->
 				<li class="page-item">
 					<a href="javascript:void(0);" class="page-link">이전</a>
 				</li>
+				<!-- 숫자페이지 -->
 				<li class="page-item">
 					<a href="javascript:void(0);" class="page-link">1</a>
 				</li>
+				<!-- 다음페이지 -->
 				<li class="page-item">
 					<a href="javascript:void(0);" class="page-link">다음</a>
 				</li>
@@ -81,231 +94,401 @@
 		<!-- 댓글 등록 박스 -->
 		<hr>
 		<div class="comments-input-container">
-			<form class="input-group" onsubmit="insertComment(event, this)">
+			<form class="input-group" onsubmit="insertComment(event, this)" >
 				<textarea name="content" class="form-control"></textarea>
-				<button class="btn btn success">등록</button>
+				<button class="btn btn-success">등록</button>
 			</form>
 		</div>
 		
-		<!-- 댓글등록 -->
+		<!-- 댓글목록 -->
 		<script type="text/javascript">
-			async function insertComment(event, el){
+		/* 전역변수 : 게시글 번호 */
+		const postNum = [[${post.po_num}]];
+		/* 전역변수 : 댓글 페이지 */
+		let page = 1;
+		
+		/*댓글 목록 가져오기 */
+		async function getComments(currentPage){
+			//댓글 목록 조회할 때 페이지 정보를 안넘겨주면  
+			if(!currentPage){
+				//전역변수로 선언된 page를 가져옴
+				currentPage = page;
+			}
+			try{
+				const response = 
+					await fetch(`/api/v1/posts/${postNum}/comments?page=${currentPage}`);
+				
+				if(response.ok){
+					const result = await response.json();
+					const comments = result.list;
+					const pm = result.pm;
+					renderComments(comments);
+					renderPagination(pm);
+				}
+			}catch(error){
+				console.error(error)
+			}
+		}
+		/* 댓글 페이지네이션 화면에 배치 */
+		function renderPagination(pm){
+			let pagination = '';
+			const container 
+				= document.querySelector('.comments-pagination-container>.pagination')
+			/* 댓글이 없으면 페이지네이션 없앰. */
+			if(pm.endPage == 0){
+				container.innerHTML = '';
+				return;
+			}
+			/* 이전 페이지 활성화 */
+			if(pm.prev){
+				pagination += `
+				<li class="page-item" onclick="getComments(page=${pm.startPage - 1})">
+					<a href="javascript:void(0);" class="page-link">이전</a>
+				</li>
+				`;
+			}
+			/* 숫자 페이지 */
+			for(i = pm.startPage; i <= pm.endPage; i++){
+				
+				/* 현재 페이지에 색상 추가 */
+				let active = '';
+				if(i == pm.cri.page){
+					active = 'active';	
+				}
+				//let active = `${i == pm.cri.page ? 'actvie' : ''}`;
+				
+				pagination += `
+				<li class="page-item ${active}" onclick="getComments(page=${i})">
+					<a href="javascript:void(0);" class="page-link">${i}</a>
+				</li>
+				`;
+			}
+			
+			/* 다음 페이지 활성화 */
+			if(pm.next){
+				pagination += `
+				<li class="page-item" onclick="getComments(page=${pm.endPage + 1})">
+					<a href="javascript:void(0);" class="page-link">다음</a>
+				</li>
+				`;
+			}
+			/* 페이지네이션 컨테이너에 페이지네이션을 추가 */
+			container.innerHTML = pagination;
+			
+		}
+		
+		/* 댓글 목록 화면에 배치 */
+		function renderComments(comments){
+			const commnetsContainer 
+				= document.querySelector(".comments-container")
+			
+			let commentsItems = '';
+			
+			/* 댓글이 없는 경우 */
+			if(comments.length == 0){
+				commentsItems =
+					`
+					<div class="comments-item">
+						<div class="comments-wrap form-control mb-3 text-center py-5">
+							등록된 댓글이 없습니다.
+						</div>
+					</div>
+					`;
+				commnetsContainer.innerHTML = commentsItems;
+				return;
+			}
+			/* 댓글이 있는 경우 */
+			//자바에서 향상된 for문과 같은 역할 
+			for(comment of comments){
+				
+				let replyBtn = '';
+				let ps = '';
+				
+				
+				/* 댓글인 경우 : 대댓글이 보여야함 */
+				if(comment.oriNum == comment.num){
+					replyBtn = `
+						<button class="btn btn-outline-dark" onclick="changeReplyBox(this, ${comment.num})">대댓글</button>
+					`;
+				}
+				/* 대댓인 경우 : 대댓글이 안보이고, 왼쪽 여백을 추가 */
+				else{
+					ps = 'ps-5';
+				}
+				
+				/* 댓글이 삭제된 경우 */
+				if(comment.del == 'Y'){
+					commentsItems += `
+						<div class="comments-item ${ps}">
+							<div class="comments-wrap form-control mb-3">
+							삭제된 댓글입니다.
+							</div>
+						</div>
+					`;
+					commnetsContainer.innerHTML = commentsItems;
+					continue;
+				}
+				
+				let udBtns = '';
+				/* 작성자인 경우 수정 삭제 버튼을 추가 */
+				if(comment.id == '[[${#authentication.name}]]'){
+					udBtns = `
+						<button class="btn btn-outline-warning" onclick="changUpdateBox(this, ${comment.num})">수정</button>
+						<button class="btn btn-outline-danger" onclick="deleteComments(${comment.num})">삭제</button>
+					`
+				}
+				
+				commentsItems += 
+				`
+				<div class="comments-item ${ps}">
+					<div class="comments-wrap form-control mb-3">
+						<!-- 작성자와 작성일 -->
+						<div class="comments-header d-flex justify-content-between mt-3">
+							<div>${comment.id}</div>
+							<div>${comment.date}</div>
+						</div>
+						<hr>
+						<!-- 댓글 내용 -->
+						<pre class="comments-body">${comment.content}</pre>
+						<!-- 수정,삭제,대댓글 버튼 -->
+						<div class="comments-footer">
+							<hr>
+							${replyBtn}
+							${udBtns}
+						</div>
+					</div>
+				</div>
+				`;
+			}
+			
+			commnetsContainer.innerHTML = commentsItems;
+		}
+		/* 댓글 목록 호출 */
+		getComments();
+		</script>
+		
+		<!-- 댓글 등록 -->
+		<script type="text/javascript">
+			/* 댓글을 등록하는 함수 
+			event : 발생한 이벤트 정보
+			el : 이벤트가 발생한 요소(form태그)
+			oriNum : 참조하는 댓글번호
+			*/
+			async function insertComment(event, el, oriNum){
+				/* form태그 기본 이벤트를 막음 */
 				event.preventDefault();
+				
+				/* textarea 요소 선택 */
 				const textareaEl = el.querySelector("[name=content]");
+				
+				/* textarea에서 value값을 가져옴 */
 				const content = textareaEl.value;
+				
+				/* 참조 댓글번호가 없으면 0으로 설정 */
+				if(!oriNum){
+					oriNum = 0;
+				}
+				
+				// 가져온 댓글을 객체로 변환
 				let obj = {
-						content,
+					content,
+					oriNum
 				};
+  				
 				try{
-					const response = await fetch(`/api/v1/posts/${postNum}/comments`,{
-						method: 'post',
-						headers: {
+					/* 비동기 통신으로 댓글을 서버에 전송 */
+					const response = await fetch(`/api/v1/posts/${postNum}/comments`, {
+						method : 'post',
+						headers : {
+							//댓글 내용을 서버로 JSON으로 보냄
 							'Content-Type' : 'application/json'
 						},
+						//댓글 내용이 있는 객체를 JSON 문자열로 변환
 						body : JSON.stringify(obj)
 					});
+					
 					if(response.ok){
+						//서버에서 보낸 결과를 가져옴
 						const result = await response.text();
+						//댓글 입력창을 비움
 						textareaEl.value = '';
+						//댓글 목록 새로고침
 						getComments(1);
 						alert(result);
 					}
-					else{
-						const errorText = await
-						response.text();
-						alert("서버 오류: " + errorText);
-					}
 				}catch(error){
 					console.error(error);
 				}
+				
 			}
-
 		</script>
 	
-		<!-- 댓글삭제 -->
+		<!-- 댓글 삭제 -->
 		<script type="text/javascript">
-			async function deleteComments(coNum){
+			async function deleteComments(num){
+				
 				try{
-					const response = await fetch(`/api/v1/posts/${postNum}/comments/${coNum}`,{
+					const response = await fetch(`/api/v1/posts/${postNum}/comments/${num}`, {
 						method : 'delete',
 						headers : {
-							
+							//'Content-Type' : ''
 						},
+						//body : ''
 					})
-					if (response.ok) {
+					if(response.ok){
 						const result = await response.text();
 						alert(result);
 						getComments();
-					} else {
-						console.error(error)
 					}
-					
 				}catch(error){
 					console.error(error);
 				}
 			}
-
-		</script>
-		
-		<!-- 화면에 댓글 목록 출력 -->
-		<!-- /post/detail 에 fetch url: /api/v1/posts/번호/comments get방식 -->
-		<script type="text/javascript">
-		const postNum = [[${post.po_num}]];
-		let page = 1;
-		
-			async function getComments(currentPage) {
-				if(!currentPage){
-					currentPage = page;
-				}
-				try {
-					const response = await fetch(`/api/v1/posts/${postNum}/comments?page=${currentPage}`);
-
-					if (response.ok) {
-						const result = await response.json();
-						const comments = result.list;
-						const pm = result.pm;
-						renderComments(comments);
-						renderPagination(pm);
-					} else {
-						const errorText = await
-						response.text();
-						alert("서버 오류: " + errorText);
-					}
-
-				} catch (error) {
-					console.error("통신 중 오류 발생:", error);
-					alert("통신에 실패했습니다.");
-				}
-			}
-			function renderPagination(pm){
-				
-				let pagination = '';
-				const container
-					= document.querySelector('.comments-pagination-container>.pagination')
-				
-				/* 댓글이 없으면 페이지네이션 없앰 */
-				if(pm.endPage == 0){
-					container.innerHTML = '';
-					return;
-				}
-				/* 이전 페이지 활성화 */
-				if(pm.prev){
-					pagination += `
-						<li class="page-item" onclick="getComments(page=${pm.startPage - 1})">
-							<a href="javascript:void(0);" class="page-link">이전</a>
-						</li>
-					`
-				}
-				/* 숫자 페이지 */
-				for(i = pm.startPage; i <= pm.endPage; i++){
-					
-					/* 현재 페이지에 색상 추가*/
-					let active = '';
-					if(i == pm.cri.page){
-						active = 'active';
-					}
-					
-					pagination += `
-						<li class="page-item ${active}" onclick="getComments(page=${i})">
-							<a href="javascript:void(0);" class="page-link">${i}</a>
-						</li>
-					`
-				}
-				
-				/* 다음 페이지 활성화 */
-				if(pm.next){
-					pagination += `
-						<li class="page-item" onclick="getComments(page=${pm.endPage + 1})">
-							<a href="javascript:void(0);" class="page-link">다음</a>
-						</li>
-					`
-				}
-				container.innerHTML = pagination;
-			}
-			
-			function renderComments(comments){
-				const commentsContainer
-				= document.querySelector(".comments-container")
-				let commentsItems = '';
-				if(comments.length == 0){
-					commentsItems =
-						`
-						<div class="comments-item">
-							<div class="comments-wrap form-control mb-3 text-center py-5">
-								등록된 댓글이 없습니다.
-							</div>
-						</div>
-						`;
-					commentsContainer.innerHTML = commentsItems;
-					return;
-				}
-				for(comment of comments){
-					
-					let replyBtn = '';
-					let ps = '';
-					
-					
-					
-					if(comment.oriNum == comment.num){
-						replyBtn = `
-							<button class="btn btn-outline-dark">대댓글</button>
-						`;
-					}
-					else{
-						ps = 'ps-5';
-					}
-					
-					if(comment.del == 'Y'){
-						commentsItems += `
-							<div class="comments-item ${ps}">
-								<div class="comments-wrap form-control mb-3">
-								삭제된 댓글입니다.
-								</div>
-							</div>
-						`
-						commentsContainer.innerHTML = commentsItems;
-						continue;
-					}
-					
-					let udBtns = ''
-					if(comment.id == '[[${#authentication.name}]]'){
-						udBtns=`
-						<button class="btn btn-outline-warning">수정</button>
-						<button class="btn btn-outline-danger" onclick="deleteComments(${comment.num})">삭제</button>
-						`;
-					}
-					
-					commentsItems +=
-						`
-						<div class="comments-item ${ps}">
-							<div class="comments-wrap form-control mb-3">
-								<!-- 작성자와 작성일 -->
-								<div class="comments-header d-flex justify-content-between mt-3">
-									<div>${comment.id}</div>
-									<div>${comment.date}</div>
-								</div>
-								<hr>
-								<!-- 댓글 내용 -->
-								<pre class="comments-body">${comment.content}</pre>
-								<hr>
-								<!-- 수정,삭제,대댓글 버튼 -->
-								<div class="comments-footer">
-									${replyBtn}
-									${udBtns}
-								</div>
-							</div>
-						</div>
-						`;
-				}
-				commentsContainer.innerHTML = commentsItems;
-			}
-			getComments();
-			
 		</script>
 	
+		<!-- 대댓글 등록 -->
+		<script type="text/javascript">
+		/* 대댓글을 클릭하면 대댓글 입력창이 나오게 하는 함수 
+		el : 클릭이벤트가 발생한 요소
+		*/
+		function changeReplyBox(el , oriNum){
+			//대댓글 입력창을 HTML코드로 구성
+			let inputEl = `
+				<hr>
+				<div class="comments-input-container">
+					<form class="input-group" onsubmit="insertComment(event, this, ${oriNum})" >
+						<textarea name="content" class="form-control"></textarea>
+						<button class="btn btn-success">등록</button>
+					</form>
+				</div>
+			`;
+			//원하는 위치에 HTML코드를 배치
+			//.comments-footer 다음에 대댓글 입력창을 배치
+			//.comments-footer는 대댓글 버튼의 부모 요소
+			el.parentElement.insertAdjacentHTML('afterend' , inputEl);
+			/* 
+			타겟.insertAdjacentHTML(위치, 요소) : 위치에 요소를 배치
+			- 위치
+			  - 'beforebegin' : 타겟 앞, before(요소)
+			  - 'afterbegin' : 타겟의 첫번째 자식,appendChild() 
+			  - 'beforeend' : 타겟의 마지막 자식, prepend()
+			  - 'afterend' : 타겟 뒤 , afeter(요소)
+			- after,before, appendChild, prepend는 HTML코드는 안됨
+			*/
+		}
+		
+		
+		</script>
+		
+		<!-- 댓글 수정 -->
+		<script type="text/javascript">
+		function changUpdateBox(el, coNum){
+			//기존 댓글 내용을 가져옴
+			const contentEl 
+				= el.closest(".comments-wrap")
+					.querySelector(".comments-body");
+			let content = contentEl.textContent;
+			let inputEl = `
+				<div class="comments-update-container">
+					<form class="input-group" onsubmit="updateComments(event, this ,${coNum})">
+						<textarea name="content" class="form-control">${content}</textarea>
+						<button class="btn btn-success">수정</button>
+					</form>
+				</div>
+			`;
+			const parent = el.parentElement; //버튼들이 있는 박스
+			//수정 버튼 다음에 수정창을 추가
+			parent.insertAdjacentHTML('afterend' , inputEl);
+			
+			//버튼들을 감춤
+			parent.classList.add('d-none');
+			//기존 댓글창을 감춤
+			contentEl.classList.add('d-none');
+		}
+		
+		async function updateComments(e, el, coNum){
+			e.preventDefault();
+			
+			// 수정된 댓글 내용을 가져와야 함
+			// 1. 댓글 내용이 입력된 요소를 선택(textarea)
+			// -form태그 안에 있는 name이 content인 요소를 선택하면 됨
+			const textareaEl = el.querySelector("[name=content]");
+			// 2. 요소에서 내용을 가져옴(value)
+			const content = textareaEl.value;
+			
+			try{
+				const response = await fetch(`/api/v1/posts/${postNum}/comments/${coNum}`, {
+					method : 'put',
+					headers : {
+						"Content-Type": "application/json"
+					},
+					 body: JSON.stringify({
+					        content: content
+					    })
+				})
+				if(response.ok){
+					const result = await response.text();
+					alert(result);
+					getComments();
+				}
+			}catch(error){
+				console.error(error);
+			}
+			
+		}
+		</script>
+		
+		<script type="text/javascript">
+		/* 함수를 ()없이 사용해도 되는 경우 */
+		//매개변수로 함수를 필요 => 매개변수로 오는 함수를 콜백함수라고 함
+		function fun1(callbakcFunc){
+			//함수가 존재하면
+			if(callbakcFunc){
+				//넘겨받은 콜백함수를 호출
+				callbakcFunc();
+			}
+		}
+		
+		function test(){
+			alert("안녕?");
+		}
+		/* 
+		보통 함수를 부를 때 함수명() 형태로 사용하는데, 
+		함수명만 쓰이는 경우
+		=> 함수의 매개변수로 함수가 필요한 경우(콜백함수), 매개변수로 함수를 넘길때 ()없이
+		   함수명만 사용
+		*/
+		//fun1(test);
+		</script>
+	
+		<script type="text/javascript">
+			async function like(){
+				try{
+					const response = await fetch(`/api/v2/posts/${postNum}/like`, {
+						method : 'post',
+						headers : {
+							//'Content-Type' : 'application/json'
+						},
+						//댓글 내용이 있는 객체를 JSON 문자열로 변환
+						//body : JSON.stringify(obj)
+					});
+					
+					if(response.ok){
+						//서버에서 보낸 결과를 가져옴
+						const result = await response.text();
+						alert(result);
+					}
+				}catch(error){
+					console.error(error);
+				}
+			}
+		</script>
 	</main>
 </body>
 </html>
+
+
+
 
 
 

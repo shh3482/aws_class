@@ -20,4 +20,6 @@ public interface CommentDAO {
 
 	Comment selectComment(@Param("coNum")int coNum);
 
+	boolean updateComment(@Param("coNum")int coNum, @Param("comment") Comment comment);
+
 }
