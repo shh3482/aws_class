@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,6 +69,18 @@ public class CommentController {
 		@AuthenticationPrincipal CustomUser user) {
 		String result = commentService.deleteComment(coNum,user);
 		
+		return ResponseEntity.ok(result);
+	}
+	
+	@PutMapping("/posts/{postNum}/comments/{coNum}")
+	public ResponseEntity<String> updateCommentsPost(
+		@PathVariable("postNum") int postNum,
+		@PathVariable("coNum") int coNum,
+		@RequestBody Comment comment,
+		@AuthenticationPrincipal CustomUser user) {
+		comment.setPostNum(postNum);
+	    comment.setNum(coNum);
+		String result = commentService.updateComment(coNum, comment, user);
 		return ResponseEntity.ok(result);
 	}
 }

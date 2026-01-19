@@ -13,19 +13,19 @@ import kr.hi.boot.model.vo.Comment;
 
 @Service
 public class CommentService {
-	
+
 	private final CommentDAO commentDAO;
-	
-	public CommentService (CommentDAO commentDAO){
+
+	public CommentService(CommentDAO commentDAO) {
 		this.commentDAO = commentDAO;
-		
+
 	}
 
-	//다오한테 번호주고 댓글 목록 요청
-	//댓글 목록 반환
+	// 다오한테 번호주고 댓글 목록 요청
+	// 댓글 목록 반환
 	public List<Comment> getComments(int poNum, Criteria cri) {
 		// TODO Auto-generated method stub
-		List<Comment> list = commentDAO.selectComments(poNum,cri);
+		List<Comment> list = commentDAO.selectComments(poNum, cri);
 		return list;
 	}
 
@@ -43,16 +43,15 @@ public class CommentService {
 
 	public String insertComment(Comment comment, CustomUser user) {
 		// TODO Auto-generated method stub
-		if(user == null) {
+		if (user == null) {
 			return "로그인이 필요한 서비스입니다.";
 		}
-		if(comment.getContent() == null ||
-			comment.getContent().isBlank()) {
+		if (comment.getContent() == null || comment.getContent().isBlank()) {
 			return "댓글을 입력하세요.";
 		}
 		comment.setId(user.getUsername());
 		boolean result = commentDAO.insertComment(comment);
-		if(result) {
+		if (result) {
 			return "댓글을 등록했습니다.";
 		}
 		return "댓글을 등록하지 못했습니다.";
@@ -60,29 +59,54 @@ public class CommentService {
 
 	public String deleteComment(int coNum, CustomUser user) {
 		// TODO Auto-generated method stub
-		if(user == null) {
+		if (user == null) {
 			return "로그인이 필요한 서비스입니다.";
 		}
 		String id = user.getUsername();
-		if(!isWriter(coNum, id)) {
+		if (!isWriter(coNum, id)) {
 			return "작성자가 아닙니다.";
 		}
-		
+
 		boolean res = commentDAO.deleteComment(coNum);
-		if(res) {
+		if (res) {
 			return "댓글을 삭제했습니다.";
 		}
 		return "댓글을 삭제하지 못했습니다.";
-		
+
 	}
+
 	private boolean isWriter(int coNum, String id) {
 		Comment comment = commentDAO.selectComment(coNum);
 		System.out.println(comment);
-		if(comment == null) {
+		if (comment == null) {
 			return false;
 		}
 		String writer = comment.getId();
 		return writer.equals(id);
+	}
+
+	public String updateComment(int coNum, Comment comment, CustomUser user) {
+		// TODO Auto-generated method stub
+		// 내용 비었는지
+		if (comment.getContent() == null || comment.getContent().isBlank()) {
+			return "댓글을 입력하세요.";
+		}
+		// 로그인 했는지
+		if (user == null) {
+			return "로그인이 필요한 서비스입니다.";
+		}
+		// 작성자가 맞는지
+		String id = user.getUsername();
+		if (!isWriter(coNum, id)) {
+			return "작성자가 아닙니다.";
+		}
+		// 다오에게 명령
+		boolean result = commentDAO.updateComment(coNum, comment);
+		// 수정 여부에 따른 리턴
+		if (result) {
+			return "댓글을 수정했습니다.";
+		}
+		return "댓글을 수정하지 못했습니다.";
 	}
 
 }
