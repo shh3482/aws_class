@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6f8;
+}
+
+/* 헤더 */
+.header {
+  background: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav a {
+  margin-right: 16px;
+  text-decoration: none;
+  color: #333;
+}
+
+.header-search input {
+  padding: 8px 12px;
+  width: 260px;
+}
+
+.auth {
+  margin-left: auto;
+}
+
+.auth a {
+  margin-left: 12px;
+  text-decoration: none;
+}
+
+/* 메인 */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+section {
+  margin-bottom: 60px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* 여행지 카드 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.card-image {
+  height: 220px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-body {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 커뮤니티 */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.board-card {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.board-meta {
+  margin-top: 10px;
+  color: #666;
+}
+
+/* 여행 정보 */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.info-card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 18px;
+}

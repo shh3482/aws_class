@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>커뮤니티 - Travel</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+
+<!-- 상단바 -->
+<header class="header">
+  <div class="logo">Travel</div>
+
+  <nav class="nav">
+    <a href="#">여행지</a>
+    <a href="#">테마</a>
+    <a href="#">커뮤니티</a>
+  </nav>
+
+  <div class="header-search">
+    <input type="text" placeholder="어디로 떠나볼까요?">
+  </div>
+
+  <div class="auth">
+    <a href="#">로그인</a>
+    <a href="#">회원가입</a>
+  </div>
+</header>
+
+<!-- 메인 -->
+<main class="container">
+
+  <div class="board-layout">
+
+    <!-- 왼쪽: 게시판 -->
+    <div class="board-main">
+
+      <div class="board-header">
+        <h2>🧑‍🤝‍🧑 여행 커뮤니티</h2>
+      </div>
+
+      <!-- 카테고리 -->
+      <div class="category">
+        <button class="active">전체</button>
+        <button>혼자여행</button>
+        <button>커플여행</button>
+        <button>맛집여행</button>
+        <button>자유</button>
+      </div>
+
+      <!-- 게시글 목록 -->
+      <div class="board-list">
+
+        <div class="board-item">
+          <div class="thumb">썸네일</div>
+          <div class="content">
+            <div class="title">혼자 떠난 오사카 여행 후기</div>
+            <div class="meta">👍 24 · 💬 5</div>
+          </div>
+          <div class="writer">
+            <div class="writer-label">Created by</div>
+            <div class="writer-name">홍길동</div>
+          </div>
+        </div>
+
+        <div class="board-item">
+          <div class="thumb">썸네일</div>
+          <div class="content">
+            <div class="title">제주도 3박 4일 코스 공유</div>
+            <div class="meta">👍 18 · 💬 2</div>
+          </div>
+          <div class="writer">
+            <div class="writer-label">Created by</div>
+            <div class="writer-name">김철수</div>
+          </div>
+        </div>
+
+        <div class="board-item">
+          <div class="thumb">썸네일</div>
+          <div class="content">
+            <div class="title">부산 맛집 투어 정리</div>
+            <div class="meta">👍 31 · 💬 12</div>
+          </div>
+          <div class="writer">
+            <div class="writer-label">Created by</div>
+            <div class="writer-name">이영희</div>
+          </div>
+        </div>
+
+        <div class="board-item">
+          <div class="thumb">썸네일</div>
+          <div class="content">
+            <div class="title">도쿄 여행 질문 있습니다</div>
+            <div class="meta">👍 3 · 💬 7</div>
+          </div>
+          <div class="writer">
+            <div class="writer-label">Created by</div>
+            <div class="writer-name">초보여행자</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 페이지네이션 -->
+      <div class="pagination">
+        <button>&lt;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>&gt;</button>
+      </div>
+
+    </div>
+
+    <!-- 오른쪽: 사이드바 -->
+    <aside class="board-side">
+
+      <div class="side-box write-box">
+        <a href="#" class="write-big-btn">✍️ 글쓰기</a>
+      </div>
+
+      <div class="side-box">
+        <h3>🔥 인기글</h3>
+        <ul>
+          <li>오사카 혼자 여행 후기</li>
+          <li>제주 커플 여행 코스</li>
+          <li>부산 맛집 투어</li>
+          <li>도쿄 여행 질문</li>
+          <li>강릉 혼행 추천</li>
+        </ul>
+      </div>
+
+      <div class="side-box">
+        <h3>🏷 인기 태그</h3>
+        <div class="tags">
+          <span>#혼자여행</span>
+          <span>#커플여행</span>
+          <span>#맛집</span>
+          <span>#힐링</span>
+          <span>#가성비</span>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+</main>
+
+</body>
+</html>
