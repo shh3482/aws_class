@@ -1,0 +1,251 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6f8;
+}
+
+/* =====================
+   헤더
+===================== */
+.header {
+  background: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav a {
+  margin-right: 16px;
+  text-decoration: none;
+  color: #333;
+}
+
+.header-search input {
+  padding: 8px 12px;
+  width: 260px;
+}
+
+.auth {
+  margin-left: auto;
+}
+
+.auth a {
+  margin-left: 12px;
+  text-decoration: none;
+}
+
+/* =====================
+   메인 컨테이너
+===================== */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* 레이아웃 */
+.board-layout {
+  display: grid;
+  grid-template-columns: 2.3fr 1fr;
+  gap: 30px;
+}
+
+/* =====================
+   게시판 메인
+===================== */
+.board-header {
+  margin-bottom: 20px;
+}
+
+/* 카테고리 */
+.category {
+  margin-bottom: 20px;
+}
+
+.category button {
+  margin-right: 8px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.category .active {
+  background: #333;
+  color: white;
+}
+
+/* =====================
+   게시글 목록
+===================== */
+.board-list {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.board-item {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.board-item:last-child {
+  border-bottom: none;
+}
+
+.board-item:hover {
+  background: #f9f9f9;
+}
+
+/* 썸네일 */
+.thumb {
+  width: 120px;
+  height: 80px;
+  background: #ddd;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  color: #777;
+}
+
+/* 글 내용 */
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* 작성자 */
+.writer {
+  width: 120px;
+  text-align: right;
+  font-size: 13px;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.writer-label {
+  font-size: 11px;
+  color: #999;
+}
+
+.writer-name {
+  font-weight: bold;
+}
+
+/* =====================
+   페이지네이션
+===================== */
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination button {
+  margin: 0 4px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination .active {
+  background: #333;
+  color: white;
+}
+
+/* =====================
+   사이드바
+===================== */
+.board-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.side-box {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* 글쓰기 버튼 */
+.write-box {
+  padding: 0;
+  overflow: hidden;
+}
+
+.write-big-btn {
+  display: block;
+  padding: 20px;
+  text-align: center;
+  background: #333;
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.write-big-btn:hover {
+  background: #000;
+}
+
+.side-box h3 {
+  margin-bottom: 12px;
+}
+
+.side-box ul {
+  list-style: none;
+}
+
+.side-box ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.side-box ul li:hover {
+  text-decoration: underline;
+}
+
+.tags span {
+  display: inline-block;
+  padding: 6px 10px;
+  margin: 4px;
+  border-radius: 20px;
+  background: #f1f1f1;
+  font-size: 13px;
+  cursor: pointer;
+}
