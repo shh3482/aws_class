@@ -1,0 +1,21 @@
+package day06;
+
+public class Student {
+		
+	private int grade, classNum, num;
+	private String name;
+	
+	public Student(int grade, int classNum, int num, String name) {
+		super();
+		this.grade = grade;
+		this.classNum = classNum;
+		this.num = num;
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return grade + "학년 " + classNum + "반 " + num + "번 " + name;
+	}
+	
+}

@@ -1,0 +1,14 @@
+package day07;
+
+public class EX07_NetworkClient {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 
+		 * 
+		 */
+		String ip = "";
+		int port = 5000;
+	}
+
+}

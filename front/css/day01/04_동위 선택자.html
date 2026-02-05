@@ -11,7 +11,7 @@
 
 	선택자A + 선택자B
 	- 선택자A 바로 뒤에 있는 선택자B를 선택
-	
+
 	선택자A ~ 선택자B
 	- 선택자A 뒤에 있는 선택자B를 선택
 
@@ -20,9 +20,9 @@
 	- 태그명이 들어가는 경우 태그명을 제일 앞에 작성
 	-->
 	<style>
-		.first + .item {color: red;}
-		.first ~ .item {background-color: yellow;}
-		div.first{color: green;}
+		.first + .item { color: red;}
+		.first ~ .item { background-color: yellow;}
+		div.first{ color: green;}
 	</style>
 </head>
 <body>
@@ -34,10 +34,12 @@
 		<li class="item">4</li>
 		<li class="item">5</li>
 	</ul>
-	<div class="item first">1</div>
-	<div class="item">2</div>
-	<div class="item">3</div>
-	<div class="item">4</div>
-	<div class="item">5</div>
+	<div>
+		<div class="item first">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+	</div>
 </body>
 </html>

@@ -1,0 +1,40 @@
+package day07;
+
+import java.util.Scanner;
+
+public class EX02_ExceptionTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 메뉴를 출력하고 메뉴를 입력받은 예제
+		 * 
+		 */
+		int menu;
+		Scanner scan = new Scanner(System.in);
+		
+		do {
+			System.out.println("===메뉴===");
+			System.out.println("1. 메뉴1");
+			System.out.println("2. 메뉴2");
+			System.out.println("3. 메뉴3");
+			System.out.println("메뉴 선택 : ");
+			
+			menu = scan.nextInt();
+			
+			try {
+				System.out.println();
+			}
+			catch(Exception e) {
+				System.out.println("예외 발생");
+				return;
+			}
+			finally {
+				System.out.println("무조건 실행 됩니다.");
+			}
+			System.out.println("무조건 실행 되겠지?");
+		}while(menu !=3);
+		
+	}
+
+
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>연습 예제2</title>
+</head>
+<body>
+	<h1>두 정수를 입력받아 합을 구하는 예제</h1>
+	<script>
+		// 두 정수를 입력받아 두 정수의 합을 알림창으로 보여주는 코드를 작성하세요.
+		//두 정수를 prompt로 입력받음(06_연습 예제1.html 참고)
+		let num1 = prompt("정수1 입력");
+		let num2 = prompt("정수2 입력");//정수를 입력해도 자료형은 문자열
+
+		//입력받은 num1, num2를 정수로 변환
+		num1 = parseInt(num1);
+		num2 = parseInt(num2);
+		
+		//두 정수의 합을 alert으로 출력
+		alert(num1 + num2);
+	</script>
+</body>
+</html>

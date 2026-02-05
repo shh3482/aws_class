@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>객체 예제</title>
+
 </head>
 <body>
 	<h1>객체 예제</h1>
@@ -22,10 +23,16 @@
 		*/
 		//학생 정보
 		let age = 20, name = "홍길동", addr = "서울시";
-
+		let age1 = 23, name1 = "임꺽정", addr1 = "서울시";
+		
 		let std1 = {
 			age : 20,
 			name : "홍길동",
+			addr : "서울시"
+		}
+		let std2 = {
+			age : 23,
+			name : "임꺽정",
 			addr : "서울시"
 		}
 		/* 
@@ -39,8 +46,8 @@
 		}
 		*/
 		function student(age, name, addr){
-			return{
-				age : age, // 왼쪽 age는 이름이고, 오른쪽 age는 매개변수가 가진 값
+			return {
+				age : age, //왼쪽 age는 이름이고, 오른쪽 age는 매개변수가 가진 값
 				name : name,
 				addr : addr
 			}
@@ -48,12 +55,12 @@
 		let std3 = student(20, "홍길동", "서울시");
 		let std4 = student(23, "임꺽정", "서울시");
 
-		/* 
+		/*
 		객체 사용 방법
 		- 객체 안에 있는 변수나 함수를 사용
 		객체명.변수명
 		*/
-		document.writeln(`이름 : ${std1.name}, 나이 : ${std1.age}, 주소 : ${std1.addr}<br>`)
+		document.write(`이름 : ${std1.name}, 나이 : ${std1.age}, 주소 : ${std1.addr}<br>`);
 	</script>
 </body>
 </html>

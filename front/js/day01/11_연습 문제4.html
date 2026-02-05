@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>연습 문제4</title>
+</head>
+<body>
+	<h1>조건문 예제</h1>
+	<script>
+		//prompt로 정수를 입력받아 입력받은 정수가 짝수인지 홀수인지 판별하여
+		//document.write로 결과(홀수, 짝수)를 출력하세요.
+		let num = prompt("정수 입력");
+		
+		num = parseInt(num);//문자열을 정수로 변환
+		
+		if(num % 2 == 0){
+			document.write(`${num}는 짝수<br>`);
+		}else{
+			document.write(`${num}는 홀수<br>`);
+		}
+	</script>
+</body>
+</html>

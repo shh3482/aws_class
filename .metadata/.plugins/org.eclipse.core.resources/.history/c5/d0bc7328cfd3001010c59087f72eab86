@@ -1,0 +1,13 @@
+package day06;
+
+public class EX01_Object {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* Object 360페이지
+		 * - 모든 클래스의 최상위 조상이 되는 클래스
+		 * 
+		 */
+	}
+
+}

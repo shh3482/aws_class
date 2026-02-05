@@ -1,0 +1,17 @@
+package day06;
+
+public class EX04Generid {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 제네릭
+		 * - 핃르나 메서드의 타입을 고정으로 하지 않고 객체를 생성할 때 타입을 지정할ㄹ
+		 *  제네릭 zmffotm
+		 */
+	}
+
+}
+
+class Array1{
+	int[] arr;
+}

@@ -1,0 +1,14 @@
+package day06;
+
+public class EX03_Enum {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* enum 285페이지
+		 * - 열거형
+		 * - 왜 사용?
+		 * 
+		 */
+	}
+
+}

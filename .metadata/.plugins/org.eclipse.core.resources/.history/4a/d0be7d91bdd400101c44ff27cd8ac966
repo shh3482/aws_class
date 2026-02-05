@@ -1,0 +1,23 @@
+package day07;
+
+public class EX07_Network {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* TCP
+		 * - 데이터 전송 속도가 느림
+		 * - 안절적으로 통신
+		 * - 연결 지향적
+		 * 
+		 * UDP
+		 * - 데이터 전속 속도가 빠름
+		 * - 신뢰성이 없음
+		 * - 비연결 지향적
+		 * 
+		 * 소케 프로그래밍
+		 * - 소켁을 이용한 통신 프로그램
+		 * - 들어올수 있는 두멍을 만들고, 그 구명을 통해 통신 
+		 */
+	}
+
+}

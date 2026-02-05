@@ -1,0 +1,76 @@
+package day07;
+
+import java.io.*;
+
+public class EX04_IOStream {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 스트림
+		 * - 데이터를 읽거나 쓰는데 추상화된 개념
+		 * - 데이터를 연속적으로 처리
+		 * - 분류
+		 *   - 입력 vs 출력
+		 *   - 바이트 vs 문자
+		 *   - 기반 vs 보조
+		 *   
+		 * 표준 입출력 549페이지
+		 * - PrintStream out : 표준 출력 스트림
+		 * - InputStream in : 표준 입력 스트림
+		 * - OutputStream err : 표준 오류 스트림
+		 * 
+		 * InputStream
+		 * - 바이트 단위 스트림 중 최상위 스트림
+		 * 
+		 * OutputStream
+		 * - 바이트 단위 출력 스트림 중 최상위 스트림
+		 * 
+		 * Reader
+		 * - 문자 단위 입력 스트림 중 최상위 스트림
+		 * - FileReader
+		 * 
+		 * Writter
+		 * - 문자 단위 출력 스트림중 최상위 스트림
+		 * - FileWriter
+		 * 
+		 * 
+		 */
+		
+		// day07 패키지에 data.txt파일을 염
+		String fileName = "src/day07/data.txt";
+		
+		// 한 글자씩 읽어오기
+		FileReader fr = null;
+		try {
+			fr = new FileReader(fileName);
+			while(fr.ready()) {
+				char ch = (char)fr.read();
+				System.out.print(ch);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("파일을 열 수 없습니다.");
+		} catch(IOException e) {
+			System.err.println("IO 예외 발생");
+		} finally {
+			if(fr != null) {
+				try {
+					fr.close();
+				}catch(IOException e) {
+					System.err.println("IO 예외 발생");
+				}
+			}
+		}
+		
+		BufferedReader br;
+		try {
+			fr = new FileReader(fileName);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		br = new BufferedReader(fr);
+		
+	}
+
+}

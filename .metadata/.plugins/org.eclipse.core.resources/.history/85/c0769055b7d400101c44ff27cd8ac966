@@ -1,0 +1,41 @@
+package HomeWork;
+
+public class Tetris {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		//□ ■ ▣ ┏ ━ ┓ ┗ ┛ ┃
+
+		int col = 15;
+		int row = 15;
+		int curCol = 0;
+		int curRow = 0;
+		
+		// 좌 상
+		if(curCol == 0 && curRow == 0) {
+			System.out.print("┏━");
+		}
+		
+		// 상
+		for(curCol = 1; curCol < col; curCol++) {
+			System.out.print("━━");
+		}
+		
+		// 우 상
+		if(curCol == 15 && curRow == 0) {
+			System.out.println("━┓");
+		}
+		
+		// 좌 
+		for(curRow = 0; curRow < row; curRow++) {
+			System.out.print("┃");
+			for (curCol = 0; curCol < 30; curCol++) {
+				System.out.print(" ");
+			}
+		}
+		//System.out.println("┃");
+		
+	}
+}
+

@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { getMe } from "../../api/authFech";
+import { useAuth } from "../../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 function Login(){
-
+	const {setUser} = useAuth();
 	let [info, setInfo] = useState({id : "", pw : ""})
+	const navigate = useNavigate();
 
 	const changeHandler = e =>{
 		const {name, value} = e.target;
@@ -11,7 +15,36 @@ function Login(){
 	}
 	const submitHandler = e =>{
 		e.preventDefault();
+
+		login(info);
 	}
+
+	const login = async (info)=>{
+		try{
+			const response = await fetch("/api/v1/auth/login", {
+				method : "POST",
+				headers : {
+					"Content-Type" : "application/json",
+				},
+				body : JSON.stringify(info)
+			});
+			if(!response.ok){
+				alert("로그인 실패!");
+				return;
+			}
+			const res = await response.json();
+			localStorage.setItem("accessToken", res.accessToken);
+			alert("로그인 성공!");
+			//로그인 성공 후 회원 정보를 user에 저장
+			const userData = await getMe();
+			setUser(userData);
+			navigate("/");
+
+		}catch(e){
+			console.error(e);
+		}
+	}
+
 	return(
 		<div>
 			<h1>로그인</h1>

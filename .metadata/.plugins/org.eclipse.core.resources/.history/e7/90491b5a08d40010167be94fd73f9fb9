@@ -1,0 +1,30 @@
+package day06;
+
+public class EX09_Stream {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 스트림 493페이지
+		 * - 왜 사용?
+		 *   - 배열이나 컬렉션 인터페이스의 정보들을 일관된 방법으로 처리할 수 있어서
+		 *   - 중간 처리 메서드와 최종 처리 메서드를 제공해서 여러 연산을 한번에 할 수 있음
+		 * - filter
+		 *   - 중간 처리 메서드
+		 *   - 객체들 중 원하는 객체들만 고를 때 사용
+		 * - map
+		 *   - 중간 처리 메서드
+		 *   - 객체를 이용하여 다른 형태의 결과를 얻을 때 사용
+		 *   - mapToInt : 객체를 이용하여 정수를 반환할 때 사용
+		 * - count, average : 개수, 평균, 정수로 변환 경우
+		 *   - 최종 처리 메서드
+		 *   - count : 개수
+		 *   - average : 평균. 정수로 변환 경우
+		 * - forEach
+		 *   - 
+		 * - 
+		 */
+		
+		
+	}
+
+}

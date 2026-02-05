@@ -1,0 +1,12 @@
+package day06;
+
+public class EX07_Lambda {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 내부 클래스
+		 * 
+		 */
+	}
+
+}

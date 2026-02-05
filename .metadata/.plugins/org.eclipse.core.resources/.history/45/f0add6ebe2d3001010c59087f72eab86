@@ -1,0 +1,8 @@
+package day06;
+
+public class Student {
+		
+	private int grade, classNum, num;
+	private String name;
+	
+}

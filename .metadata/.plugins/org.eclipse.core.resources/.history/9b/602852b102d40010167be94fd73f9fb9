@@ -1,0 +1,16 @@
+package day06;
+
+public class EX08_FunctionalInterFace {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* Consumer : 매개변수 O, 리턴 X, 주로 출력문 담당
+		 * Supplier : 매개변수 X, 리턴 O
+		 * Function : 매개변수 O, 리턴 O, 매개변수타입 != 리턴타입
+		 * Operator : 매개변수 O, 리턴 O, 매개변수타입 == 리턴타입
+		 * Predicate : 매개변수 O, 리턴 boolean
+		 * 
+		 */
+	}
+
+}

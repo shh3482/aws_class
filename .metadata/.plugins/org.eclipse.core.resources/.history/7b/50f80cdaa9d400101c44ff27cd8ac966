@@ -1,0 +1,13 @@
+package day07;
+
+public class EX04_TryResources {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* - 스트림을 열면 닫아야 해서 보통 finally 에 닫는 작업을 함
+		 *   => 닫을 때도 예외가 발생할 수 있어서 finally에 다시 예외처리를 해야하는 번거로움이 발생
+		 * 
+		 */
+	}
+
+}

@@ -1,0 +1,17 @@
+package day07;
+
+public class EX06_Thread {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 프로세스
+		 * - 실행중인 프로그램
+		 * - 하나 이상의 스레드로 구성
+		 * 
+		 * 스레드
+		 * - 프로세스 내에서 
+		 * 
+		 */
+	}
+
+}
