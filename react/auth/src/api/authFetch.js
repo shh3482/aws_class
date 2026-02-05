@@ -31,6 +31,17 @@ async function authFetch(url, options = {} ){
 		return response;
 	}
 	//실패하면 리프레쉬 토큰을 이용해서 새 토큰을 발급받고, 받았으면 기존 하던작업 다시 진행
+	const refresh = await fetch("/api/v1/auth/refresh", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!refresh.ok) throw new Error("로그인 만료");
+
+    const data = await refresh.json();
+    localStorage.setItem("accessToken", data.accessToken);
+
+    return authFetch(url, options);
 }
 
 export {authFetch};
