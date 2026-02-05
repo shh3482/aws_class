@@ -8,12 +8,12 @@ import kr.hi.todo.model.vo.TodoVO;
 
 public interface TodoDAO {
 
-	List<TodoVO> selectTodos();
+	List<TodoVO> selectTodos(@Param("date")String date);
 
 	boolean insertTodo(@Param("todo")TodoVO todo);
 
-	TodoVO selectTodo(@Param("todo_num")int todo_num);
-	
-	TodoVO deleteTodo(@Param("todo_num")int todo_num);
-	
+	boolean deleteTodo(@Param("num")int num);
+
+	boolean updateTodo(@Param("todo")TodoVO todo);
+
 }

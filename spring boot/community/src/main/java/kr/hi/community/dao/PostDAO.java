@@ -15,7 +15,7 @@ import kr.hi.community.model.vo.PostVO;
 
 public interface PostDAO {
 
-	ArrayList<PostVO> selectPostList(@Param ("cri")Criteria cri);
+	ArrayList<PostVO> selectPostList(@Param("cri")Criteria cri);
 
 	//@Param("매퍼.xml에서 사용할 이름")
 	void updateView(@Param("num")int po_num);
@@ -34,21 +34,17 @@ public interface PostDAO {
 
 	int selectTotalCount(@Param("cri")Criteria cri);
 
-	void deletePost(@Param("num")int po_num);
-	
-	void hidePost(@Param("num")int po_num);
+	void deletePost(@Param("num")int postNum);
 
-	void updatePost(@Param("num")int po_num);
-
-	void postUpdatePost(@Param("num")int po_num, @Param("title")String po_title, @Param("content")String po_content);
+	void updatePost(@Param("post")PostDTO post);
 
 	void insertFile(@Param("file")FileVO fileVo);
 
 	List<FileVO> selectFileList(@Param("num")int po_num);
 
-	void deleteFile(@Param("num")int fi_num);
+	void deleteFile(@Param("fiNum")int fi_num);
 
-	FileVO selectFile(@Param("fi_num")int num);
+	FileVO selectFile(@Param("fiNum")int num);
 
 	LikeVO selectLike(@Param("like")LikeDTO like);
 
@@ -61,6 +57,5 @@ public interface PostDAO {
 	int selectLikeCount(@Param("postNum")int postNum, @Param("state")int state);
 
 	void updateBoardLike(@Param("postNum")int postNum);
-
 
 }

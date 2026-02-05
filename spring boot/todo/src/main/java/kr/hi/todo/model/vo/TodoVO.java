@@ -16,5 +16,4 @@ public class TodoVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date date;
 	int order;
-
 }

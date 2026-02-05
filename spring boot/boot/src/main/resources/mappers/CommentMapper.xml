@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.hi.boot.dao.CommentDAO">
-	<!-- 삭제되지 않은 댓글만 가져옴, 시오오리넘 기준 내림차순 시오넘 기준 오름차순 -->
-	<resultMap type="Comment" id="commentMap">
-		<id property="num" 			column="co_num"/>
-		<result property="content" 	column="co_content"/>
-		<result property="date" 	column="co_date"/>
-		<result property="id"		column="co_me_id"/>
-		<result property="oriNum" 	column="co_ori_num"/>
-		<result property="del" 		column="co_del"/>
-		<result property="postNum" 	column="co_po_num"/>
-	</resultMap>
-	<select id="selectComments" resultMap = "commentMap">
-		select *
-		from
-			comment
-		where
-			co_po_num = #{poNum} 
-		order by
-			co_ori_num desc,
-			co_num asc
-		limit #{cri.pageStart}, #{cri.perPageNum}
-	</select>
-	
-	<select id="selectCommentsCount" resultType="int">
-		<!-- 게시글 번호에 맞게 댓글 수를 가져오는 쿼리 -->
-		select
-			count(*)
-		from
-			comment
-		where
-			co_po_num = #{poNum}
-	</select>
-
-	<insert id="insertComment">
-		insert into
-			comment(co_num, co_ori_num, co_me_id, co_content, co_po_num)
-		select
-			ifnull(max(co_num), 0) + 1,
-			ifnull(max(co_num), 0) + 1,
-			#{comment.id},
-			#{comment.content},
-			#{comment.postNum}
-		from
-			comment
-	</insert>
-	<select id="selectComment" resultMap="commentMap">
-		select * from comment where co_num = #{coNum}
-	</select>
-	<update id="deleteComment">
-		update comment
-    	set
-    		co_del = 'Y' 
+    
+    <!-- 
+    comment 테이블의 컬럼들과 Comment 클래스의 필드들의 이름이 서로 달라서
+    자동으로 맵핑이 되지않아 resultMap을 이용하여 불러옴
+    resultMap
+    - type : 맵핑할 클래스명
+    - id : 매퍼에서 사용할 이름
+    
+    id/result : id는 기본키컬럼, result는 일반컬럼
+    - property : 클래스의 필드명
+    - column : 테이블의 컬럼명
+     -->
+    <resultMap type="Comment" id="commentMap">
+    	<id property="num" 			column="co_num"/>
+    	<result property="content" 	column="co_content"/>
+    	<result property="date" 	column="co_date"/>
+    	<result property="id" 		column="co_me_id"/>
+    	<result property="oriNum" 	column="co_ori_num"/>
+    	<result property="del" 		column="co_del"/>
+    	<result property="postNum" 	column="co_po_num"/>
+    </resultMap>
+    
+    <select id="selectComments" resultMap="commentMap">
+    	select * 
+    	from comment
     	where
-    		co_num = #{coNum} 
-	</update>
-	<update id="updateComment">
-		update comment
-    	set
-    		co_content = #{comment.content} 
+    		co_po_num = #{poNum}
+    	order by co_ori_num desc, co_num asc
+    	limit #{cri.pageStart}, #{cri.perPageNum}
+    </select>
+    
+    <select id="selectCommentsCount" resultType="int">
+    	<!-- 게시글 번호에 맞게 댓글 수를 가져오는 쿼리 -->
+    	select count(*) 
+    	from comment
     	where
-    		co_num = #{coNum} 
-	</update>
+    		co_po_num = #{poNum}
+    </select>
+    
+    <insert id="insertComment">
+    	insert into 
+    	comment(co_num, co_ori_num, co_me_id, co_content, co_po_num) 
+    	select 
+    		ifnull(max(co_num), 0) + 1, 
+    		
+    		<choose>
+    			<!-- 댓글 -->
+    			<when test="comment.oriNum == 0">
+    				ifnull(max(co_num), 0) + 1,
+    			</when>
+    			<!-- 대댓 -->
+    			<otherwise>
+    				#{comment.oriNum},
+    			</otherwise>
+    		</choose>
+    		 
+    		
+    		#{comment.id}, 
+    		#{comment.content},
+    		#{comment.postNum}
+    	from comment 
+    </insert>
+    
+    <select id="selectComment" resultMap="commentMap">
+    	select * from comment where co_num = #{coNum}
+    </select>
+    
+    <update id="deleteComment">
+    	update comment
+    	set
+    		co_del = 'Y'
+    	where
+    		co_num = #{coNum}
+    </update>
+    
+    <update id="updateComment">
+    	update comment
+    	set
+    		co_content = #{content}
+    	where
+    		co_num = #{coNum}
+    </update>
 </mapper>
 
 
