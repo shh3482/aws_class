@@ -1,0 +1,13 @@
+package day06;
+
+public class EX02_String {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* String 클래스 377페이지
+		 * 
+		 * 
+		 */
+	}
+
+}

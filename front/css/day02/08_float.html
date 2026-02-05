@@ -5,7 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>float 예제</title>
 	<!-- 
-	float (교재 141)
+	교재 p.141
+	float
 	- 요소를 왼쪽, 오른쪽으로 배치할 때 사용하는 속성
 	- inline, block에 상관 없이 왼쪽, 오른쪽으로 배치
 	- 엔터에 의한 공백을 없애 줌
@@ -20,21 +21,16 @@
 		- both : 왼쪽과 오른쪽 float 요소의 높이 중 긴 요소를 기준으로 배치
 	-->
 	<style>
-		/* .box{float: left;} */
-		.box{
-			height: 100px;
-			background-color: yellow;
-			width: 150px;
+		.box{ 
+			height: 100px; background: yellow;width : 150px;
 			border: 1px solid black;
 		}
-		.float-left{float: left;}
-		.float-right{float: right; height: 400px;}
+		.float-left{ float: left;}
+		.float-right{ float: right; height: 400px;}
 		.clearfix::after{
-			content: '';
-			display: block;
-			clear: both;
+			content: ''; display: block; clear: both;
 		}
-		.container{margin-bottom: 20px;}
+		.container{ margin-bottom: 20px;}
 	</style>
 </head>
 <body>
@@ -46,16 +42,16 @@
 			<div class="box float-right">float : right</div>
 			<div class="box float-left">float : left 2</div>
 		</div>
-		<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. In deserunt quos atque earum vero placeat odio itaque nemo magnam aperiam.</div>
+		<div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla unde minus deserunt error odio sed facilis ullam omnis voluptas explicabo!</div>
 	</div>
-<h2>clear 미적용</h2>
+	<h2>clear 미적용</h2>
 	<div class="container">
 		<div class="inner-box">
 			<div class="box float-left">float : left 1</div>
 			<div class="box float-right">float : right</div>
 			<div class="box float-left">float : left 2</div>
 		</div>
-		<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. In deserunt quos atque earum vero placeat odio itaque nemo magnam aperiam.</div>
+		<div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla unde minus deserunt error odio sed facilis ullam omnis voluptas explicabo!</div>
 	</div>
 </body>
 </html>

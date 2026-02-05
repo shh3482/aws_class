@@ -1,0 +1,77 @@
+package day07;
+
+import java.util.ArrayList;
+
+public class EX08_Test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 게임 성적을 관리하는 프로그램을 만들려고 한다.
+		 * - 이름, 점수를 관리
+		 * - 이름은 중복이 X
+		 * - 기능
+		 *   - 추가
+		 *   - 삭제
+		 *   - 조회
+		 *   - 정렬
+		 * 
+		 */
+		
+		
+		
+	}
+
+}
+
+interface GameRecordManager{
+	boolean add(GameRecord gameRocord);
+	GameRecord remove(String name);
+	GameRecord find(String name);
+}
+
+class GameRecordManagerImp implements GameRecordManager{
+	private ArrayList<GameRecord> list = new ArrayList<GameRecord>();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class GameRecord {
+	private String name;
+	private int score;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
+	
+	public GameRecord(String name, int score) {
+		this.name = name;
+		this.score = score;
+	}
+
+	@Override
+	public String toString() {
+		return "GameRecord [name=" + name + ", score=" + score + "]";
+	}
+	
+}

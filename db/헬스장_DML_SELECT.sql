@@ -1,176 +1,96 @@
-# 헬스장에 등록된 회원 목록을 조회
-select *
-from member;
+# 헬스장에 등록된 회원 목록을 조회 
+SELECT * FROM MEMBER;
+# 헬스장에 등록된 회원 수를 조회 
+SELECT COUNT(*) FROM MEMBER;
 
-# 헬스장에 등록된 회원 수를 조회
-select count(*) 회원수
-from member;
+# 헬스장에 등록된 강좌를 조회 
+SELECT * FROM CLASS;
+# 모닝 요가를 수강신청한 인원 수를 조회 
+# 방법1 : 모닝 요가의 키값을 알 때 
+SELECT COUNT(*) FROM ENROLLMENT WHERE CLASS_ID = 1;
+# 방법2 : 모닝 요가의 키값을 모를 때. 서브 쿼리
+SELECT COUNT(*) FROM ENROLLMENT 
+WHERE
+	CLASS_ID = (SELECT CLASS_ID FROM CLASS WHERE NAME='모닝 요가');
+# 방법3 : 모닝 요가의 키값을 모를 때. JOIN 
+SELECT COUNT(*) FROM ENROLLMENT 
+	JOIN CLASS USING(CLASS_ID)
+    WHERE
+		NAME = '모닝 요가';
 
-# 헬스장에 등록된 강좌를 조회
-select *
-from class;
+# 강좌별 수강 신청 인원 수를 조회 
+# - 강좌의 수강 신청한 회원이 없어도 0명으로 조회 
+SELECT 
+	CLASS.CLASS_ID 강좌번호, NAME 강좌명, COUNT(ENROLLMENT_ID) 신청수 
+FROM ENROLLMENT 
+RIGHT JOIN CLASS USING(CLASS_ID)
+GROUP BY CLASS.CLASS_ID;
 
-# 모닝 요가를 수강신청한 인원 수를 조회
-select count(*)
-from enrollment
-join class
-on enrollment.class_id = class.class_id
-where class.name = "모닝 요가";
+# 사물함 전체를 조회 
+SELECT * FROM LOCKER;
 
-# 강좌별 수강 신청 인원 수를 조회
-select c.class_id, c.name, ifnull(count(enrollment_id),0) 
-from enrollment
-right join class c
-on c.class_id = enrollment.class_id
-group by c.class_id;
+# 사용중인 사물함을 조회 
+SELECT LOCATION `사용중인 사물함 위치`, LOCKER_ID FROM MEMBER 
+	JOIN LOCKER USING(LOCKER_ID);
 
-# 사물함 전체를 조회
-select *
-from locker;
+# 각 사물함 별 사용자 번호를 조회 
+SELECT 
+	LOCATION `사용중인 사물함 위치`, 
+    MEMBER.LOCKER_ID 
+FROM MEMBER 
+	RIGHT JOIN LOCKER USING(LOCKER_ID);
 
-# 사용중인 사물함을 조회
-select *
-from locker
-join member
-where member.locker_id = locker.locker_id;
+# 사물함 전체에서 사용이 가능하면 사용 가능, 사용중이면 사용중이라고 조회 
+# A구역-01 사용중 
+# A구역-02 사용가능 
+SELECT 
+	LOCATION `사용중인 사물함 위치`, 
+    IF(MEMBER.LOCKER_ID IS NOT NULL, '사용중', '사용가능') `사용 가능 여부`
+FROM MEMBER 
+	RIGHT JOIN LOCKER USING(LOCKER_ID);
 
-# 사물함 전체에서 사용이 가능하면 사용 가능, 사용중이면 사용중이라고 조회
-# 내가 처음 작성한거
-select l.locker_id, l.location, '사용중' 사용상태
-from member m
-right join locker l
-on l.locker_id = m.locker_id;
-
-# 선생님이 힌트준거
-select if (null is null, '사용가능', '사용중');
-select if(1 is null, '사용가능', '사용중');
-
-# 내가 고친거
-select l.locker_id 사물함_번호, l.location 사물함_구역,
-if (l.locker_id = m.locker_id, '사용중', '사용가능') 사용상태
-from member m
-right join locker l
-using(locker_id); # 뒤에 비교하는 대상이 같은 경우 using을 사용할 수 있음
-
-# 선생님꺼, 각 사물함 별 사용자 번호를 조회
-select location '사용중인 사물함 위치', member.locker_id
-from member
-right join locker
-using (locker_id);
-
-select location '사용중인 사물함 위치',
-# MYSQL에서 참 거짓을 융통성 있게 판별
-# False, Null, 0, '' 등은 거짓, 거짓이 아닌 모든 값은 참
-# 단, 사용하지 않은 사물함은 회원 사물함 정보에서 null로 되어 있어야 함
-if (member.locker_id, '사용중','사용가능') '사용 가능 여부'
-from member
-right join locker
-using (locker_id);
-
-select location '사용중인 사물함 위치',
-if (member.locker_id, '사용중','사용가능') '사용 가능 여부',
-case when member.locker_id
-then '사용중'
-else '사용가능'
-end '사용 가능 여부2'
-from member
-right join locker
-using (locker_id);
-
-# 각 강좌별 현재 출석한 회원 수를 조회
-# 1. 모든 강좌 리스트, 출석한 회원 리스트, 출석한 회원 수 카운트
-# class + attendance + member
-select count(*), date(now())
-from attendance a
-right join class c
-on c.class_id = a.class_id
-where date(check_in_time) = date(now());
-
-# 내가 한거
-select *
-from member m
-left join attendance a
-on m.member_id = a.member_id
-right join class c
-on  c.class_id = a.class_id;
-
-# 선생님이 한거
-# where 절을 group by 앞에 넣으면 outer join을 한 결과에
-# 조건을 걸기 때문에 출석 정보가 없는 강좌들이 조회가 안됨.
-# => 서브쿼리를 이용하여 조건을 걸면, 조건을 검색한 후에 outer join 을
-# 하기 때문에 출석 정보가 없는 강좌들도 조회가 됨.
-select name, count(check_in_time)
-from (select*
-from attendance
-where date(check_in_time) = date(now())
-) att
-right join class using(class_id)
-group by class.class_id;
-
-# 회원별 회원이 강좌에 사용한 총 금액을 조회
-#내가 한거
-select member.name, class.name, sum(class.fee) # <- 이렇게 작성하면 왼쪽에 있는 name 애들도 똑같이 합치려 해서 오류가 발생
-from member
-join enrollment using(member_id)
-right join class using(class_id)
-where enrollment.payment_state = "결재";
-
-#선생님이 한거
-select member.*, format(ifnull(sum(fee),0),0)
-from class
-join (select *
-from enrollment
-where payment_state = '결재') e
-using(class_id)
-right join member using(member_ID)
-group by member_id;
-
-# Study #
-# 강좌별 수강 신청 인원 수를 조회하되, 신청자가 없는 강좌도 모두 출력하시오.
-select class.name '강좌명', ifnull(count(enrollment_id),0) '신청 인원 수'
-from enrollment
-right join class
-using (class_id)
-group by class_id;
-
-# 회원별로 수강 신청한 강좌 개수를 조회하시오.
-# (수강 신청을 안 한 회원도 0으로 출력)
-select m.name '회원명', ifnull(count(enrollment_id),0) '신청한 강좌 수'
-from member m
-left join enrollment e
-using(member_id)
-group by member_id;
-
-# 사물함별 사용 상태를 조회하시오.
-# (회원이 사용 중이면 '사용중', 아니면 '사용가능')
-select location '구역',
-if (m.locker_id, "사용중","사용가능") '사용 상태'
-from locker l
-left join member m 
-using (locker_id);
-
-# 결제가 완료된 수강 신청만 기준으로 강좌별 총 매출액을 조회하시오.
-# (결제된 수강 신청이 없는 강좌도 0으로 출력)
-select c.name, ifnull(count(e.enrollment_id) * c.fee,0) as total_sales
-from class c
-left join enrollment e
-using(class_id)
-group by c.class_id;
-
-# 오늘 날짜 기준으로 강좌별 출석한 회원 수를 조회하시오.
-# (출석자가 없는 강좌도 포함)
-select c.name, count(attendance_id)
-from (
-select *
-from attendance
-where date(check_in_time) = '2025-12-22'
-)a
-right join class c
-using (class_id)
-group by class_id;
+SELECT 
+	LOCATION `사용중인 사물함 위치`, 
+    # MYSQL에서 참 거짓을 융통성 있게 판별 
+    # FALSE, NULL, 0, '' 등은 거짓, 거짓이 아닌 모든 값은 참 
+    # 단, 사용하지 않은 사물함은 회원 사물함 정보에서 NULL로 되어 있어야 함 
+    IF(MEMBER.LOCKER_ID, '사용중', '사용가능') `사용 가능 여부`,
+    CASE 
+		WHEN MEMBER.LOCKER_ID  THEN '사용중' 
+		ELSE '사용가능' 
+	END `사용 가능 여부2`
+FROM MEMBER 
+	RIGHT JOIN LOCKER USING(LOCKER_ID);
 
 
+# 사물함과 회원을 연결했을 때 
+SELECT IF( NULL IS NULL, '사용가능', '사용중'); # 회원과 연결된 사물함이 아님 
+SELECT IF( 1 IS NULL, '사용가능', '사용중'); # 회원과 연결된 사물함. 1번 회원
 
+# 각 강좌별 현재 출석한 회원 수를 조회 
+# - WHERE 절을 GROUP BY 앞에 넣으면 OUTER JOIN을 한 결과에 
+#   조건을 걸기 때문에 출석 정보가 없는 강좌들이 조회가 안됨.
+#   => 서브쿼리를 이용하여 조건을 걸면, 조건을 검색한 후에 OUTER JOIN을 하기 때문에
+#      출석 정보가 없는 강좌들도 조회가 됨.
+SELECT NAME, COUNT(CHECK_IN_TIME) 출석회원수
+FROM (
+	SELECT * FROM ATTENDANCE 
+    WHERE 
+		DATE(CHECK_IN_TIME) = DATE(NOW())
+	) ATT
+	RIGHT JOIN CLASS USING(CLASS_ID)
+GROUP BY CLASS.CLASS_ID;
+
+# 회원별 회원이 강좌에 사용한 총 금액을 조회 
+SELECT MEMBER.*, FORMAT(IFNULL(SUM(FEE), 0),0) 총금액 
+FROM CLASS 
+JOIN 
+	(SELECT * 
+		FROM ENROLLMENT
+        WHERE PAYMENT_STATE = '결재') E
+    USING(CLASS_ID)
+RIGHT JOIN MEMBER USING(MEMBER_ID)
+GROUP BY MEMBER_ID;
 
 
 
