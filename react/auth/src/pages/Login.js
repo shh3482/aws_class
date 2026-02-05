@@ -9,7 +9,7 @@ export function Login(){
 
 	const [info, setInfo] = useState({id : '', pw : ''});
 
-	const {setUser, getMe} = useAuth();
+	const {getMeAndSetUser} = useAuth();
 
 	const inputChange = (e)=>{
 		const {id, value} = e.target;
@@ -35,8 +35,7 @@ export function Login(){
 				alert("로그인 성공");
 				localStorage.setItem("accessToken", res.accessToken);
 				navigate("/");
-				const me = await getMe();
-				setUser(me);
+				getMeAndSetUser();
 			}
 		}catch(e){
 			console.error(e);
@@ -67,7 +66,7 @@ export function Login(){
 						<input type="password" name="pw" id="pw" onChange={inputChange}/>	
 					</div>
 				</div>
-				<button>회원가입</button>
+				<button>로그인</button>
 			</form>
 		</div>
 	)
