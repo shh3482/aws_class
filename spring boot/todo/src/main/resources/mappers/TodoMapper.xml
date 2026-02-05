@@ -4,24 +4,28 @@
     
     <select id="selectTodos" resultType="TodoVO">
     	select * from todo 
+    	<if test='date != ""'>
+    		where date = #{date}
+    	</if>
     	order by date desc, `order` asc
     </select>
     
     <insert id="insertTodo">
-    	insert into todo(date,text,`order`)
-    	select
-    		#{todo.date},
-    		#{todo.text},
-    		ifnull(max(`order`),0)+1
-    	from todo
-    	where date = #{todo.date}
+    	insert into todo(date, text, `order`)
+		select 
+			#{todo.date}, 
+			#{todo.text}, 
+			ifnull(max(`order`), 0) + 1 
+		from todo 
+		where date = #{todo.date}
     </insert>
-    <select id="selectTodo" resultType="TodoVO">
-    	select * from todo 
-    	where #{todo.num} = todo_num;
-    </select>
-    <delete id="deleteTodo" parameterType="int">
-    	delete from todo
-    	where num = #{value}
+    
+    <delete id="deleteTodo">
+    	delete from todo where num = #{num}
     </delete>
+    
+    <update id="updateTodo">
+    	update todo set text = #{todo.text}
+    	where num = #{todo.num}
+    </update>
 </mapper>

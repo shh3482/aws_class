@@ -1,17 +1,25 @@
 
+//분을 입력받으면 초로 변환하는 컴포넌트
+
 import { useState } from "react";
 
+//숫자를 입력하면 입력한 숫자에 해당하는 초가 바로 출력되도록 구현
 function Convert(){
+	let [amount, setAmount] = useState(0);
 
-	let [min, setMin] = useState(0);
-	const change = (e)=>{setMin(e.target.value); console.log(min)};
-
-	return(
+	return (
 		<div>
 			<div>
-				<input type="number" disabled={false} value={min} onChange={change} />
+				<input 
+					type="number" 
+					onChange={e=>setAmount(e.target.value)} 
+					disabled={false}
+					value={amount}/>
 			</div>
-			<input type="number" disabled={true} value={min * 60} />
+			<input 
+				type="number" 
+				disabled={true} 
+				value={amount * 60} />
 		</div>
 	);
 }

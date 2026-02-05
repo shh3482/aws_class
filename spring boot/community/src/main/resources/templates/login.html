@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 	layout:decorate="~{layout/layout.html}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
+<body >
 	<main layout:fragment="content" class="container">
-		<h2>로그인</h2>
+		<h1>로그인</h1>
 		<form action="/login" method="post">
 			<div class="mb-3 mt-3">
-				<label for="id" class="form-label">아이디:</label> <input type="text"
-					class="form-control" id="id" placeholder="아이디를 입력하세요." name="username">
+				<label for="id" class="form-label">아이디:</label> <input
+					type="text" class="form-control" id="id"
+					placeholder="아이디를 입력하세요." name="username">
 			</div>
 			<div class="mb-3">
 				<label for="pw" class="form-label">비밀번호:</label> <input
@@ -22,7 +24,7 @@
 			<div class="form-check mb-3">
 				<label class="form-check-label"> <input
 					class="form-check-input" type="checkbox" name="remember-me">
-					자동 로그인
+					자동로그인
 				</label>
 			</div>
 			<button type="submit" class="btn btn-primary col-12">로그인</button>

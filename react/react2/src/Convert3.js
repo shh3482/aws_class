@@ -1,24 +1,36 @@
 
+//분을 입력받으면 초로 변환하는 컴포넌트
+
 import { useState } from "react";
 
+//숫자를 입력하면 입력한 숫자에 해당하는 초가 바로 출력되도록 구현
 function Convert3(){
+	let [amount, setAmount] = useState(0);
+	let [flag, setFlag] = useState(true);
 
-	let [num, setNum] = useState(0);
-	const change = (e)=>{setNum(e.target.value);};
+	const chageAmount = e => setAmount(e.target.value);
+	const btnClick = () =>{
+		setAmount(flag ? amount / 60 : amount * 60 );
+		setFlag(!flag);
+	}
 
-	let [isSwaped, swapNum] = useState(true);
-	const btnClick = ()=>{
-		setNum(isSwaped ? parseInt(num * 60) : parseInt(num / 60));
-		swapNum(!isSwaped);
-	};
-
-	return(
+	return (
 		<div>
 			<div>
-				<input type="number" disabled={!isSwaped} value={isSwaped ? num : parseInt(num / 60) } onChange={change} />
+				<input 
+					type="number" 
+					onChange={chageAmount} 
+					disabled={flag} 
+					// flag일 때 parseInt(amount/60), !flat일 때 amount
+					value={flag ? parseInt(amount/60) : parseInt(amount)}/>
 				<button onClick={btnClick}>변환</button>
 			</div>
-			<input type="number" disabled={isSwaped} value={isSwaped ? parseInt(num * 60) : num } onChange={change} />
+			<input 
+				type="number" 
+				onChange={chageAmount} 
+				disabled={!flag}
+				// flag일 때 amount, !flag일 때 amount*60
+				value={flag ? parseInt(amount) : parseInt(amount * 60)}/>
 		</div>
 	);
 }

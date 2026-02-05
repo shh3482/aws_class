@@ -1,12 +1,11 @@
 
 function Select(){
-	return(
+	return (
 		<select>
-      <option>타입1</option>
-      <option>타입2</option>
-    </select>
+			<option>타입1</option>
+			<option>타입2</option>
+		</select>
 	);
 }
 
-export default Select;
-	
+export {Select};

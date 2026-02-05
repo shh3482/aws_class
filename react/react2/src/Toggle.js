@@ -11,12 +11,11 @@ function Toggle(){
 				{
 					menus.map(menu=>{
 						return(
-							<li
-								onClick={()=>setActiveMenu(menu)}
-								className={`menu-item ${activeMenu === menu ? "active" : ""}`}
-								key={menu}>{menu}
-							</li>
-						)
+							<li 
+								onClick={()=> setActiveMenu(menu)}
+								className={`menu-item ${activeMenu === menu ? "active": ""}`} 
+								key={menu}>{menu}</li>
+						);
 					})
 				}
 			</ul>

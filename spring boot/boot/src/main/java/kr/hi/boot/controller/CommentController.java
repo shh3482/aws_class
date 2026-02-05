@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import kr.hi.boot.config.SecurityConfig;
 import kr.hi.boot.model.dto.CommentResponseDTO;
 import kr.hi.boot.model.util.Criteria;
 import kr.hi.boot.model.util.CustomUser;
@@ -25,62 +24,84 @@ import kr.hi.boot.service.CommentService;
 @RequestMapping("/api/v1")
 public class CommentController {
 
+    private final SecurityConfig securityConfig;
+
+	//@Autowired
 	private final CommentService commentService;
-
-	public CommentController(CommentService commentService) {
+	
+	//생성자를 이용한 의존성 주입
+	public CommentController(CommentService commentService, SecurityConfig securityConfig) {
 		this.commentService = commentService;
+		this.securityConfig = securityConfig;
 	}
-
-	// api/v1/posts/게시글번호/comments 임시로 null
+	
 	@GetMapping("/posts/{num}/comments")
-	@ResponseBody
 	public ResponseEntity<CommentResponseDTO> getComments(
-		@PathVariable("num")int poNum,
-		Criteria cri
-		) {
+			//화면에서 보낸 게시글 번호를 가져옴 
+			@PathVariable("num")int poNum,
+			//화면에서 보낸 페이지 정보를 가져옴
+			Criteria cri){
+		
+		//한페이에 댓글 5개로 설정
 		cri.setPerPageNum(5);
-		// 게시글 번호 가져옴
-		// 서비스한테 번호주고 댓글 목록 가져옴
+		//서비스에게 게시글 번호와 페이지 정보를 주면서 댓글 목록 가져오라고 요청
+		//댓글목록 = 서비스야.댓글목록가져와(게시글번호, 페이지정보);
 		List<Comment> list = commentService.getComments(poNum, cri);
 		
-		//서비스에게 게시글 번호와 페이지 정보를 주면서 pagemaker 객체를 가져오라고 요청
+		//서비스에게 게시글 번호와 페이지 정보를 주면서 PageMaker 객체를 가져오라고 요청
+		//PageMaker객체 = 서비스야.PageMaker객체가져와(게시글번호, 페이지정보)
 		PageMaker pm = commentService.getPageMaker(poNum, cri);
 		
-		// 댓글목록 화면에 출력
+		//가져온 댓글 목록과 페이지네이션정보를 화면에 전달
 		CommentResponseDTO dto = new CommentResponseDTO(list, pm);
-		
 		return ResponseEntity.ok(dto);
 	}
 	
 	@PostMapping("/posts/{num}/comments")
-	@ResponseBody
 	public ResponseEntity<String> getCommentsPost(
-		@PathVariable("num")int postNum,
-		@RequestBody Comment comment,
-		@AuthenticationPrincipal CustomUser user) {
+			//- 화면에서 보낸 게시글 번호를 가져옴
+			@PathVariable("num")int postNum,
+			//- 화면에서 보낸 댓글 내용을 가져옴
+			@RequestBody Comment comment,
+			//- 로그인한 사용자 정보 가져옴
+			@AuthenticationPrincipal CustomUser user
+			){
+		//- 서비스에게 게시글번호와 댓글내용, 사용자정보를 주면서 댓글을 등록하고 결과를 문자열로 가져오라고 요청
 		comment.setPostNum(postNum);
-		String result = commentService.insertComment(comment,user);
+		
+		//결과 = 서비스야.댓글등록해(게시글번호와댓글내용, 사용자정보);
+		String result = commentService.insertComment(comment, user);
+		//- 가져온 결과를 화면에 전송
 		return ResponseEntity.ok(result);
 	}
-	
 	@DeleteMapping("/posts/{postNum}/comments/{coNum}")
 	public ResponseEntity<String> postsCommentsDelete(
-		@PathVariable("coNum") int coNum,
-		@AuthenticationPrincipal CustomUser user) {
-		String result = commentService.deleteComment(coNum,user);
-		
+			//- 화면에서 보낸 댓글 번호를 가져옴
+			@PathVariable("coNum") int coNum,
+			//- 로그인한 사용자 정보를 가져옴
+			@AuthenticationPrincipal CustomUser user
+			){
+		//- 서비스에게 댓글 번호와 로그인한 사용자 정보를 주면서 댓글을 삭제하고 결과를 알려달라고 요청
+		//결과 = 서비스야.댓글삭제해(댓글번호, 사용자정보);
+		String result = commentService.deleteComment(coNum, user);
+		//- 결과를 화면에 전달
 		return ResponseEntity.ok(result);
 	}
 	
 	@PutMapping("/posts/{postNum}/comments/{coNum}")
-	public ResponseEntity<String> updateCommentsPost(
-		@PathVariable("postNum") int postNum,
-		@PathVariable("coNum") int coNum,
-		@RequestBody Comment comment,
-		@AuthenticationPrincipal CustomUser user) {
-		comment.setPostNum(postNum);
-	    comment.setNum(coNum);
+	public ResponseEntity<String> postCommentsPut(
+			//- 화면에서 보낸 정보를 가져옴
+			//  - 댓글번호
+			@PathVariable("coNum") int coNum,
+			//  - 수정된 댓글 내용
+			@RequestBody Comment comment,
+			//- 로그인한 사용자 정보를 가져옴
+			@AuthenticationPrincipal CustomUser user
+			){
+		//- 서비스에게 댓글번호, 수정된 댓글내용, 사용자 정보를 주면서 수정하고 결과를 알려달라고 요청
+		//결과 = 서비스야.댓글수정해(댓글번호, 댓글내용, 사용자);
 		String result = commentService.updateComment(coNum, comment, user);
+		//- 가져온 결과를 화면에 전달
 		return ResponseEntity.ok(result);
 	}
 }
