@@ -1,0 +1,918 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Pretendard", sans-serif;
+}
+
+body {
+    background: #f9fafb;
+    color: #222;
+}
+
+/* 상단바 */
+.top-bar {
+    height: 60px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    border-bottom: 1px solid #eee;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.auth a {
+    margin-left: 16px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+}
+
+/* 전체 레이아웃 */
+.layout {
+    display: flex;
+    margin-top: 60px;
+}
+
+/* 사이드바 */
+.sidebar {
+    width: 220px;
+    background: #fff;
+    border-right: 1px solid #eee;
+    padding: 24px;
+    height: calc(100vh - 60px);
+    position: fixed;
+}
+
+.sidebar h3 {
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #555;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+    background: #f1f3f5;
+    font-weight: 600;
+}
+
+/* 메인 콘텐츠 */
+.content {
+    margin-left: 240px;
+    padding: 32px;
+    width: 100%;
+}
+
+.content h2 {
+    margin-bottom: 24px;
+}
+
+/* 카드 그리드 */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+/* 카드 */
+.post-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.post-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.post-info {
+    padding: 16px;
+}
+
+.post-info h4 {
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.post-info p {
+    font-size: 13px;
+    color: #666;
+    height: 36px;
+    overflow: hidden;
+}
+
+.meta {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+}
+/* 상세 페이지 */
+.post-detail {
+    background: #fff;
+    padding: 32px;
+    border-radius: 16px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.post-detail img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.author {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.text {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* 좋아요 버튼 */
+.like-btn {
+    border: none;
+    background: #f1f3f5;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.like-btn.active {
+    background: #ffe3e3;
+    color: #e03131;
+    transform: scale(1.1);
+}
+
+/* 댓글 */
+.comment-section {
+    margin-top: 40px;
+}
+
+.comment {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.comment strong {
+    font-size: 13px;
+}
+
+.comment p {
+    font-size: 13px;
+    color: #444;
+}
+
+.comment-form {
+    display: flex;
+    margin-top: 16px;
+    gap: 8px;
+}
+
+.comment-form textarea {
+    flex: 1;
+    height: 70px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.comment-form button {
+    border: none;
+    background: #222;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 16px;
+}
+
+.pagination {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.pagination span, .pagination button {
+    margin: 0 6px;
+    cursor: pointer;
+}
+.pagination .active {
+    font-weight: 700;
+}
+
+/* 텍스트 게시판 */
+.text-board {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.text-board th, .text-board td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    text-align: center;
+}
+
+.text-board .title {
+    text-align: left;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.text-board tr:hover {
+    background: #f8f9fa;
+}
+
+.free-layout {
+    display: flex;
+    gap: 24px;
+}
+
+.free-board {
+    flex: 3;
+}
+
+.best-box {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.best-box h3 {
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.best-box ul {
+    list-style: none;
+}
+
+.best-box li {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
+    cursor: pointer;
+}
+
+.best-box li span {
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.travel-top {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.travel-top img {
+    width: 55%;
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.travel-info {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    width: 45%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.travel-info .sub {
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.desc {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #444;
+}
+
+.date-box {
+    margin: 16px 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.weather-box {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.weather-box .day {
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    width: 50px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.weather-box span {
+    display: block;
+    font-size: 12px;
+}
+
+.map-box iframe {
+    width: 100%;
+    height: 320px;
+    border-radius: 16px;
+    border: none;
+}
+
+.out-link {
+    margin-top: 16px;
+    text-align: right;
+}
+
+.out-link a {
+    text-decoration: none;
+    font-weight: bold;
+}
+.blog-style {
+    max-width: 800px;
+    margin: auto;
+}
+
+.blog-post {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    line-height: 1.8;
+}
+
+.blog-meta {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.blog-hero {
+    width: 100%;
+    border-radius: 16px;
+    margin: 20px 0;
+}
+
+.blog-post img {
+    width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.tags {
+    margin-top: 20px;
+    color: #555;
+}
+
+.blog-actions {
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+}
+
+.tour-btn {
+    display: inline-block;
+    margin: 30px auto 0;
+    padding: 14px 36px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.tour-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+}
+
+.best-news {
+    max-width: 1100px;
+    margin: 50px auto 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.best-main {
+    position: relative;
+    padding: 35px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+.rank-badge {
+    position: absolute;
+    top: -18px;
+    left: -18px;
+    background: #ff6b6b;
+    color: #fff;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.best-main h2 {
+    font-size: 26px;
+    margin-bottom: 14px;
+}
+
+.best-main p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.best-meta {
+    margin-top: 20px;
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.best-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.best-item {
+    background: #fff;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.best-item span {
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.best-item:hover {
+    transform: translateX(5px);
+    background: #fff5f5;
+}
+.best-news {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.best-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.best-main {
+    position: relative;
+    background: #fff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.best-sub {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.best-mini {
+    background: #fff;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    cursor: pointer;
+}
+
+.best-mini span {
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-right: 6px;
+}
+
+.best-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.best-item {
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.best-item span {
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.rank-badge {
+    position: absolute;
+    top: -14px;
+    left: -14px;
+    background: #ff6b6b;
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+.event-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ffd43b, #ffa94d);
+    color: #5f3b00;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.post-detail {
+    max-width: 780px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.post-detail img {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+}
+
+.post-detail h2 {
+    padding: 20px 24px 0;
+    font-size: 26px;
+}
+
+.post-detail .author {
+    padding: 0 24px;
+    font-size: 13px;
+    color: #999;
+}
+
+.post-detail .text {
+    padding: 20px 24px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333;
+}
+.actions {
+    padding: 0 24px 20px;
+}
+
+.like-btn {
+    border: none;
+    background: #ffeded;
+    color: #e63946;
+    padding: 10px 16px;
+    border-radius: 30px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.like-btn:hover {
+    background: #ffe3e3;
+    transform: scale(1.05);
+}
+.comment-section {
+    max-width: 780px;
+    margin: 0 auto 80px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.comment-section h3 {
+    margin-bottom: 12px;
+}
+
+.comment {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.comment strong {
+    font-size: 13px;
+    color: #444;
+}
+
+.comment p {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.comment-form textarea {
+    flex: 1;
+    height: 70px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    resize: none;
+}
+
+.comment-form button {
+    background: #4dabf7;
+    border: none;
+    color: white;
+    padding: 0 18px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.thumb-board {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-top: 20px;
+}
+
+.thumb-board th {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    color: #777;
+    font-size: 13px;
+}
+
+.thumb-board td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f1f1;
+    vertical-align: middle;
+}
+
+.thumb-board .thumb img {
+    width: 70px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.thumb-board .title {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.thumb-board tr:hover {
+    background: #fafafa;
+}
+
+
+.best-thumb img {
+    width: 100%;
+    height: 180px;
+    border-radius: 14px;
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+.best-mini,
+.best-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.best-mini img,
+.best-item img {
+    width: 60px;
+    height: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.best-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.best-item em,
+.best-mini em {
+    margin-left: auto;
+    color: #ff5a5f;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.map-weather {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.map-half,
+.weather-half {
+    width: 50%;
+}
+
+.map-half iframe {
+    width: 100%;
+    height: 320px;
+    border-radius: 18px;
+    border: none;
+}
+
+.weather-half {
+    background: #fafafa;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.weather-half .date-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.weather-half input {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.weather-half button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #ff5a5f;
+    color: white;
+    cursor: pointer;
+}
+
+.weather-box {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.weather-box .day {
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    width: 13%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-size: 18px;
+}
+
+.weather-box span {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #666;
+}
+#calendar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.map-weather {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.map-half {
+    width: 50%;
+}
+
+.map-half iframe {
+    width: 100%;
+    height: 420px;
+    border-radius: 16px;
+    border: none;
+}
+
+.weather-half {
+    width: 50%;
+}
+
+#calendar {
+    height: 300px; /* ⭐ 이게 핵심 */
+    background: #fff;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+/* 날짜 셀 전체 높이 강제 축소 */
+.fc-daygrid-day {
+    height: 22px !important;
+    max-height: 22px !important;
+}
+
+/* 내부 프레임 */
+.fc-daygrid-day-frame {
+    min-height: 22px !important;
+    height: 22px !important;
+    padding: 0 !important;
+}
+
+/* 날짜 숫자 위치 */
+.fc-daygrid-day-number {
+    font-size: 11px !important;
+    padding: 0 !important;
+    line-height: 22px !important; /* 가운데 정렬 */
+}
+
+/* 줄 간격 제거 */
+.fc-daygrid-body table {
+    line-height: 1 !important;
+}
+
+/* 오늘 강조 */
+.fc-day-today {
+    background: #fff0f0 !important;
+    border-radius: 6px;
+}
