@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Elden Ring | ARCANE LOG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">ARCANE LOG</div>
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="posts.html">POSTS</a>
+  </nav>
+</header>
+
+<main class="post-layout wide">
+
+  <!-- 좌측 사이드 -->
+  <aside class="post-meta">
+
+    <!-- 🎮 GAME PROFILE -->
+    <div class="game-profile">
+      <h4>GAME PROFILE</h4>
+
+      <div class="profile-row">
+        <span>출시일</span>
+        <strong>2022.02.25</strong>
+      </div>
+      <div class="profile-row">
+        <span>개발사</span>
+        <strong>FromSoftware</strong>
+      </div>
+      <div class="profile-row">
+        <span>배급사</span>
+        <strong>Bandai Namco</strong>
+      </div>
+      <div class="profile-row">
+        <span>국가</span>
+        <strong>Japan</strong>
+      </div>
+      <div class="profile-row">
+        <span>플랫폼</span>
+        <strong>PC · PS · Xbox</strong>
+      </div>
+    </div>
+
+    <!-- TAG -->
+    <span class="tag">RPG</span>
+    <span class="tag">COMBAT</span>
+
+    <!-- STATS -->
+    <div class="stat">
+      <label>조작감</label>
+      <div class="bar"><span style="width:90%"></span></div>
+    </div>
+    <div class="stat">
+      <label>그래픽</label>
+      <div class="bar"><span style="width:95%"></span></div>
+    </div>
+    <div class="stat">
+      <label>스토리</label>
+      <div class="bar"><span style="width:80%"></span></div>
+    </div>
+    <div class="stat">
+      <label>난이도 설계</label>
+      <div class="bar"><span style="width:88%"></span></div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+      <h4>분석 목차</h4>
+      <a href="#s1">1. 스태미나 리스크 설계</a>
+      <a href="#s2">2. 딜 욕심 처벌 구조</a>
+      <a href="#s3">3. 패턴 학습 유도</a>
+    </div>
+
+  </aside>
+
+  <!-- 본문 -->
+  <article class="post-content">
+
+    <h1>엘든링 전투 시스템 분석</h1>
+    <p class="lead">
+      이 게임의 핵심은 반사신경이 아니라  
+      <strong>의사결정의 정확성</strong>이다.
+    </p>
+
+    <div class="hud-image">
+      <!-- <img src="images/eldenring_01.jpg" onerror="this.style.display='none'"> -->
+      <div class="image-placeholder">GAME SCREENSHOT</div>
+      <span class="hud-point" style="top:35%;left:42%;">①</span>
+    </div>
+
+    <h2 id="s1">1. 스태미나 리스크 설계</h2>
+    <p>
+      스태미나는 공격 자원이 아니라  
+      선택의 여유를 수치화한 장치다.
+    </p>
+
+    <div class="hud-image">
+      <!-- <img src="images/eldenring_02.jpg" onerror="this.style.display='none'"> -->
+      <div class="image-placeholder">BOSS ENCOUNTER</div>
+    </div>
+
+    <h2 id="s2">2. 딜 욕심 처벌 구조</h2>
+    <p>
+      엘든링은 플레이어의 탐욕을  
+      시스템적으로 교정한다.
+    </p>
+
+    <h2 id="s3">3. 패턴 학습 유도</h2>
+    <p>
+      실패는 좌절이 아니라  
+      학습으로 이어지도록 설계되어 있다.
+    </p>
+
+  </article>
+
+  <!-- 우측 추천 -->
+  <aside class="post-recommend">
+    <h4>관련 포스트</h4>
+
+    <div class="recommend-card">
+      <div class="thumb"></div>
+      <div class="rec-info">
+        <p class="rec-title">세키로 패링 설계 분석</p>
+        <span>COMBAT</span>
+      </div>
+    </div>
+
+    <div class="recommend-card">
+      <div class="thumb"></div>
+      <div class="rec-info">
+        <p class="rec-title">위쳐3 선택지 구조 해부</p>
+        <span>STORY</span>
+      </div>
+    </div>
+
+  </aside>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
