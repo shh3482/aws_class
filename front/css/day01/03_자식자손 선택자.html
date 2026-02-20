@@ -3,31 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>자식자손 선택자</title>
+	<title>자식 자손 선택자 예제</title>
 	<!-- 
-	자식 선택자 (교재 76페이지)
+	자식 선택자 (교재 p.76)
 	- 부모선택자 > 자식선택자
 	- 요소 안에 있는 자식을 선택
 
-	자손 선택자 (교재 75페이지)
+	자손 선택자 교재 (p.75)
 	- 조상선택자 자손선택자
 	- 요소 안에 있는 자손을 선택
 	- 자식 요소도 포함
 	-->
 	<style>
-		.box{color: red;}
-		.box > .link{color: green;}
-		/* 
-		우선 순위가 같으면 밑에 있는 속성이 적용
-		*/
-		.container .link{color: blue;}
+		.box{ color : red; }
+		.box > .link{ color: green;}
+		/* 우선 순위가 같으면 밑에 있는 속성이 적용 */
+		.container .link{ color: blue;}
 	</style>
 </head>
 <body>
 	<h1>자식 자손 선택자 예제</h1>
 	<!-- 
 	.container의 자손 요소는?
-	- .box 와 .link
+	- .box와 .link
 	.container의 자식 요소는?
 	- .box
 	-->

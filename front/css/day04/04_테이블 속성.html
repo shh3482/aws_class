@@ -12,14 +12,15 @@
 		- collapse : 합침
 
 	table-layout
-	- 첫 tr태그의 td/th 너비가 지정된 경우,
-		지정된 너비를 고정으로 할지 비례해서 자동으로 커지게 할지를 결정
+	- 첫 tr태그의 td/th 너비가 지정된 경우, 
+	  지정된 너비를 고정으로 할지 비례해서 자동으로 커지게 할지를 결정
 	- 값
 		- auto : 기본값, 자동으로 비례해서 커짐
 		- fixed : 고정
-
+	
+	
 	조건
-	- boder-collapse : seperate 일 때 적용 가능한 속성들
+	- border-collapse : seperate 일 때 적용 가능한 속성들
 
 	empty-cells
 	- th/td가 비어 있으면 보여줄지를 결정
@@ -31,7 +32,9 @@
 	- 수평 수직 순으로 설정
 	-->
 	<style>
-		table, table td, table th{
+		table,
+		table td, 
+		table th{
 			border: 1px solid black;
 		}
 		table{
@@ -61,15 +64,17 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td rowspan="3">HTML(HyperText Makrup Language)</td>
+				<td rowspan="3" >HTML(HyperText Makrup Language)</td>
 				<td>홍길동</td>
 				<td>100</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td>임꺽정</td>
 				<td>80</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td>장길산</td>
 				<td>70</td>
 			</tr>
@@ -77,11 +82,11 @@
 		<tfoot>
 			<tr>
 				<th colspan="2">총점</th>
+				<!-- <th></th> -->
 				<th>250</th>
 			</tr>
 		</tfoot>
 	</table>
-
 	<h2>layout : fixed</h2>
 	<table>
 		<thead>
@@ -93,15 +98,17 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td rowspan="3">HTML(HyperText Makrup Language)</td>
+				<td rowspan="3" >HTML(HyperText Makrup Language)</td>
 				<td>홍길동</td>
 				<td>100</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td>임꺽정</td>
 				<td>80</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td>장길산</td>
 				<td>70</td>
 			</tr>
@@ -109,11 +116,11 @@
 		<tfoot>
 			<tr>
 				<th colspan="2">총점</th>
+				<!-- <th></th> -->
 				<th>250</th>
 			</tr>
 		</tfoot>
 	</table>
-
 	<h2>seperate일 때 사용 가능한 속성</h2>
 	<table class="table">
 		<thead>
@@ -125,15 +132,17 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td rowspan="3">HTML(HyperText Makrup Language)</td>
+				<td rowspan="3" >HTML(HyperText Makrup Language)</td>
 				<td>홍길동</td>
 				<td>100</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td></td>
 				<td>80</td>
 			</tr>
 			<tr>
+				<!-- <td>HTML</td> -->
 				<td>장길산</td>
 				<td>70</td>
 			</tr>
@@ -141,6 +150,7 @@
 		<tfoot>
 			<tr>
 				<th colspan="2">총점</th>
+				<!-- <th></th> -->
 				<th>250</th>
 			</tr>
 		</tfoot>

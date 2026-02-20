@@ -1,0 +1,20 @@
+<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+
+<form action="/post/write" method="post">
+    <textarea name="content" id="editor"></textarea>
+    <button type="submit">전송</button>
+</form>
+
+<script>
+    // 3. 에디터 실행
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            language: 'ko' // 한글 설정
+        })
+        .then(editor => {
+            console.log('에디터 준비 완료!', editor);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>

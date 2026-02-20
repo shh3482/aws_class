@@ -16,15 +16,11 @@ java {
 
 configurations {
 	compileOnly {
-		extendsFrom annotationProcessor	
+		extendsFrom annotationProcessor
 	}
 }
 
 repositories {
-/*	maven{
-		url=uri("http://repo.maven.apache.org/maven2/")
-		allowInsecureProtocol=true
-	}*/
 	mavenCentral()
 }
 

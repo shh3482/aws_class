@@ -2,7 +2,6 @@ package kr.hi.boot.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import kr.hi.boot.dao.CommentDAO;
@@ -15,98 +14,116 @@ import kr.hi.boot.model.vo.Comment;
 public class CommentService {
 
 	private final CommentDAO commentDAO;
-
+	
 	public CommentService(CommentDAO commentDAO) {
 		this.commentDAO = commentDAO;
-
 	}
 
-	// 다오한테 번호주고 댓글 목록 요청
-	// 댓글 목록 반환
 	public List<Comment> getComments(int poNum, Criteria cri) {
-		// TODO Auto-generated method stub
+		//다오에게 게시글 번호와 페이지 정보를 주면서 댓글 목록을 가져오라고 요청
+		//게시글 목록 = 다오야.댓글목록가져와(게시글번호, 페이지정보);
 		List<Comment> list = commentDAO.selectComments(poNum, cri);
+		
+		//가져온 댓글 목록을 반환 
 		return list;
 	}
 
 	public PageMaker getPageMaker(int poNum, Criteria cri) {
-		// TODO Auto-generated method stub
-		// 한페이지네이션에서 최대 페이지수를 3개로 선언
+		//한페이지네이션에서 최대 페이지수를 3개로 선언
 		int pageCount = 3;
-		// 다오에게 게시글번호를 주면서 전체 댓글 수를 가져오라고 요청
+		//다오에게 게시글번호를 주면서 전체 댓글 수를 가져오라고 요청
+		//전체댓글수 = 다오야.전체댓글수가져와(게시글번호);
 		int count = commentDAO.selectCommentsCount(poNum);
-		// 최대 페이지수, 전체게시글수, 현재페이지 정보를 이용하여 PageMaker 객체를 생성
+		//최대 페이지수, 전체게시글수, 현재페이지 정보를 이용하여 PageMaker 객체를 생성
 		PageMaker pm = new PageMaker(pageCount, cri, count);
-		// 생성된 객체를 반환
+		//생성된 객체를 반환
 		return pm;
 	}
 
 	public String insertComment(Comment comment, CustomUser user) {
-		// TODO Auto-generated method stub
-		if (user == null) {
+		//- 사용자가 로그인 안했으면 "로그인이 필요한 서비스입니다."라고 반환
+		if(user == null) {
 			return "로그인이 필요한 서비스입니다.";
 		}
-		if (comment.getContent() == null || comment.getContent().isBlank()) {
+		//댓글 내용이 비었으면 "댓글을 입력하세요."라고 반환
+		if(comment.getContent() == null || 
+			comment.getContent().isBlank()) {
 			return "댓글을 입력하세요.";
 		}
+		//- 다오에게 게시글 번호, 댓글 내용, 사용자아이디를 주면서 게시글을 등록하라고 요청후 등록 여부를 알려달라고 요청
 		comment.setId(user.getUsername());
+		//등록결과 = 다오야.게시글등록해(댓글정보);
 		boolean result = commentDAO.insertComment(comment);
-		if (result) {
+		//- 등록햇으면 "댓글을 등록했습니다."라고 반환하고
+		if(result) {
 			return "댓글을 등록했습니다.";
 		}
+		//- 못했으면 댓글을 등록하지 못했습니다라고 반환
 		return "댓글을 등록하지 못했습니다.";
 	}
 
 	public String deleteComment(int coNum, CustomUser user) {
-		// TODO Auto-generated method stub
-		if (user == null) {
+		//- 사용자가 로그인되어 있지 않으면 "로그인이 필요한 서비스입니다" 반환
+		if(user == null) {
 			return "로그인이 필요한 서비스입니다.";
 		}
+		//- 댓글 작성자가 아니면 "작성자가 아닙니다" 반환
 		String id = user.getUsername();
-		if (!isWriter(coNum, id)) {
+		if(!isWriter(coNum, id)) {
 			return "작성자가 아닙니다.";
 		}
-
+		   
+		//- 다오에게 댓글 번호를 주면서 삭제하고 결과를 알려달라고 요청
+		//결과 = 다오야.댓글삭제해(댓글번호);
 		boolean res = commentDAO.deleteComment(coNum);
-		if (res) {
-			return "댓글을 삭제했습니다.";
+		//- 삭제했으면 "댓글을 삭제했습니다"를 반환
+		if(res) {
+			return "댓글을 삭제했습니다";
 		}
-		return "댓글을 삭제하지 못했습니다.";
-
+		//- 못했으면 " 댓글을 삭제하지 못했습니다"를 반환
+		return "댓글을 삭제하지 못했습니다";
 	}
-
 	private boolean isWriter(int coNum, String id) {
+		//- 다오에게 댓글번호 주면서 댓글 정보 가져오라고 요청
+		//댓글 = 다오야.댓글가져와(댓글번호);
 		Comment comment = commentDAO.selectComment(coNum);
-		System.out.println(comment);
-		if (comment == null) {
+		
+		//- 가져온 댓글 정보가 없으면 false를 반환
+		if(comment == null) {
 			return false;
 		}
 		String writer = comment.getId();
+		//- 작성자와 아이디가 같으면 true, 다르면 false를 반환
 		return writer.equals(id);
 	}
 
 	public String updateComment(int coNum, Comment comment, CustomUser user) {
-		// TODO Auto-generated method stub
-		// 내용 비었는지
-		if (comment.getContent() == null || comment.getContent().isBlank()) {
+		//- 내용이 비었는지 체크하여 비었으면 댓글을 입력하세요를 반환
+		if(comment == null || comment.getContent().isBlank()) {
 			return "댓글을 입력하세요.";
 		}
-		// 로그인 했는지
-		if (user == null) {
+		//- 로그인 안했으면 로그인이 필요한 서비스입니다를 반환
+		if(user == null) {
 			return "로그인이 필요한 서비스입니다.";
 		}
-		// 작성자가 맞는지
-		String id = user.getUsername();
-		if (!isWriter(coNum, id)) {
-			return "작성자가 아닙니다.";
+		//- 작성자가 아니면 작성자가 아닙니다를 반환
+		//  => isWriter
+		if(!isWriter(coNum, user.getUsername())) {
+			return "댓글 작성자가 아닙니다.";
 		}
-		// 다오에게 명령
-		boolean result = commentDAO.updateComment(coNum, comment);
-		// 수정 여부에 따른 리턴
-		if (result) {
+		//- 다오에게 댓글번호와 내용을 주면서 수정하라고 요청하고 결과를 가져옴
+		//결과 = 다오야.댓글수정해(댓글번호, 내용);
+		boolean result = commentDAO.updateComment(coNum, comment.getContent());
+		
+		//comment.setNum(coNum);
+		//boolean result = commentDAO.updateComment(comment);
+		//- 수정햇으면 댓글을 수정했습니다를 반환
+		if(result) {
 			return "댓글을 수정했습니다.";
 		}
+		//- 안했으면 댓글을 수정하지 못했습니다를 반환
 		return "댓글을 수정하지 못했습니다.";
 	}
-
 }
+
+

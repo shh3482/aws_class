@@ -10,16 +10,14 @@ import kr.hi.boot.model.vo.Comment;
 public interface CommentDAO {
 
 	List<Comment> selectComments(@Param("poNum")int poNum, @Param("cri")Criteria cri);
-	//삭제되지 않은 댓글만 가져옴, 시오오리넘 기준 내림차순 시오넘 기준 오름차순
 
 	int selectCommentsCount(@Param("poNum")int poNum);
 
 	boolean insertComment(@Param("comment")Comment comment);
 
-	boolean deleteComment(@Param("coNum")int coNum);
-
 	Comment selectComment(@Param("coNum")int coNum);
 
-	boolean updateComment(@Param("coNum")int coNum, @Param("comment") Comment comment);
+	boolean deleteComment(@Param("coNum")int coNum);
 
+	boolean updateComment(@Param("coNum")int coNum, @Param("content")String content);
 }

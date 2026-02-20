@@ -10,32 +10,32 @@
 	list-style-type
 	- 마커 종류
 	- 값
-		- ul태그 : disc(기본값), circle, square, none
-		- ol태그 : decimal(기본값), decimal-leading-zero
+		- ul태그 : disc(기본값), circle, squre
+		- ol 태그 : 
+			- decimal(기본값), decimal-leading-zero, 
 			- lower-roman/upper-roman
 			- lower-alpha/upper-alpha
 			- lower-latin/upper-latin
-		- 공통 :none
+		- 공통 : none
+	
+	list-style-image
+	- 마커를 이미지로 대체
+	- url함수를 이용
 
-		list-style-image
-		- 마커를 이미지로 대체
-		- url함수를 이용
+	list-style-position
+	- 마커의 위치
+	- 값
+		- inside : li태그 안쪽
+		- outside : li태그 바깥쪽
 
-		list-style-position
-		- 마커의 위치
-		- 값
-			- inside : li태그 안쪽
-			- outside : li태그 바깥쪽
-		
-		list-style
-		- list-style-type, list-style-posotion list-style-image를 한번에 적용하는 단축 속성
-		- list-style : none을 이용하여 마커를 제거
-
+	list-style
+	- list-style-type, list-style-position list-style-image를 한번에 적용하는 단축 속성
+	- list-style : none을 이용하여 마커를 제거
 	-->
 	<style>
-		ul, ol{background-color: pink;}
+		ul, ol{ background-color: pink;}
 		li{background-color: yellow;}
-		.list1{
+		.list1{ 
 			/* list-style-type: circle;
 			list-style-position: inside; */
 			list-style: circle inside;
@@ -45,7 +45,7 @@
 			list-style-position: outside;
 		}
 		.list3{
-			list-style-image: url(../../../static/image/마커.png);
+			list-style-image: url(../../../static/img/마커.png);
 		}
 
 	</style>

@@ -25,32 +25,32 @@ public class PostService {
 	}
 
 	public void insertBoard(String name) {
-		// 시작문자 앞과 마지막문자 뒤의 공백을 제거
+		//시작문자 앞과 마지막문자 뒤의 공백을 제거
 		name = name.trim();
-		// 공백을 제거한 문자열의 길이가 0일때=> 입력을 안하거나 공백으로만 이루어졌을때
-		if (name.length() == 0) {
+		//공백을 제거한 문자열의 길이가 0일때=> 입력을 안하거나 공백으로만 이루어졌을때
+		if(name.length() == 0) {
 			return;
 		}
-		// 게시판 추가
+		//게시판 추가
 		try {
-			// 동일한 게시판을 추가하려고 할 때 예외가 발생
+			//동일한 게시판을 추가하려고 할 때 예외가 발생
 			postDAO.insertBoard(name);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void deleteBoard(int num) {
-
+		
 		postDAO.deleteBoard(num);
-
+		
 	}
 
 	public void updateBoard(int num, String name) {
 		try {
-			// 변경할 이름을 다른 게시판이 사용중이면 예외 발생
+			//변경할 이름을 다른 게시판이 사용중이면 예외 발생
 			postDAO.updateBoard(num, name);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -65,32 +65,32 @@ public class PostService {
 	}
 
 	public void insertPost(PostDTO post, CustomUser cUser) {
-		// 제목이 없으면 추가 안함
-		if (post.getTitle().trim().length() == 0) {
+		//제목이 없으면 추가 안함
+		if(post.getTitle().trim().length() == 0) {
 			return;
 		}
-		// 내용이 없으면 추가 안함
-		if (post.getContent().trim().length() == 0) {
+		//내용이 없으면 추가 안함
+		if(post.getContent().trim().length() == 0) {
 			return;
 		}
-		// 없는 게시판 번호면 추가 안함
-		// 게시판 번호를 이용하여 게시판 정보를 가져옴
+		//없는 게시판 번호면 추가 안함
+		//게시판 번호를 이용하여 게시판 정보를 가져옴 
 		Board board = postDAO.getBoard(post.getBoard());
-		// 일치하는 게시판이 없으면 종료
-		if (board == null) {
+		//일치하는 게시판이 없으면 종료
+		if(board == null) {
 			return;
 		}
-		// 사용자가 로그인 안되어있으면 추가 안함
-		if (cUser == null) {
+		//사용자가 로그인 안되어있으면 추가 안함
+		if(cUser == null) {
 			return;
 		}
-		// post에 작성자 정보 추가
+		//post에 작성자 정보 추가
 		Member user = cUser.getMember();
-		if (user == null) {
+		if(user == null) {
 			return;
 		}
 		post.setId(user.getMe_id());
-		// 게시글 등록
+		//게시글 등록
 		postDAO.insertPost(post);
 	}
 
@@ -99,80 +99,88 @@ public class PostService {
 	}
 
 	public PageMaker getPageMaker(Criteria cri) {
-		// - 한 페이지네이션의 최대 페이지수는 3개로 설정
+		//- 한 페이지네이션의 최대 페이지수는 3개로 설정
 		int displayPageNum = 3;
-
-		// - 다오에게 현재 페이지 정보를 주면서 페이지 정보와 일치하는 게시글
-		// 전체 수를 가져오라고 요청
-		// 게시글수 = 다오야.게시글전체수를가져와(현재페이지정보)
+		
+		//- 다오에게 현재 페이지 정보를 주면서 페이지 정보와 일치하는 게시글
+		//   전체 수를 가져오라고 요청
+		//게시글수 = 다오야.게시글전체수를가져와(현재페이지정보)
 		int count = postDAO.selectPostListCount(cri);
-		// - 최대 페이지수, 총 게시글수, 현재 페이지정보를 이용하여
-		// PageMaker클래스 객체를 생성후 반환
-		PageMaker pm =
-				// new PageMaker(한페이지네이션의최대페이지수, 현재페이지정보, 현재페이지정보에맞는전체컨텐츠수);
-				new PageMaker(displayPageNum, cri, count);
+		//- 최대 페이지수, 총 게시글수, 현재 페이지정보를 이용하여 
+		//  PageMaker클래스 객체를 생성후 반환
+		PageMaker pm = 
+			//new PageMaker(한페이지네이션의최대페이지수, 현재페이지정보, 현재페이지정보에맞는전체컨텐츠수);
+			new PageMaker(displayPageNum, cri, count);
 		return pm;
 	}
 
 	public void deletePost(int poNum, CustomUser user) {
-		// 사용자 정보가 로그인이 안되어 있으면 종료
-		if (user == null) {
+		//사용자 정보가 로그인이 안되어 있으면 종료
+		if(user == null) {
 			return;
 		}
-		// 사용자가 작성자인지 확인
-		// 게시글 번호를 이용하여 게시글을 가져옴
-		// =>다오에게 게시글 번호를 주면서 게시글을 가져오라고 요청
-		// 게시글 = 다오야.게시글가져와(게시글번호);
+		//사용자가 작성자인지 확인
+		//게시글 번호를 이용하여 게시글을 가져옴
+		//=>다오에게 게시글 번호를 주면서 게시글을 가져오라고 요청
+		//게시글 = 다오야.게시글가져와(게시글번호);
 		Post post = postDAO.getPost(poNum);
-
-		// 게시글이 없으면 종료
-		// if(게시글이 없다) {
-		if (post == null) {
+		
+		//게시글이 없으면 종료
+		//if(게시글이 없다) {
+		if(post == null) {
 			return;
 		}
-
-		// 게시글 작성자와 사용자아이디를 비교하여 다르면 종료
-		// 게시글 작성자 아이디
+		
+		//게시글 작성자와 사용자아이디를 비교하여 다르면 종료
+		//게시글 작성자 아이디 
 		String writer = post.getPo_me_id();
-		// 사용자 아이디
+		//사용자 아이디
 		String id = user.getUsername();
-
-		// if(게시글작성자아이디와 사용자아이디가 다르다){
-		// if(!게시글작성자아이디.equals(사용자아이디)){
-		if (!writer.equals(id)) {
+		
+		//if(게시글작성자아이디와 사용자아이디가 다르다){
+		//if(!게시글작성자아이디.equals(사용자아이디)){
+		if(!writer.equals(id)) {
 			return;
 		}
-
-		// 다오에게 게시글 번호를 주면서 삭제하라고 요청
-		// 다오야.게시글삭제해(게시글번호);
+		
+		//다오에게 게시글 번호를 주면서 삭제하라고 요청
+		//다오야.게시글삭제해(게시글번호);
 		postDAO.deletePost(poNum);
 	}
 
-	public void updatePost(PostDTO dto, CustomUser cUser, int poNum) {
-		// TODO Auto-generated method stub
-		// 사용자가 로그인 안되어있으면 추가 안함
-		if (cUser == null) {
-			return;
-		}                                     
-		if (dto == null ||
-			dto.getTitle().isBlank() ||
+	public void updatePost(int poNum, PostDTO dto, CustomUser user) {
+		//- 제목, 내용이 비었는 확인해서 비었으면 종료
+		if( dto == null || 
+			dto.getTitle().isBlank() || 
 			dto.getContent().isBlank()) {
 			return;
 		}
-		// 다오에게 게시글을 수정하라고 시키기
+		//- 사용자가 로그인 안되면 종료
+		if(user == null) {
+			return;
+		}
+		//- 작성자가와 사용자가 다르면 종료
+		//  - 다오에게 게시글번호 주면서 게시글 가져오라고 요청
+		//  - 게시글이 없으면 종료
+		//  - 게시글의 작성자와 사용자 아이디가 다르면 종료
 		Post post = postDAO.getPost(poNum);
-
-		if (post == null) {
+		
+		if(post == null) {
 			return;
 		}
-
+		
 		String writer = post.getPo_me_id();
-		String id = cUser.getUsername();
-
-		if (!writer.equals(id)) {
+		String id = user.getUsername();
+		
+		if(!writer.equals(id)) {
 			return;
 		}
-		postDAO.updatePost(dto, poNum);
-
+		
+		//- 다오에게 게시글번호, 제목, 내용을 주면서 수정하라고 요청
+		//다오야.게시글수정해(게시글번호, 제목과내용);
+		postDAO.updatePost(poNum, dto);
 	}
 }
+
+
+

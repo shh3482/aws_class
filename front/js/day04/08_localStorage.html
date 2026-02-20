@@ -7,6 +7,7 @@
 </head>
 <body>
 	<h1>Local Storage 예제</h1>
+
 	<script>
 		/* 
 		localStorage
@@ -24,20 +25,16 @@
 		clear()
 		- 전체 삭제
 		*/
-		
 		let objs = [
 			{name : "홍길동", age : 21},
 			{name : "임꺽정", age : 23},
 			{name : "둘리", age : 30}
 		]
-
-		//배열 객체를 localStorage에 저장하기 배열 객체를 문자열로 변환하여 저장
+		//배열 객체를 localStroage에 저장하기 배열 객체를 문자열로 변환하여 저장
 		localStorage.setItem("list", JSON.stringify(objs));
-
 		//문자열을 객체 배열로 변환하여 가져옴
 		let list = JSON.parse(localStorage.getItem("list"));
 		console.log(list);
-		
 	</script>
 </body>
 </html>

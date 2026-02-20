@@ -1,5 +1,6 @@
 package kr.hi.community.model.util;
 
 public enum UserRole {
-	USER,ADMIN, SUPER_ADMIN
+	//아래 값들은 member 테이블에 me_role에 들어가는 권한들	
+	USER, ADMIN, SUPER_ADMIN
 }

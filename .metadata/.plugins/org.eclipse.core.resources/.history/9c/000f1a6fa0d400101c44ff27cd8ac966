@@ -1,0 +1,14 @@
+package day07;
+
+public class EX02_ExceptionTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 메뉴를 출력하고 메뉴를 입력받은 예제
+		 * 
+		 */
+		int menu;
+		Scanner scan = new Scanner(System.in);
+	}
+
+}

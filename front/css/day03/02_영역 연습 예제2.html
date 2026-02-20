@@ -10,37 +10,35 @@
 			/* container와 box들 사이의 간격을 지정 */
 			padding: 10px;
 			/* container의 너비를 마지막 자식 요소의 위치까지 잡음 */
-			/* 내가 한거: width: fit-content; */
 			float: left;
 		}
 		/* 모든 box */
 		.box{
 			/* 너비/높이 지정 */
-			width: 150px;
-			height: 200px;
+			width: 150px; height: 200px; 
 			/* 배경색 지정 */
-			background-color: red;
+			background: red;
+			/* 너비/높이를 요소의 너비/높이로 적용하기 위한 설정 */
+			box-sizing: border-box;
 			/* box들을 block요소 상관없이 나열하기 위한 설정 */
 			float: left;
 		}
-		/* 2번째 box */
-		.container > div:nth-of-type(2){
+		/* 2번째 box(오른쪽 box) */
+		.container>div:nth-of-type(2){
 			/* 오른쪽 box 배경색 */
-			background-color: blue;
+			background: blue; 
 			/* box사이의 간격을 지정하기 위해 오른쪽 box에 왼쪽 여백을 지정 */
 			margin-left: 10px;
 		}
 		/* box에 float 속성을 적용해서 container의 높이가 0이 되는 현상이 있어서 해결하기 위한 설정 */
-		.container::after, body::after{
-			content: '';
-			display: block;
-			clear: both;
+		.container::after,
+		body::after{
+			content: ''; display: block; clear: both;
 		}
-
 	</style>
 </head>
 <body>
-	<h1>영역 연습 예제2</h1>
+	<h1>영역 연습 예제</h1>
 	<!-- 
 		각 box 요소의 너비/높이는 150px/200px
 		각 box는 한 라인에 배치

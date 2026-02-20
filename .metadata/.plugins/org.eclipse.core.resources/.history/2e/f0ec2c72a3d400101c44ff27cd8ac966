@@ -1,0 +1,18 @@
+package day07;
+
+public class EX04_IOStream {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 스트림
+		 * - 데이터를 읽거나 쓰는데 추상화된 개념
+		 * - 데이터를 연속적으로 처리
+		 * - 분류
+		 *   - 입력 vs 출력
+		 *   - 바이트 vs 문자
+		 *   - 기반 vs 보조
+		 * 
+		 */
+	}
+
+}
