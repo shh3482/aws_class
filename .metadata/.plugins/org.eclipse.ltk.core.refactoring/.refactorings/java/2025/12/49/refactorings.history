@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;day01.EX14_ifSwitchTest.java&apos; to &apos;EX14_IfSwitchTest.java&apos;&#x0D;&#x0A;- Original project: &apos;java&apos;&#x0D;&#x0A;- Original element: &apos;day01.EX14_ifSwitchTest.java&apos;&#x0D;&#x0A;- Renamed element: &apos;day01.EX14_IfSwitchTest.java&apos;" description="Rename compilation unit &apos;EX14_ifSwitchTest.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;day01{EX14_ifSwitchTest.java" name="EX14_IfSwitchTest.java" references="false" stamp="1765032885157" version="1.0"/>
+</session>
