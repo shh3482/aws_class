@@ -1,111 +1,111 @@
-drop database if exists fitness;
+DROP DATABASE IF EXISTS FITNESS;
 
-create database fitness;
+CREATE DATABASE FITNESS;
 
-use fitness;
+USE FITNESS;
 
-DROP TABLE IF EXISTS `locker`;
+DROP TABLE IF EXISTS `LOCKER`;
 
-CREATE TABLE `locker` (
-	`locker_ID`	int	primary key auto_increment,
-	`location`	varchar(10)	not NULL
+CREATE TABLE `LOCKER` (
+	`LOCKER_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`LOCATION`	VARCHAR(10)	NOT NULL
 );
 
-DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `MEMBER`;
 
-CREATE TABLE `member` (
-	`member_ID`	int	primary key auto_increment,
-	`name`	varchar(20)	not NULL,
-	`contact`	varchar(13)	not NULL,
-	`join_date`	datetime	not NULL default current_timestamp,
-	`locker_ID`	int unique NULL
+CREATE TABLE `MEMBER` (
+	`MEMBER_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`NAME`	VARCHAR(20)	NOT NULL,
+	`CONTACT`	VARCHAR(13)	NOT NULL,
+	`JOIN_DATE`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`LOCKER_ID`	INT	UNIQUE NULL
 );
 
-DROP TABLE IF EXISTS `class`;
+DROP TABLE IF EXISTS `CLASS`;
 
-CREATE TABLE `class` (
-	`class_id`	int	primary key auto_increment,
-	`name`	varchar(20)	not NULL,
-	`capacity`	int	NULL,
-	`fee`	int	NULL,
-	`trainer_id`	int NOT NULL
+CREATE TABLE `CLASS` (
+	`CLASS_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`NAME`	VARCHAR(20)	NOT NULL,
+	`CAPACITY`	INT	NOT NULL,
+	`FEE`	INT	NOT NULL,
+	`TRAINER_ID`	INT	NOT NULL
 );
 
-DROP TABLE IF EXISTS `trainer`;
+DROP TABLE IF EXISTS `TRAINER`;
 
-CREATE TABLE `trainer` (
-	`trainer_id`	int	primary key auto_increment,
-	`name`	varchar(20)	not NULL,
-	`speciality`	varchar(20)	NULL,
-	`experience`	int	not NULL default 0,
-	`manager_id`	int NULL
+CREATE TABLE `TRAINER` (
+	`TRAINER_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`NAME`	VARCHAR(20)	NOT NULL,
+	`SPECIALTY`	VARCHAR(20)	NULL,
+	`EXPERIENCE`	INT	NOT NULL DEFAULT 0,
+	`MANAGER_ID`	INT	NULL
 );
 
-DROP TABLE IF EXISTS `enrollment`;
+DROP TABLE IF EXISTS `ENROLLMENT`;
 
-CREATE TABLE `enrollment` (
-	`enrollment_id`	int	primary key auto_increment,
-	`apply_date`	datetime	not NULL default current_timestamp,
-	`payment_state`	varchar(3)	not NULL,
-	`member_id`	int	NOT NULL,
-	`class_id`	int	NOT NULL
+CREATE TABLE `ENROLLMENT` (
+	`ENROLLMENT_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`APPLY_DATE`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`PAYMENT_STATE`	VARCHAR(3)	NOT NULL,
+	`MEMBER_ID`	INT	NOT NULL,
+	`CLASS_ID`	INT	NOT NULL
 );
 
-DROP TABLE IF EXISTS `attendance`;
+DROP TABLE IF EXISTS `ATTENDANCE`;
 
-CREATE TABLE `attendance` (
-	`attendance_id`	int	primary key auto_increment,
-	`check_in_time`	datetime	not NULL default current_timestamp,
-	`member_id`	int	NOT NULL,
-	`class_id`	int	NOT NULL
+CREATE TABLE `ATTENDANCE` (
+	`ATTENDANCE_ID`	INT	PRIMARY KEY AUTO_INCREMENT,
+	`CHECK_IN_TIME`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`MEMBER_ID`	INT	NOT NULL,
+	`CLASS_ID`	INT	NOT NULL
 );
 
-ALTER TABLE `member` ADD CONSTRAINT `FK_locker_TO_member_1` FOREIGN KEY (
-	`locker_ID`
+ALTER TABLE `MEMBER` ADD CONSTRAINT `FK_LOCKER_TO_MEMBER_1` FOREIGN KEY (
+	`LOCKER_ID`
 )
-REFERENCES `locker` (
-	`locker_ID`
+REFERENCES `LOCKER` (
+	`LOCKER_ID`
 );
 
-ALTER TABLE `class` ADD CONSTRAINT `FK_trainer_TO_class_1` FOREIGN KEY (
-	`trainer_id`
+ALTER TABLE `CLASS` ADD CONSTRAINT `FK_TRAINER_TO_CLASS_1` FOREIGN KEY (
+	`TRAINER_ID`
 )
-REFERENCES `trainer` (
-	`trainer_id`
+REFERENCES `TRAINER` (
+	`TRAINER_ID`
 );
 
-ALTER TABLE `trainer` ADD CONSTRAINT `FK_trainer_TO_trainer_1` FOREIGN KEY (
-	`manager_id`
+ALTER TABLE `TRAINER` ADD CONSTRAINT `FK_TRAINER_TO_TRAINER_1` FOREIGN KEY (
+	`MANAGER_ID`
 )
-REFERENCES `trainer` (
-	`trainer_id`
+REFERENCES `TRAINER` (
+	`TRAINER_ID`
 );
 
-ALTER TABLE `enrollment` ADD CONSTRAINT `FK_member_TO_enrollment_1` FOREIGN KEY (
-	`member_id`
+ALTER TABLE `ENROLLMENT` ADD CONSTRAINT `FK_MEMBER_TO_ENROLLMENT_1` FOREIGN KEY (
+	`MEMBER_ID`
 )
-REFERENCES `member` (
-	`member_ID`
+REFERENCES `MEMBER` (
+	`MEMBER_ID`
 );
 
-ALTER TABLE `enrollment` ADD CONSTRAINT `FK_class_TO_enrollment_1` FOREIGN KEY (
-	`class_id`
+ALTER TABLE `ENROLLMENT` ADD CONSTRAINT `FK_CLASS_TO_ENROLLMENT_1` FOREIGN KEY (
+	`CLASS_ID`
 )
-REFERENCES `class` (
-	`class_id`
+REFERENCES `CLASS` (
+	`CLASS_ID`
 );
 
-ALTER TABLE `attendance` ADD CONSTRAINT `FK_member_TO_attendance_1` FOREIGN KEY (
-	`member_id`
+ALTER TABLE `ATTENDANCE` ADD CONSTRAINT `FK_MEMBER_TO_ATTENDANCE_1` FOREIGN KEY (
+	`MEMBER_ID`
 )
-REFERENCES `member` (
-	`member_ID`
+REFERENCES `MEMBER` (
+	`MEMBER_ID`
 );
 
-ALTER TABLE `attendance` ADD CONSTRAINT `FK_class_TO_attendance_1` FOREIGN KEY (
-	`class_id`
+ALTER TABLE `ATTENDANCE` ADD CONSTRAINT `FK_CLASS_TO_ATTENDANCE_1` FOREIGN KEY (
+	`CLASS_ID`
 )
-REFERENCES `class` (
-	`class_id`
+REFERENCES `CLASS` (
+	`CLASS_ID`
 );
 

@@ -42,9 +42,37 @@
 			</div>
 			<button class="btn btn-outline-success col-12">게시글 등록</button>
 		</form>
+		<script>
+    const {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph
+    } = CKEDITOR;
+    const { FormatPainter } = CKEDITOR_PREMIUM_FEATURES;
+
+    ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+            licenseKey: '<YOUR_LICENSE_KEY>',
+            plugins: [ Essentials, Bold, Italic, Font, Paragraph, FormatPainter ],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                'formatPainter'
+            ]
+        } )
+        .then(  editor => {
+			window.editor = editor;
+		} )
+        .catch( /* ... */ );
+</script>
+		
 	</main>
 </body>
 </html>
+
 
 
 

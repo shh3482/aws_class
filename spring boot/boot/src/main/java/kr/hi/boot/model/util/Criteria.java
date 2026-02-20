@@ -20,8 +20,4 @@ public class Criteria {
 	public int getPageStart() {
 		return (page - 1) * perPageNum;
 	}
-	public void setBoardNum(int boardNum) {
-		// TODO Auto-generated method stub
-		
-	}
 }

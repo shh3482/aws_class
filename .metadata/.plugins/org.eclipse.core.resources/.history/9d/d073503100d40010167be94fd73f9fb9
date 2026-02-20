@@ -1,0 +1,17 @@
+package day06;
+
+public class EX07_Lambda {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* 내부 클래스
+		 * - 클래스 안에 있는 클래스
+		 * - 클래스를 구현하는 데 필요한 클래스이지만 다른 곳에서는 사용할 필요가 없을 때 내부 클래스를 만듬
+		 * 
+		 * 람다식 479페이지
+		 * - 언제 사용?
+		 *   - 함수형 인터페이스의 객체를 만들 때 사용
+		 */
+	}
+
+}

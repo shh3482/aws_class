@@ -1,6 +1,7 @@
 package kr.hi.boot.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,15 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import kr.hi.boot.model.dto.PostDTO;
-import kr.hi.boot.model.util.Criteria;
 import kr.hi.boot.model.util.CustomUser;
 import kr.hi.boot.model.util.PageMaker;
 import kr.hi.boot.model.util.PostCriteria;
 import kr.hi.boot.model.vo.Board;
 import kr.hi.boot.model.vo.Post;
 import kr.hi.boot.service.PostService;
-
-import java.util.List;
 
 @Controller
 public class PostController {
@@ -94,38 +92,33 @@ public class PostController {
 		postService.deletePost(poNum, user);
 		return "redirect:/post/list";
 	}
-	
 	@GetMapping("/post/update/{num}")
 	public String postUpdate(
-		Model model,
-		@PathVariable("num")int poNum) {
-		//포스트넘을 가져오기
+			//- 화면에서 보낸 게시글 번호를 가져옴
+			@PathVariable("num")int poNum,
+			Model model) {
+		//- 서비스에게 게시글 번호를 주면서 게시글을 가져오라고 요청
+		//게시글 = 서비스야.게시글가져와(게시글번호);
 		Post post = postService.getPost(poNum);
-		//화면에 전달
+		//- 가져온 게시글을 화면에 전달
 		model.addAttribute("post", post);
-		System.out.println(post);
 		return "post/update";
 	}
-	
 	@PostMapping("/post/update/{num}")
 	public String postUpdate(
-		//화면에 입력한거 가져오기
-		PostDTO dto,
-		@AuthenticationPrincipal CustomUser cUser,
-		@PathVariable("num")int poNum
-		) {
-		//가져온걸 서비스한테 넘겨줌
-		postService.updatePost(dto, cUser, poNum);
-		//화면에 전달
+			//URL에 있는 게시글 번호를 가져옴
+			@PathVariable("num")int poNum,
+			//로그인한 사용자 정보 가져옴
+			@AuthenticationPrincipal CustomUser user,
+			//화면에서 보낸 제목과 내용을 가져옴
+			PostDTO dto
+			) {
+		//서비스에게 게시글번호, 제목, 내용, 사용자 정보를 주면서 수정하라고 요청
+		//서비스야.게시글정보수정해(게시글번호, 게시글제목과내용, 사용자정보);
+		postService.updatePost(poNum, dto, user);
 		return "redirect:/post/detail/{num}";
 	}
 }
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,21 @@
+package day06;
+
+public class EX02_String {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/* String 클래스 377페이지
+		 * - 문자열을 관리하는 클래스
+		 * - final char[]로 문자열을 관리
+		 * - 문자열이 변경되면 기존 문자열에서 변경되는게 아니라 새로운 문자열을 만들어서 연결
+		 *   예시
+		 *   String str = "abc"
+		 *   str = str + "d"; // abc 뒤에 ㅇ를 이어 붙이는게 아니라 abcd라는 문자열을 새로 만들어 연결
+		 * 
+		 * StringBuffer(쓰레드 지원)와 StringBuilder 380페이지
+		 * - char[]로 문자열을 관리
+		 * - 둘의 차이는 쓰레드 지원 여부
+		 */
+	}
+
+}

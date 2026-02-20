@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Travel Recommendation</title>
+<link rel="stylesheet" href="community.css">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">TRAVELLOG</div>
+    <div class="auth">
+        <a href="#">로그인</a>
+        <a href="#">회원가입</a>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <h3>카테고리</h3>
+        <ul>
+            <li class="active">여행추천</li>
+            <li>국내여행</li>
+            <li>해외여행</li>
+            <li>자유게시판</li>
+        </ul>
+    </aside>
+
+    <main class="content">
+
+        <div class="travel-top">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+            <div class="travel-info">
+                <h2>제주 겨울 숲길</h2>
+                <p class="sub">제주 서귀포시 | 자연 · 힐링</p>
+                <p>☎ 064-000-0000</p>
+                <p>🚗 서귀포 터미널 → 15분</p>
+                <p class="desc">
+                    겨울 바람과 돌담이 어우러진 조용한 산책 코스입니다.
+                </p>
+								<a href="https://www.visitjeju.net" target="_blank" class="tour-btn">
+				공식 관광지 페이지 보러가기 →
+		</a>
+            </div>
+        </div>
+
+        <!-- 지도 + 날씨 반반 -->
+<div class="map-weather">
+
+    <!-- 좌: 지도 -->
+    <div class="map-half">
+        <iframe
+          src="https://maps.google.com/maps?q=Jeju&t=&z=13&ie=UTF8&iwloc=&output=embed">
+        </iframe>
+    </div>
+
+    <!-- 우: 달력 + 날씨 -->
+    <div class="weather-half">
+
+        <!-- 달력 -->
+        <div id="calendar"></div>
+
+        <!-- 날씨 -->
+        <div class="weather-box">
+            <div class="day">☀️<span>월</span></div>
+            <div class="day">⛅<span>화</span></div>
+            <div class="day">🌧️<span>수</span></div>
+            <div class="day">🌧️<span>목</span></div>
+            <div class="day">☀️<span>금</span></div>
+            <div class="day">⛅<span>토</span></div>
+            <div class="day">☀️<span>일</span></div>
+        </div>
+
+    </div>
+</div>
+
+
+
+    </main>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ko',
+        height: 300,
+        dateClick: function(info) {
+            alert("선택한 날짜: " + info.dateStr);
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
+</body>
+</html>

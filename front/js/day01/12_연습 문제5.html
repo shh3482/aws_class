@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>연습 문제</title>
+</head>
+<body>
+	<h1>성적 출력 예제</h1>
+	<script>
+		/* 
+		성적을 정수로 입력받아(prompt) 학점을 출력하세요(document.write).
+		90~100 : A
+		=> 성적이 90점이상이고 100이하이면 A
+		=> 성적이 90점이상이고 성적이 100점이하이면 A
+		=> 성적이 90보다 크거나 같고 성적이 100보다 작거나 같으면 A
+		조건식
+		- 성적이 90보다 크거나 같고 성적이 100보다 작거나 같다
+		=>성적이 90보다 크거나 같다 && 성적이 100보다 작거나 같다
+		=>성적 >= 90 && 성적 <= 100
+		80~89 : B
+		70~79 : C
+		60~69 : D
+		0~59 : F
+		*/
+		let 성적 = prompt("정수 성적 입력");
+		if(성적 >= 90 && 성적 <= 100){
+			document.write(`${성적}은 A학점<br>`);
+		}
+		//A학점이 아닌 성적 중에서 B학점을 찾음
+		else if(성적 >= 80 && 성적 <= 89){
+			document.write(`${성적}은 B학점<br>`);
+		}
+		//A,B학점이 아닌 성적 중에서 C학점을 찾음
+		else if(성적 >= 70 && 성적 <= 79){
+			document.write(`${성적}은 C학점<br>`);
+		}
+		//A,B,C학점이 아닌 성적 중에서 D학점을 찾음
+		else if(성적 >= 60 && 성적 <= 69){
+			document.write(`${성적}은 D학점<br>`);
+		}
+		//A,B,C,D학점이 아니면 F
+		else{
+			document.write(`${성적}은 F학점<br>`);
+		}
+	</script>
+</body>
+</html>

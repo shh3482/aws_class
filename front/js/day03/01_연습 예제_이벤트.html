@@ -6,24 +6,26 @@
 	<title>이벤트 연습 예제</title>
 </head>
 <body>
-	<button type="button" id = "btn1">더보기</button>
+	<button type="button" id="btn1" >더보기</button>
+	
 	<script>
-		/* 
-		버튼을 클릭할 때 마다 문구가 더보기<->접기로 바뀌도록 구현
-		*/
-		const btn1 = document.getElementById("btn1");
+		/* 버튼을 클릭할 때마다 문구가 더보기<->접기로 바뀌도록 구현 */
+		//요소 선택(버튼)
+		const btn = document.querySelector("#btn1");
 
-		btn1.addEventListener("click", ()=>{
-			let text = btn1.textContent;
-			if(text == "더보기"){
-				text = "접기";
-				btn1.textContent = text;
+		//선택한 요소에 이벤트 등록
+		btn.addEventListener("click", function(){
+			
+			//더보기이면 접기로 텍스트를 변경
+			//요소의 텍스트 : 요소.textContent
+			if(btn.textContent == "더보기"){
+				btn.textContent = "접기";
 			}
+			//아니면 더보기로 텍스트를 변경
 			else{
-				btn1.textContent = "더보기";
+				btn.textContent = "더보기";
 			}
-		})
-		
+		});
 	</script>
 </body>
 </html>

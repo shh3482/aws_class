@@ -5,9 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>opacity 속성 예제</title>
 	<!-- 
-	opacity (교재 156페이지)
+	opacity (교재 p.156)
 	- 요소의 투명도를 설정
-	- 0~1사이의 실수
+	- 0~1사이의 실수 
 	- 0이면 투명, 1이면 불투명
 	- 부모 요소에 투명도가 적용되면 자식 요소에도 적용 됨
 		=> 자식 요소에 투명도를 1로 해도 투명이 됨
@@ -16,7 +16,7 @@
 	<style>
 		.container{
 			opacity: 0.4;
-			background-color: red;
+			background: red;
 		}
 		.container > .box,
 		.container1 > .box1{
@@ -28,17 +28,16 @@
 			opacity: 1;
 		}
 		.container1{
-			background-color: rgba(255, 0, 0, 0.4);
+			background: rgba(255, 0, 0, 0.4);
 		}
-
 		.container2{
-			width: 1280px;
-			height: 845px;
+			width: 397px;
+			height: 640px;
 			/* 글자의 기준으로 삼기 위해 */
 			position: relative;
 		}
 		.img{
-			background: url(../../../static/image/bird.jpg);
+			background: url(../../../static/img/루돌프.jpg);
 			height: 100%;
 			opacity: 0.4;
 		}
@@ -46,6 +45,7 @@
 			/* p태그의 기본 값이 있으면 제거하기 위해 */
 			margin: 0;
 			padding: 0;
+
 			width: 200px;
 			height: 50px;
 			line-height: 50px;
@@ -60,26 +60,22 @@
 			margin-left: -100px;
 			margin-top: -25px;
 		}
-
 	</style>
 </head>
 <body>
 	<h1>opacity 속성 예제</h1>
-	
 	<h2>opacity 속성 적용</h2>
 	<div class="container">
 		<div class="box">안녕하세요.</div>
 	</div>
-
 	<h2>배경에 rgba를 적용</h2>
 	<div class="container1">
 		<div class="box1">안녕하세요.</div>
 	</div>
-
-	<h2>이미지 위에 글자 배치 opacity 속성 적용</h2>
+	<h2>이미지 위에 글자 배치 : opacity 속성 적용</h2>
 	<div class="container2">
 		<div class="img"></div>
-		<p class="text">새</p>
+		<p class="text">루돌프</p>
 	</div>
 </body>
 </html>
