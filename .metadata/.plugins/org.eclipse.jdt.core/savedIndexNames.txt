@@ -1,5 +1,2 @@
-INDEX VERSION 1.134+C:\Users\hi6\Documents\AWS Class\git\aws_class\.metadata\.plugins\org.eclipse.jdt.core
-1174234569.index
-1704979481.index
+INDEX VERSION 1.134+C:\Users\user\Documents\GitHub\aws_class\.metadata\.plugins\org.eclipse.jdt.core
 1865797976.index
-3755857139.index
