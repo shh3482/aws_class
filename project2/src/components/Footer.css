@@ -1,0 +1,115 @@
+.footer {
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, transparent, rgba(124,58,237,0.05));
+  padding-top: 80px;
+  padding-bottom: 0;
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 1fr);
+  gap: 48px;
+  padding-bottom: 60px;
+}
+
+.footer__logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__tagline {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.footer__social {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.social-btn:hover {
+  background: rgba(124,58,237,0.15);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.footer__col-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.footer__col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__col ul li a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.footer__col ul li a:hover {
+  color: var(--primary-light);
+  padding-left: 4px;
+}
+
+.footer__bottom {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+}
+
+.footer__bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+  }
+  .footer__bottom-inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
