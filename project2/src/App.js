@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -8,16 +8,14 @@ import Footer from './components/Footer';
 import './App.css';
 
 function App() {
-  const [activeChat, setActiveChat] = useState(false);
-
   return (
-    <div className="app">
+    <div className="App">
       <Header />
       <main>
-        <Hero onStartChat={() => setActiveChat(true)} />
+        <Hero />
         <Features />
         <HowItWorks />
-        <ChatDemo isActive={activeChat} onOpen={() => setActiveChat(true)} />
+        <ChatDemo />
       </main>
       <Footer />
     </div>

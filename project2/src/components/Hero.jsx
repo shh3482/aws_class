@@ -1,93 +1,142 @@
 import React from 'react';
 import './Hero.css';
 
-const Hero = ({ onStartChat }) => {
+function Hero() {
   return (
-    <section className="hero" id="hero">
-      {/* 배경 Blob */}
-      <div className="hero__bg">
-        <div className="blob blob--1" />
-        <div className="blob blob--2" />
-        <div className="blob blob--3" />
-        <div className="grid-overlay" />
+    <section className="hero" id="home">
+      {/* 배경 장식 요소들 */}
+      <div className="hero-bg">
+        <div className="bg-blob blob1"></div>
+        <div className="bg-blob blob2"></div>
+        <div className="bg-blob blob3"></div>
+        <div className="stars">
+          <span className="star s1">✦</span>
+          <span className="star s2">✦</span>
+          <span className="star s3">✦</span>
+          <span className="star s4">✦</span>
+          <span className="star s5">✦</span>
+        </div>
       </div>
 
-      <div className="container hero__content">
-        {/* 상단 배지 */}
-        <div className="hero__badge">
-          <span className="badge-dot" />
-          AI 기반 심리 상담 서비스 오픈 🎉
-        </div>
+      <div className="hero-inner container">
+        {/* 텍스트 영역 */}
+        <div className="hero-text">
+          <div className="hero-badge">
+            <span>🤖</span>
+            <span>AI 기반 정서 지원 서비스</span>
+          </div>
 
-        {/* 메인 타이틀 */}
-        <h1 className="hero__title">
-          혼자 고민하지 마세요<br />
-          <span className="gradient-text">AI가 함께</span> 들어드릴게요
-        </h1>
+          <h1 className="hero-title">
+            먼저 다가가는<br />
+            <span className="gradient-text">AI 친구</span>
+          </h1>
 
-        {/* 서브 텍스트 */}
-        <p className="hero__desc">
-          24시간 언제든지, 판단 없이 고민을 털어놓으세요.<br />
-          마음AI는 당신의 이야기를 진심으로 들어드립니다.
-        </p>
+          <p className="hero-subtitle">
+            당신이 힘들다고 말하기 전에, 이미 눈치채고 있어요.<br />
+            바탕화면에 상주하며 당신의 마음을 먼저 알아채는 상담 파트너
+          </p>
 
-        {/* CTA 버튼 */}
-        <div className="hero__cta">
-          <button className="cta-main" onClick={onStartChat}>
-            <span>지금 바로 시작하기</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5"
-                strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button className="cta-sub">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-            서비스 소개 영상
-          </button>
-        </div>
-
-        {/* 신뢰 지표 */}
-        <div className="hero__stats">
-          {[
-            { num: '12,000+', label: '누적 상담 수' },
-            { num: '98%', label: '사용자 만족도' },
-            { num: '24/7', label: '언제든지 이용' },
-          ].map((stat, i) => (
-            <div key={i} className="stat-item">
-              <strong>{stat.num}</strong>
-              <span>{stat.label}</span>
+          {/* 특징 뱃지 */}
+          <div className="hero-features">
+            <div className="feature-badge">
+              <span>💬</span>
+              <span>24/7 실시간 대화</span>
             </div>
-          ))}
-        </div>
-      </div>
+            <div className="feature-badge">
+              <span>🧠</span>
+              <span>AI 감정 분석</span>
+            </div>
+            <div className="feature-badge">
+              <span>🔒</span>
+              <span>완벽한 비밀 보장</span>
+            </div>
+          </div>
 
-      {/* 플로팅 채팅 미리보기 */}
-      <div className="hero__preview">
-        <div className="chat-preview">
-          <div className="chat-preview__header">
-            <div className="ai-avatar">🤖</div>
+          {/* CTA 버튼들 */}
+          <div className="hero-cta">
+            <button className="btn-primary-hero">
+              <span>무료로 시작하기</span>
+              <span className="btn-arrow">→</span>
+            </button>
+            <div className="download-group">
+              <span className="download-label">데스크톱 앱</span>
+              <button className="btn-download">
+                <span>🪟</span>
+                <span>Windows</span>
+              </button>
+              <button className="btn-download">
+                <span>🍎</span>
+                <span>macOS</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 신뢰 지표 */}
+          <div className="hero-trust">
+            <div className="trust-avatars">
+              <div className="avatar">🐰</div>
+              <div className="avatar">🐱</div>
+              <div className="avatar">🌟</div>
+              <div className="avatar">💙</div>
+            </div>
+            <p className="trust-text"><strong>2,400+</strong> 명이 매일 마음친구와 대화 중</p>
+          </div>
+        </div>
+
+        {/* 캐릭터 & 미리보기 영역 */}
+        <div className="hero-visual">
+          {/* 메인 캐릭터 카드 */}
+          <div className="character-card">
+            {/* 배경 링 */}
+            <div className="character-glow"></div>
+
+            {/* ✅ 실제 이미지 사용 */}
+            <img
+              src="/images/rabbit-duo.png"
+              alt="마음친구 캐릭터 하루와 루미"
+              className="character-duo-img"
+            />
+
+            {/* 캐릭터 이름 태그 */}
+            <div className="char-names">
+              <span className="char-name-tag rabbit-tag">🐰 하루</span>
+              <span className="char-name-tag cat-tag">🐱 루미</span>
+            </div>
+
+            {/* 말풍선 */}
+            <div className="chat-bubble bubble1">
+              <span>지금 많이 힘들어 보여요 🥺</span>
+            </div>
+            <div className="chat-bubble bubble2">
+              <span>에러가 계속 나네, 같이 볼까요? 💙</span>
+            </div>
+          </div>
+
+          {/* 미니 상태 카드 */}
+          <div className="status-card card1">
+            <span className="status-icon">💚</span>
             <div>
-              <p className="ai-name">마음AI</p>
-              <p className="ai-status"><span className="online-dot"/>온라인</p>
+              <div className="status-title">오늘 기분</div>
+              <div className="status-value">많이 호전되었어요</div>
             </div>
           </div>
-          <div className="chat-preview__messages">
-            <div className="msg msg--ai">
-              안녕하세요! 오늘 어떤 고민이 있으신가요? 편하게 말씀해 주세요 😊
-            </div>
-            <div className="msg msg--user">
-              요즘 취업 준비가 너무 힘들어요...
-            </div>
-            <div className="msg msg--ai typing">
-              <span /><span /><span />
+          <div className="status-card card2">
+            <span className="status-icon">📊</span>
+            <div>
+              <div className="status-title">감정 패턴</div>
+              <div className="status-value">분석 중...</div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 스크롤 인디케이터 */}
+      <div className="scroll-indicator">
+        <div className="scroll-dot"></div>
+        <span>아래로 스크롤</span>
       </div>
     </section>
   );
-};
+}
 
 export default Hero;
