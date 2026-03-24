@@ -17,5 +17,5 @@ async def text(msg:str = Form(...)):
   return {'msg' : '긍정' if res else '부정'}
 
 if __name__ == '__main__':
-    import uvicorn  # <--- 들여쓰기!
-    uvicorn.run('main:app', port=8000, reload=True)  # <--- 들여쓰기!
+    import uvicorn
+    uvicorn.run('main:app', port=8000, reload=True)
