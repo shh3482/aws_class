@@ -1,34 +1,9 @@
-# konlpy를 import할 때 생기는 에러 처리를 위한 초기화
-def init(java_path:str):
-    import os
-    import jpype
-    
-    # JAVA_HOME 설정
-    os.environ['JAVA_HOME'] = java_path
-    
-    # JVM이 이미 켜져 있다면 다시 켜지 않고 통과
-    if not jpype.isJVMStarted():
-        print("... JVM(자바)을 깨우는 중입니다 ...")
-        # 기본 JVM 경로로 시작 (가장 안전함)
-        jpype.startJVM(convertStrings=True)
-    
-    print("✅ 2. 자바 초기화 완료!")
-
-# 실행 순서 확인용 프린트 추가
-print("1. 프로그램 시작")
-# init(r'C:\Program Files\Java\jdk-21.0.10')
-print("2. 자바 초기화 함수는 현재 호출 안 함")
-
 import pandas as pd
 from konlpy.tag import Okt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 import joblib as jl
 import os
-
-print("1. 프로그램 시작")
-
-okt = Okt()   # 딱 1번만 생성
 
 def text_preprocessing(text):
     result = okt.pos(str(text), stem=True)
