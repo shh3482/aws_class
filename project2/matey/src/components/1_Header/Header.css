@@ -25,12 +25,17 @@
   gap: 24px;
 }
 
-/* 로고 */
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 .logo-icon {
@@ -54,7 +59,6 @@
   background-clip: text;
 }
 
-/* 네비게이션 */
 .nav-desktop {
   display: flex;
   align-items: center;
@@ -69,6 +73,7 @@
   color: #5A5A7A;
   transition: all 0.2s ease;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -76,11 +81,10 @@
   color: #6C9EFF;
 }
 
-/* CTA 버튼 */
 .header-cta {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-login {
@@ -118,7 +122,31 @@
   box-shadow: 0 8px 24px rgba(108, 158, 255, 0.45);
 }
 
-/* 햄버거 */
+.btn-logout {
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #FF8FAB, #FF6B9D);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 143, 171, 0.25);
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 143, 171, 0.35);
+}
+
+.user-greeting {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6C9EFF;
+  padding: 0 12px;
+}
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -138,14 +166,25 @@
   transition: all 0.3s ease;
 }
 
-/* 모바일 메뉴 */
+.bar.open:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.bar.open:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
 .mobile-menu {
   display: flex;
   flex-direction: column;
   padding: 16px 24px 24px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  animation: fadeInUp 0.25s ease;
+  animation: fadeInDown 0.25s ease;
 }
 
 .mobile-menu a {
@@ -155,6 +194,7 @@
   color: #5A5A7A;
   border-bottom: 1px solid rgba(108, 158, 255, 0.08);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .mobile-btns {
@@ -164,15 +204,26 @@
 }
 
 .mobile-btns .btn-login,
-.mobile-btns .btn-start {
+.mobile-btns .btn-start,
+.mobile-btns .btn-logout {
   flex: 1;
   padding: 12px;
   font-size: 15px;
 }
 
-/* 반응형 */
 @media (max-width: 900px) {
   .nav-desktop { display: none; }
   .header-cta { display: none; }
   .hamburger { display: flex; }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
