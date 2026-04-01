@@ -1,62 +1,121 @@
-import React from 'react';
-import './Footer.css';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./Footer.css";
 
-function Footer() {
+const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const moveToSection = (sectionId) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${sectionId}`);
+      setTimeout(() => {
+        const target = document.getElementById(sectionId);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+      return;
+    }
+
+    const target = document.getElementById(sectionId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const moveToPage = (path) => {
+    navigate(path);
+  };
+
   return (
-    <footer className="footer">
-      <div className="footer-content container">
-        <div className="footer-section">
-          <div className="footer-logo">
-            <span className="logo-icon">🫧</span>
-            <span className="logo-text">메이티</span>
+    <footer className="matey-footer">
+      <div className="matey-footer__glow matey-footer__glow--pink" />
+      <div className="matey-footer__glow matey-footer__glow--mint" />
+
+      <div className="matey-footer__inner">
+        <div className="matey-footer__top">
+          <div className="matey-footer__brand">
+            <div className="matey-footer__logo">
+              <div className="matey-footer__logo-mark">M</div>
+              <div className="matey-footer__logo-text">
+                <strong>메이티</strong>
+                <span>먼저 다가오는 AI 메이트</span>
+              </div>
+            </div>
+
+            <p className="matey-footer__desc">
+              메이티는 사용자가 먼저 도움을 요청하기 전에도
+              일상 가까이에 머물며 조심스럽게 먼저 다가오는
+              감정 동반자형 AI 서비스를 지향합니다.
+            </p>
+
+            <div className="matey-footer__chips">
+              <span>💬 능동형 상담</span>
+              <span>🖥️ 데스크톱 상주형 경험</span>
+              <span>📊 웹 대시보드 연동</span>
+            </div>
           </div>
-          <p>당신의 감정을 먼저 이해하는 AI 친구</p>
-        </div>
 
-        <div className="footer-section">
-          <h4>제품</h4>
-          <ul>
-            <li><a href="#features">특징</a></li>
-            <li><a href="#pricing">가격</a></li>
-            <li><a href="#download">다운로드</a></li>
-            <li><a href="#blog">블로그</a></li>
-          </ul>
-        </div>
+          <div className="matey-footer__links-wrap">
+            <div className="matey-footer__column">
+              <h4>서비스</h4>
+              <button type="button" onClick={() => moveToSection("intro")}>
+                소개
+              </button>
+              <button type="button" onClick={() => moveToSection("pricing")}>
+                가격
+              </button>
+              <button type="button" onClick={() => moveToPage("/download")}>
+                다운로드
+              </button>
+              <button type="button" onClick={() => moveToPage("/signup")}>
+                무료 체험
+              </button>
+            </div>
 
-        <div className="footer-section">
-          <h4>회사</h4>
-          <ul>
-            <li><a href="#about">소개</a></li>
-            <li><a href="#contact">문의</a></li>
-            <li><a href="#careers">채용</a></li>
-            <li><a href="#press">보도자료</a></li>
-          </ul>
-        </div>
+            <div className="matey-footer__column">
+              <h4>지원</h4>
+              <button type="button" onClick={() => moveToSection("help")}>
+                도움말
+              </button>
+              <button type="button" onClick={() => moveToPage("/login")}>
+                로그인
+              </button>
+              <button type="button" onClick={() => moveToPage("/mypage")}>
+                마이페이지
+              </button>
+              <button type="button" onClick={() => moveToPage("/dashboard")}>
+                대시보드
+              </button>
+            </div>
 
-        <div className="footer-section">
-          <h4>법률</h4>
-          <ul>
-            <li><a href="#terms">이용약관</a></li>
-            <li><a href="#privacy">개인정보보호</a></li>
-            <li><a href="#security">보안</a></li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h4>팔로우</h4>
-          <div className="social-links">
-            <a href="#instagram">📱 Instagram</a>
-            <a href="#twitter">🐦 Twitter</a>
-            <a href="#youtube">▶️ YouTube</a>
+            <div className="matey-footer__column">
+              <h4>프로젝트 정보</h4>
+              <a href="mailto:matey.team@example.com">matey.team@example.com</a>
+              <span>2차 프로젝트 · AI 고민상담 서비스</span>
+              <span>Web + Desktop Connected Experience</span>
+              <span>Made with React & Electron Concept</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="footer-bottom">
-        <p>&copy; 2024 Matey. All rights reserved. 💙</p>
+        <div className="matey-footer__bottom">
+          <p>© 2026 Matey. All rights reserved.</p>
+
+          <div className="matey-footer__bottom-links">
+            <button type="button" onClick={() => moveToPage("/")}>
+              홈
+            </button>
+            <button type="button" onClick={() => moveToPage("/download")}>
+              다운로드
+            </button>
+            <button type="button" onClick={() => moveToPage("/signup")}>
+              시작하기
+            </button>
+          </div>
+        </div>
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;
