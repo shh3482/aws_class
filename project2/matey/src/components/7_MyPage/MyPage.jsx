@@ -1,441 +1,267 @@
-import React, { useMemo, useState } from 'react';
-import './MyPage.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../1_Header/Header";
+import "./MyPage.css";
 
-const companionOptions = [
+const activityData = [
   {
-    id: 'rabbit',
-    name: '하루',
-    role: '포근한 토끼 컴패니언',
-    image: '/images/rabbit.png',
-    intro: '좋은 하루예요. 오늘은 내 프로필과 분위기를 같이 다듬어볼까요?',
-    bubble: '좋은 아침이에요. 오늘 프로필에서 어떤 부분을 먼저 정리해볼까요?',
-    suggestions: ['닉네임 바꾸기', '분위기 톤 바꾸기', '대화 스타일 조정', '프로필 공개 범위 보기'],
-    accentClass: 'is-lavender',
+    title: "최근 대화",
+    desc: "메이티와 마지막으로 나눈 대화는 ‘취업 준비 불안’에 대한 이야기였어요.",
+    badge: "오늘",
   },
   {
-    id: 'cat',
-    name: '루미',
-    role: '세심한 고양이 컴패니언',
-    image: '/images/cat.png',
-    intro: '차분하게 하나씩 정리해드릴게요. 원하는 스타일을 말해주셔도 좋아요.',
-    bubble: '안녕하세요. 프로필을 더 예쁘고 편하게 바꿔볼까요?',
-    suggestions: ['소개 문구 수정', '알림 설정 확인', '보안/개인정보 점검', '캐릭터 바꾸기'],
-    accentClass: 'is-peach',
+    title: "감정 리포트 업데이트",
+    desc: "오늘 저녁 시간대 감정 흐름이 새롭게 반영되었어요.",
+    badge: "업데이트",
+  },
+  {
+    title: "메이트 성격 설정",
+    desc: "현재 메이티는 ‘다정한 현실형’ 톤으로 설정되어 있어요.",
+    badge: "설정",
   },
 ];
 
-const initialProfile = {
-  nickname: '마테이',
-  statusMessage: '오늘도 천천히, 다정하게.',
-  email: 'matey@example.com',
-  mbtiTone: '다정한 공감형',
-  birthMood: '봄 라벤더 무드',
-};
-
-const moodThemes = [
-  { id: 'soft-lavender', label: 'Soft Lavender', desc: '은은한 라벤더와 핑크' },
-  { id: 'peach-cloud', label: 'Peach Cloud', desc: '복숭아빛 크림 톤' },
-  { id: 'sky-mint', label: 'Sky Mint', desc: '하늘빛과 민트의 산뜻함' },
-  { id: 'berry-glow', label: 'Berry Glow', desc: '베리 핑크 포인트' },
-];
-
-const privacyItems = [
-  { title: '프로필 공개 범위', value: '친구만 보기' },
-  { title: '대화 기록 표시', value: '나만 보기' },
-  { title: '푸시 알림', value: '부드럽게 받기' },
-];
-
-const activityCards = [
+const connectedDevices = [
   {
-    title: '이번 주 교감 온도',
-    value: '87%',
-    desc: '최근 대화 반응과 설정 사용량을 바탕으로 측정했어요.',
+    name: "Matey Desktop · Windows",
+    status: "연결됨",
+    detail: "오늘 21:14 마지막 동기화",
   },
   {
-    title: '가장 자주 쓰는 말투',
-    value: '차분한 공감형',
-    desc: '부드러운 톤의 안내와 위로형 응답을 선호하고 있어요.',
-  },
-  {
-    title: '마지막 프로필 정리',
-    value: '오늘 오전',
-    desc: '상태 메시지와 테마 컬러가 최근에 업데이트되었어요.',
+    name: "Chrome Web Dashboard",
+    status: "활성",
+    detail: "현재 세션 유지 중",
   },
 ];
 
-function MyPage() {
-  const [selectedCompanionId, setSelectedCompanionId] = useState('rabbit');
-  const [profile, setProfile] = useState(initialProfile);
-  const [selectedTheme, setSelectedTheme] = useState('soft-lavender');
-  const [manualMessage, setManualMessage] = useState('');
-  const [imageErrorMap, setImageErrorMap] = useState({});
-  const [hoveredSuggestionArea, setHoveredSuggestionArea] = useState(false);
-  const [selectedSuggestion, setSelectedSuggestion] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+const planBenefits = [
+  "대시보드에서 대화 내역 확인",
+  "고민 히스토리 / 감정 분석 리포트 보기",
+  "메이트 성격 및 알림 설정 커스터마이징",
+  "웹과 데스크톱 앱 계정 연동",
+];
 
-  const selectedCompanion = useMemo(
-    () => companionOptions.find((item) => item.id === selectedCompanionId) || companionOptions[0],
-    [selectedCompanionId]
-  );
+const MyPage = () => {
+  const navigate = useNavigate();
 
-  const handleImageError = (key) => {
-    setImageErrorMap((prev) => ({
-      ...prev,
-      [key]: true,
-    }));
-  };
+  const token = localStorage.getItem("accessToken");
+  let nickname = "matey_user";
+  let email = "user@matey.com";
+  let role = "USER";
 
-  const handleProfileChange = (event) => {
-    const { name, value } = event.target;
-    setProfile((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSuggestionClick = (text) => {
-    setSelectedSuggestion(text);
-    setManualMessage(text);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setIsEditing(false);
-    // TODO: 기존 저장 API / 상태관리 로직 연결
-    // 예: onSaveProfile?.({ profile, selectedTheme, selectedCompanionId, manualMessage })
-  };
-
-  const handleStartEdit = () => {
-    setIsEditing(true);
-  };
-
-  const profilePreviewText = selectedSuggestion || manualMessage || '원하는 분위기나 수정 방향을 자유롭게 적어보세요.';
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      nickname = payload.nickname || payload.name || nickname;
+      email = payload.email || email;
+      role = payload.role || role;
+    } catch (error) {
+      console.error("토큰 파싱 실패:", error);
+    }
+  }
 
   return (
-    <section className="mypage-pet">
-      <div className="mypage-pet__bg mypage-pet__bg--lavender" />
-      <div className="mypage-pet__bg mypage-pet__bg--pink" />
-      <div className="mypage-pet__bg mypage-pet__bg--blue" />
+    <>
+      <Header />
 
-      <div className="mypage-pet__container">
-        <header className="mypage-pet__hero glass-card">
-          <div className="mypage-pet__hero-copy">
-            <span className="mypage-pet__eyebrow">Pet Companion Profile</span>
-            <h1>
-              나와 AI 친구의 분위기를
-              <br />
-              더 다정하게 관리하는 마이페이지
-            </h1>
-            <p>
-              프로필 정보, 대화 말투, 공개 범위, 감정 톤을 한 곳에서 정리해보세요.
-              펫 컴패니언이 먼저 말을 걸고, 원하는 방향을 같이 골라주는 구조예요.
-            </p>
+      <main className="mypage">
+        <section className="mypage__hero">
+          <div className="mypage__hero-bg mypage__hero-bg--pink" />
+          <div className="mypage__hero-bg mypage__hero-bg--mint" />
 
-            <div className="mypage-pet__hero-tags">
-              <span>프로필 관리</span>
-              <span>대화 톤 조정</span>
-              <span>감성 테마</span>
-              <span>공개 범위</span>
-            </div>
-          </div>
+          <div className="mypage__container">
+            <div className="mypage__hero-card">
+              <div className="mypage__profile">
+                <div className="mypage__avatar">🐰</div>
 
-          <div className="mypage-pet__hero-visual">
-            <div
-              className="mypage-pet__speech-wrap"
-              onMouseEnter={() => setHoveredSuggestionArea(true)}
-              onMouseLeave={() => setHoveredSuggestionArea(false)}
-            >
-              <div className="mypage-pet__speech glass-bubble">
-                <strong>{selectedCompanion.name}</strong>
-                <p>{selectedCompanion.bubble}</p>
-              </div>
+                <div className="mypage__profile-text">
+                  <span className="mypage__eyebrow">MY PAGE</span>
+                  <h1>{nickname}님의 메이티 공간</h1>
+                  <p>
+                    메이티와 함께 쌓아온 기록, 연결된 기기, 현재 플랜과 개인 설정 상태를
+                    한눈에 확인할 수 있어요.
+                  </p>
 
-              <div className={`mypage-pet__reply-list ${hoveredSuggestionArea ? 'is-visible' : ''}`}>
-                {selectedCompanion.suggestions.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    className={`mypage-pet__reply-chip ${selectedSuggestion === item ? 'is-active' : ''}`}
-                    onClick={() => handleSuggestionClick(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className={`mypage-pet__pet-card glass-card ${selectedCompanion.accentClass}`}>
-              {!imageErrorMap[selectedCompanion.id] ? (
-                <img
-                  src={selectedCompanion.image}
-                  alt={selectedCompanion.name}
-                  className="mypage-pet__pet-image"
-                  onError={() => handleImageError(selectedCompanion.id)}
-                />
-              ) : (
-                <div className="mypage-pet__pet-fallback">
-                  <strong>{selectedCompanion.name}</strong>
-                  <span>이미지를 불러오지 못했어요</span>
-                  <small>{selectedCompanion.image}</small>
+                  <div className="mypage__profile-chips">
+                    <span>🌷 {role === "ADMIN" || role === "SUPERADMIN" ? "관리자 계정" : "일반 사용자"}</span>
+                    <span>📧 {email}</span>
+                    <span>🔗 웹 · 데스크톱 연동</span>
+                  </div>
                 </div>
-              )}
-
-              <div className="mypage-pet__pet-meta">
-                <strong>{selectedCompanion.name}</strong>
-                <span>{selectedCompanion.role}</span>
-                <p>{selectedCompanion.intro}</p>
               </div>
-            </div>
-          </div>
-        </header>
 
-        <div className="mypage-pet__switcher-row">
-          <div className="mypage-pet__switcher glass-card">
-            <div className="mypage-pet__switcher-head">
-              <h2>현재 함께하는 컴패니언</h2>
-              <p>프로필 관리 화면에서 기본 응답 스타일을 결정해요.</p>
-            </div>
-
-            <div className="mypage-pet__switcher-list">
-              {companionOptions.map((companion) => {
-                const isBroken = imageErrorMap[`switcher-${companion.id}`];
-                return (
-                  <button
-                    key={companion.id}
-                    type="button"
-                    className={`mypage-pet__switcher-btn ${
-                      selectedCompanionId === companion.id ? 'is-selected' : ''
-                    }`}
-                    onClick={() => setSelectedCompanionId(companion.id)}
-                  >
-                    <div className="mypage-pet__switcher-thumb">
-                      {!isBroken ? (
-                        <img
-                          src={companion.image}
-                          alt={companion.name}
-                          onError={() => handleImageError(`switcher-${companion.id}`)}
-                        />
-                      ) : (
-                        <span>{companion.name}</span>
-                      )}
-                    </div>
-                    <div className="mypage-pet__switcher-text">
-                      <strong>{companion.name}</strong>
-                      <span>{companion.role}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mypage-pet__duo-card glass-card">
-            <div className="mypage-pet__duo-copy">
-              <span className="mypage-pet__mini-label">Together Mode</span>
-              <h3>토끼와 고양이의 듀얼 케어 무드</h3>
-              <p>
-                한 명은 다정하게 공감하고, 다른 한 명은 차분하게 정리해주는 식의
-                프로필 경험을 연출할 수 있어요.
-              </p>
-            </div>
-
-            {!imageErrorMap.duo ? (
-              <img
-                src="/images/rabbit-duo.png"
-                alt="토끼와 고양이 듀오"
-                className="mypage-pet__duo-image"
-                onError={() => handleImageError('duo')}
-              />
-            ) : (
-              <div className="mypage-pet__duo-fallback">
-                <strong>듀오 이미지 로딩 실패</strong>
-                <span>/images/rabbit-duo.png</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="mypage-pet__content-grid">
-          <form className="mypage-pet__profile glass-card" onSubmit={handleSubmit}>
-            <div className="mypage-pet__section-head">
-              <div>
-                <span className="mypage-pet__mini-label">Profile Edit</span>
-                <h2>프로필 기본 정보</h2>
-              </div>
-              <button type="button" className="mypage-pet__ghost-btn" onClick={handleStartEdit}>
-                수정 시작
-              </button>
-            </div>
-
-            <div className="mypage-pet__form-grid">
-              <label className="mypage-pet__field">
-                <span>닉네임</span>
-                <input
-                  type="text"
-                  name="nickname"
-                  value={profile.nickname}
-                  onChange={handleProfileChange}
-                  placeholder="닉네임 입력"
-                  disabled={!isEditing}
-                />
-              </label>
-
-              <label className="mypage-pet__field">
-                <span>이메일</span>
-                <input
-                  type="email"
-                  name="email"
-                  value={profile.email}
-                  onChange={handleProfileChange}
-                  placeholder="이메일 입력"
-                  disabled={!isEditing}
-                />
-              </label>
-
-              <label className="mypage-pet__field mypage-pet__field--full">
-                <span>상태 메시지</span>
-                <input
-                  type="text"
-                  name="statusMessage"
-                  value={profile.statusMessage}
-                  onChange={handleProfileChange}
-                  placeholder="오늘의 기분이나 소개 문구를 적어보세요"
-                  disabled={!isEditing}
-                />
-              </label>
-
-              <label className="mypage-pet__field">
-                <span>대화 톤</span>
-                <input
-                  type="text"
-                  name="mbtiTone"
-                  value={profile.mbtiTone}
-                  onChange={handleProfileChange}
-                  placeholder="예: 다정한 공감형"
-                  disabled={!isEditing}
-                />
-              </label>
-
-              <label className="mypage-pet__field">
-                <span>무드 키워드</span>
-                <input
-                  type="text"
-                  name="birthMood"
-                  value={profile.birthMood}
-                  onChange={handleProfileChange}
-                  placeholder="예: 봄 라벤더 무드"
-                  disabled={!isEditing}
-                />
-              </label>
-            </div>
-
-            <div className="mypage-pet__section-head mypage-pet__section-head--sub">
-              <div>
-                <span className="mypage-pet__mini-label">Theme Mood</span>
-                <h3>감성 테마 선택</h3>
-              </div>
-            </div>
-
-            <div className="mypage-pet__theme-grid">
-              {moodThemes.map((theme) => (
-                <button
-                  key={theme.id}
-                  type="button"
-                  className={`mypage-pet__theme-card ${selectedTheme === theme.id ? 'is-selected' : ''}`}
-                  onClick={() => setSelectedTheme(theme.id)}
-                >
-                  <strong>{theme.label}</strong>
-                  <span>{theme.desc}</span>
+              <div className="mypage__hero-actions">
+                <button className="mypage__primary-btn" onClick={() => navigate("/dashboard")}>
+                  대시보드로 이동
                 </button>
-              ))}
-            </div>
-
-            <div className="mypage-pet__form-actions">
-              <button type="submit" className="mypage-pet__primary-btn">
-                프로필 저장하기
-              </button>
-              <button
-                type="button"
-                className="mypage-pet__secondary-btn"
-                onClick={() => {
-                  setProfile(initialProfile);
-                  setSelectedTheme('soft-lavender');
-                  setManualMessage('');
-                  setSelectedSuggestion('');
-                  setIsEditing(false);
-                }}
-              >
-                기본값으로 되돌리기
-              </button>
-            </div>
-          </form>
-
-          <aside className="mypage-pet__assistant glass-card">
-            <div className="mypage-pet__section-head">
-              <div>
-                <span className="mypage-pet__mini-label">Companion Chat</span>
-                <h2>프로필 조정 대화</h2>
-              </div>
-            </div>
-
-            <div className="mypage-pet__assistant-preview">
-              <div className="mypage-pet__assistant-bubble">
-                <strong>{selectedCompanion.name}</strong>
-                <p>{profilePreviewText}</p>
-              </div>
-            </div>
-
-            <label className="mypage-pet__chat-input-wrap">
-              <span>직접 요청하기</span>
-              <div className="mypage-pet__chat-input-row">
-                <input
-                  type="text"
-                  value={manualMessage}
-                  onChange={(event) => setManualMessage(event.target.value)}
-                  placeholder="예: 소개 문구를 더 부드럽게 바꿔줘"
-                />
                 <button
-                  type="button"
-                  className="mypage-pet__chat-send"
-                  onClick={() => setSelectedSuggestion(manualMessage)}
+                  className="mypage__secondary-btn"
+                  onClick={() => navigate("/dashboard/settings")}
                 >
-                  적용
+                  개인 설정 열기
                 </button>
               </div>
-            </label>
-
-            <div className="mypage-pet__privacy-list">
-              {privacyItems.map((item) => (
-                <div key={item.title} className="mypage-pet__privacy-item">
-                  <span>{item.title}</span>
-                  <strong>{item.value}</strong>
-                </div>
-              ))}
             </div>
-          </aside>
-        </div>
-
-        <section className="mypage-pet__insights">
-          <div className="mypage-pet__section-head">
-            <div>
-              <span className="mypage-pet__mini-label">Profile Insights</span>
-              <h2>내 프로필 관리 요약</h2>
-            </div>
-          </div>
-
-          <div className="mypage-pet__insight-grid">
-            {activityCards.map((card) => (
-              <article key={card.title} className="mypage-pet__insight-card glass-card">
-                <span className="mypage-pet__insight-title">{card.title}</span>
-                <strong className="mypage-pet__insight-value">{card.value}</strong>
-                <p>{card.desc}</p>
-              </article>
-            ))}
           </div>
         </section>
-      </div>
-    </section>
+
+        <section className="mypage__section">
+          <div className="mypage__container">
+            <div className="mypage__grid mypage__grid--top">
+              <article className="mypage-card">
+                <div className="mypage-card__head">
+                  <span>PLAN</span>
+                  <h2>현재 이용 플랜</h2>
+                </div>
+
+                <div className="mypage-plan">
+                  <div className="mypage-plan__badge">Plus</div>
+                  <strong>메이티 Plus 플랜 이용 중</strong>
+                  <p>
+                    감정 분석, 기록 저장, 캐릭터 커스터마이징 기능을 포함한 추천 플랜입니다.
+                  </p>
+
+                  <ul className="mypage-list">
+                    {planBenefits.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+
+                  <div className="mypage-plan__actions">
+                    <button className="mypage__soft-btn">플랜 변경</button>
+                    <button className="mypage__soft-btn">결제 내역 보기</button>
+                  </div>
+                </div>
+              </article>
+
+              <article className="mypage-card">
+                <div className="mypage-card__head">
+                  <span>SUMMARY</span>
+                  <h2>한눈에 보는 나의 메이티 기록</h2>
+                </div>
+
+                <div className="mypage-stats">
+                  <div className="mypage-stat">
+                    <span>이번 주 대화 수</span>
+                    <strong>18회</strong>
+                  </div>
+                  <div className="mypage-stat">
+                    <span>오늘 먼저 건넨 말</span>
+                    <strong>3회</strong>
+                  </div>
+                  <div className="mypage-stat">
+                    <span>가장 자주 나온 감정</span>
+                    <strong>불안</strong>
+                  </div>
+                  <div className="mypage-stat">
+                    <span>감정 안정도</span>
+                    <strong>54%</strong>
+                  </div>
+                </div>
+
+                <div className="mypage-message">
+                  메이티는 최근 비교와 진로 관련 불안을 자주 감지하고 있어요.
+                  하지만 사용자의 반응 길이는 조금씩 늘어나고 있어서,
+                  대화를 통한 정리 흐름은 오히려 좋아지는 중이에요.
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="mypage__section mypage__section--soft">
+          <div className="mypage__container">
+            <div className="mypage__grid mypage__grid--middle">
+              <article className="mypage-card">
+                <div className="mypage-card__head">
+                  <span>RECENT ACTIVITY</span>
+                  <h2>최근 활동</h2>
+                </div>
+
+                <div className="mypage-activity-list">
+                  {activityData.map((item) => (
+                    <div key={item.title} className="mypage-activity">
+                      <div>
+                        <strong>{item.title}</strong>
+                        <p>{item.desc}</p>
+                      </div>
+                      <span className="mypage-chip">{item.badge}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="mypage-card">
+                <div className="mypage-card__head">
+                  <span>DEVICE</span>
+                  <h2>연결된 기기</h2>
+                </div>
+
+                <div className="mypage-device-list">
+                  {connectedDevices.map((device) => (
+                    <div key={device.name} className="mypage-device">
+                      <div className="mypage-device__icon">💻</div>
+                      <div className="mypage-device__body">
+                        <strong>{device.name}</strong>
+                        <p>{device.detail}</p>
+                      </div>
+                      <span className="mypage-chip mypage-chip--success">{device.status}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="mypage__secondary-btn" onClick={() => navigate("/download")}>
+                  앱 다운로드 페이지 보기
+                </button>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="mypage__section">
+          <div className="mypage__container">
+            <article className="mypage-card mypage-card--wide">
+              <div className="mypage-card__head">
+                <span>MATEY RELATION</span>
+                <h2>메이티와의 현재 관계 설정</h2>
+              </div>
+
+              <div className="mypage-relation">
+                <div className="mypage-relation__box">
+                  <strong>현재 메이트 성격</strong>
+                  <p>다정한 현실형</p>
+                </div>
+
+                <div className="mypage-relation__box">
+                  <strong>응답 온도</strong>
+                  <p>균형형</p>
+                </div>
+
+                <div className="mypage-relation__box">
+                  <strong>데스크톱 외형</strong>
+                  <p>토끼 메이트</p>
+                </div>
+
+                <div className="mypage-relation__box">
+                  <strong>알림 강도</strong>
+                  <p>자연스럽게</p>
+                </div>
+              </div>
+
+              <div className="mypage-inline-actions">
+                <button className="mypage__primary-btn" onClick={() => navigate("/dashboard/settings")}>
+                  메이트 설정 바꾸기
+                </button>
+                <button className="mypage__secondary-btn" onClick={() => navigate("/dashboard/reports")}>
+                  감정 리포트 보러가기
+                </button>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </>
   );
-}
+};
 
 export default MyPage;

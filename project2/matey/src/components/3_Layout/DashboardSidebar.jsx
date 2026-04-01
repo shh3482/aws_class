@@ -1,72 +1,79 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 const menuGroups = [
   {
-    title: '메인',
+    title: "메인",
     items: [
-      { label: '대시보드 홈', to: '/dashboard' },
-      { label: '상담 기록', to: '/dashboard/chat-history' },
-      { label: '감정 리포트', to: '/dashboard/reports' },
+      { label: "대시보드 홈", to: "/dashboard", icon: "🏠" },
     ],
   },
   {
-    title: '내 캐릭터',
+    title: "상담 기록",
     items: [
-      { label: '개인 정보', to: '/dashboard/personal-info' },
-      { label: '성격 / 외형 설정', to: '/dashboard/personal-settings' },
-      { label: '보안 설정', to: '/dashboard/security-settings' },
+      { label: "대화 내역", to: "/dashboard/chat-history", icon: "💬" },
     ],
   },
   {
-    title: '기타',
+    title: "보안",
     items: [
-      { label: '마이페이지', to: '/mypage' },
-      { label: '관리자', to: '/admin' },
+      { label: "보안 설정", to: "/dashboard/security", icon: "🔐" },
+    ],
+  },
+  {
+    title: "리포트",
+    items: [
+      { label: "고민 히스토리 / 감정 분석 / 하루 요약", to: "/dashboard/reports", icon: "📊" },
+    ],
+  },
+  {
+    title: "계정 관리",
+    items: [
+      { label: "개인정보 관리", to: "/dashboard/personal-info", icon: "👤" },
+      { label: "개인 설정", to: "/dashboard/settings", icon: "⚙️" },
     ],
   },
 ];
 
-function DashboardSidebar() {
+const DashboardSidebar = () => {
   return (
-    <aside className="matey-dashboard-sidebar glass-card">
-      <div className="matey-dashboard-sidebar__top">
-        <div className="matey-dashboard-sidebar__icon">
-          <img src="/images/rabbit.png" alt="Matey rabbit" />
-        </div>
+    <aside className="dashboard-sidebar">
+      <div className="dashboard-sidebar__profile">
+        <div className="dashboard-sidebar__avatar">🐰</div>
         <div>
-          <strong>Matey Space</strong>
-          <span>나만의 펫 상담사 대시보드</span>
+          <strong>메이티 대시보드</strong>
+          <p>오늘의 감정 흐름과 기록을 확인해보세요</p>
         </div>
       </div>
 
-      <div className="matey-dashboard-sidebar__status">
-        <span className="status-dot" />
-        오늘도 부드럽게 연결 중
+      <div className="dashboard-sidebar__notice">
+        <span>오늘의 한마디</span>
+        <strong>“너를 먼저 알아차리는 메이트가 여기 있어.”</strong>
       </div>
 
-      <div className="matey-dashboard-sidebar__menus">
-        {menuGroups.map((group) => (
-          <div key={group.title} className="matey-dashboard-sidebar__group">
-            <p>{group.title}</p>
-            <div className="matey-dashboard-sidebar__links">
-              {group.items.map((item) => (
-                <NavLink
-                  key={item.label}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `matey-dashboard-sidebar__link ${isActive ? 'is-active' : ''}`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </div>
+      {menuGroups.map((group) => (
+        <div className="dashboard-sidebar__group" key={group.title}>
+          <h4>{group.title}</h4>
+
+          <div className="dashboard-sidebar__links">
+            {group.items.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === "/dashboard"}
+                className={({ isActive }) =>
+                  `dashboard-sidebar__link ${isActive ? "active" : ""}`
+                }
+              >
+                <span className="dashboard-sidebar__icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </aside>
   );
-}
+};
 
 export default DashboardSidebar;

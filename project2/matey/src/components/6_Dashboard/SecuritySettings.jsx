@@ -1,131 +1,153 @@
-import React, { useState } from 'react';
-import './Dashboard.css';
+import React, { useState } from "react";
 
-function SecuritySettings() {
+const SecuritySettings = () => {
   const [settings, setSettings] = useState({
-    desktopMonitoring: true,
-    localOnlyCapture: true,
-    cloudHistory: true,
-    autoDelete: false,
-    proactiveVoice: false,
-    crisisSafety: true,
+    monitoring: true,
+    saveHistory: true,
+    proactiveNotification: true,
+    screenshotContext: false,
+    newDeviceAlert: true,
   });
 
-  const toggle = (key) => {
+  const toggleSetting = (key) => {
     setSettings((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
 
-  const items = [
-    {
-      key: 'desktopMonitoring',
-      title: '상황 인식 모니터링',
-      desc: '데스크톱 화면 맥락을 읽어 메이티가 먼저 다가오는 기능을 켜고 끕니다.',
-    },
-    {
-      key: 'localOnlyCapture',
-      title: '로컬 우선 처리',
-      desc: '가능한 경우 원본 화면은 기기 내부에서 처리하고 최소 정보만 활용합니다.',
-    },
-    {
-      key: 'cloudHistory',
-      title: '상담 기록 클라우드 저장',
-      desc: '웹과 데스크톱 사이에서 상담 기록을 동기화합니다.',
-    },
-    {
-      key: 'autoDelete',
-      title: '자동 삭제 주기',
-      desc: '민감한 기록을 일정 주기로 정리하는 옵션입니다.',
-    },
-    {
-      key: 'proactiveVoice',
-      title: '음성으로 먼저 말 걸기',
-      desc: '텍스트 말풍선 대신 음성 알림으로 안부를 전하는 기능입니다.',
-    },
-    {
-      key: 'crisisSafety',
-      title: '위기 상황 안전 가이드',
-      desc: '자해/타해 위험 문맥에서 별도 안전 안내를 우선 표시합니다.',
-    },
-  ];
-
   return (
-    <div className="petdash-page">
-      <section className="petdash-security-head glass-card">
-        <div>
-          <span className="petdash-mini-badge">Privacy & Safety</span>
-          <h3>보안과 통제는 사용자가 직접</h3>
-          <p>
-            메이티의 핵심은 “늘 보는 AI”가 아니라,
-            <strong> 내가 허용한 만큼만 곁에 있는 AI 친구</strong>여야 한다는 점이에요.
-          </p>
-        </div>
-
-        <div className="petdash-security-head__pet">
-          <img src="/images/cat.png" alt="Matey cat" />
-        </div>
-      </section>
-
-      <section className="petdash-security-grid">
-        <article className="petdash-card glass-card">
-          <div className="petdash-card__head">
-            <div>
-              <span className="petdash-mini-badge">Control Center</span>
-              <h3>모니터링 및 기록 제어</h3>
-            </div>
+    <section className="dashboard-page">
+      <div className="dashboard-page__hero">
+        <div className="dashboard-page__hero-top">
+          <div>
+            <h1>보안 설정</h1>
+            <p>
+              메이티의 프라이버시와 권한 제어는 사용자가 직접 관리할 수 있어야 합니다.
+            </p>
           </div>
 
-          <div className="petdash-toggle-list">
-            {items.map((item) => (
-              <div key={item.key} className="petdash-toggle-item">
-                <div className="petdash-toggle-item__copy">
-                  <strong>{item.title}</strong>
-                  <p>{item.desc}</p>
-                </div>
+          <div className="dashboard-page__hero-badges">
+            <div className="dashboard-badge">🔐 프라이버시 제어</div>
+            <div className="dashboard-badge">🛡️ 계정 보호</div>
+          </div>
+        </div>
+      </div>
 
-                <button
-                  type="button"
-                  className={`petdash-toggle ${settings[item.key] ? 'is-on' : ''}`}
-                  onClick={() => toggle(item.key)}
-                  aria-label={`${item.title} 토글`}
-                >
-                  <span />
-                </button>
-              </div>
-            ))}
+      <div className="dashboard-grid-2">
+        <article className="dashboard-card">
+          <h3>권한 및 기록 관리</h3>
+
+          <div className="dashboard-switch-list">
+            <SwitchItem
+              title="모니터링 기능 활성화"
+              desc="메이티가 사용자의 상태를 먼저 파악할 수 있도록 바탕화면 상호작용 기능을 켭니다."
+              checked={settings.monitoring}
+              onClick={() => toggleSetting("monitoring")}
+            />
+
+            <SwitchItem
+              title="대화 기록 저장"
+              desc="대화 내역과 감정 패턴을 리포트에 반영하기 위해 기록을 저장합니다."
+              checked={settings.saveHistory}
+              onClick={() => toggleSetting("saveHistory")}
+            />
+
+            <SwitchItem
+              title="능동형 알림 허용"
+              desc="메이티가 먼저 말을 걸거나 체크인 알림을 보내는 기능을 사용합니다."
+              checked={settings.proactiveNotification}
+              onClick={() => toggleSetting("proactiveNotification")}
+            />
+
+            <SwitchItem
+              title="화면 맥락 분석 허용"
+              desc="상황 인식 기반 반응을 위해 화면 흐름을 참고하는 기능입니다. 민감한 요소이므로 기본 OFF 예시로 두었습니다."
+              checked={settings.screenshotContext}
+              onClick={() => toggleSetting("screenshotContext")}
+            />
           </div>
         </article>
 
-        <article className="petdash-card glass-card">
-          <div className="petdash-card__head">
-            <div>
-              <span className="petdash-mini-badge">Data Policy</span>
-              <h3>데이터 보호 방식</h3>
+        <article className="dashboard-card">
+          <h3>계정 보호</h3>
+
+          <div className="dashboard-switch-list">
+            <SwitchItem
+              title="새 기기 로그인 알림"
+              desc="새로운 환경에서 로그인될 경우 사용자에게 알림을 보냅니다."
+              checked={settings.newDeviceAlert}
+              onClick={() => toggleSetting("newDeviceAlert")}
+            />
+          </div>
+
+          <div style={{ height: "14px" }} />
+
+          <div className="dashboard-form-grid dashboard-form-grid--single">
+            <div className="dashboard-field">
+              <label>현재 비밀번호</label>
+              <input
+                className="dashboard-input"
+                type="password"
+                placeholder="현재 비밀번호를 입력하세요"
+              />
+            </div>
+
+            <div className="dashboard-field">
+              <label>새 비밀번호</label>
+              <input
+                className="dashboard-input"
+                type="password"
+                placeholder="새 비밀번호를 입력하세요"
+              />
+            </div>
+
+            <div className="dashboard-field">
+              <label>새 비밀번호 확인</label>
+              <input
+                className="dashboard-input"
+                type="password"
+                placeholder="새 비밀번호를 다시 입력하세요"
+              />
             </div>
           </div>
 
-          <div className="petdash-policy-list">
-            <div className="petdash-policy-card">
-              <strong>최소 수집 원칙</strong>
-              <p>상담 경험에 꼭 필요한 정보만 남기고, 민감한 원본은 줄이는 방향을 우선합니다.</p>
-            </div>
-
-            <div className="petdash-policy-card">
-              <strong>삭제와 보관 선택권</strong>
-              <p>사용자가 기록 보관 기간, 삭제 여부, 동기화 여부를 직접 선택할 수 있도록 설계합니다.</p>
-            </div>
-
-            <div className="petdash-policy-card">
-              <strong>기기 내부 우선 처리</strong>
-              <p>가능한 기능은 로컬 처리 중심으로 두어 감시당하는 느낌을 줄이고 통제감을 높입니다.</p>
-            </div>
+          <div style={{ marginTop: "16px" }}>
+            <button type="button" className="dashboard-button">
+              비밀번호 변경
+            </button>
           </div>
         </article>
-      </section>
+      </div>
+
+      <article className="dashboard-card">
+        <h3>보안 설계 포인트</h3>
+        <p>
+          메이티는 화면 인식 같은 민감한 기능을 포함할 수 있기 때문에, 단순히 “좋은 기능”처럼 보이게 하기보다
+          사용자가 명확하게 ON/OFF를 제어할 수 있는 구조를 보여주는 것이 훨씬 중요합니다.
+          이 포인트는 발표와 면접에서 기획 방어 포인트로도 강합니다.
+        </p>
+      </article>
+    </section>
+  );
+};
+
+const SwitchItem = ({ title, desc, checked, onClick }) => {
+  return (
+    <div className="dashboard-switch-item">
+      <div>
+        <strong>{title}</strong>
+        <p>{desc}</p>
+      </div>
+
+      <button
+        type="button"
+        className={`switch ${checked ? "active" : ""}`}
+        onClick={onClick}
+        aria-label={title}
+      />
     </div>
   );
-}
+};
 
 export default SecuritySettings;
