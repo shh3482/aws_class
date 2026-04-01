@@ -1,66 +1,177 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from "react";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(null);
+
+const parseTokenPayload = (token) => {
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload;
+  } catch (error) {
+    console.error("토큰 파싱 실패:", error);
+    return null;
+  }
+};
+
+const createMockToken = (payload) => {
+  const header = { alg: "HS256", typ: "JWT" };
+
+  const encode = (obj) => {
+    return btoa(JSON.stringify(obj));
+  };
+
+  return `${encode(header)}.${encode(payload)}.matey-signature`;
+};
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken") || ""
+  );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken") || ""
+  );
+  const [user, setUser] = useState(parseTokenPayload(localStorage.getItem("accessToken")));
+  const [loading, setLoading] = useState(false);
 
-  // 초기화: 로컬스토리지에서 토큰 확인
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        setIsLoggedIn(true);
-        setIsAdmin(parsedUser.role === 'admin');
-      } catch (error) {
-        console.error('사용자 정보 파싱 오류:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-      }
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+    } else {
+      localStorage.removeItem("accessToken");
     }
-    setLoading(false);
+
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    } else {
+      localStorage.removeItem("refreshToken");
+    }
+
+    setUser(parseTokenPayload(accessToken));
+  }, [accessToken, refreshToken]);
+
+  useEffect(() => {
+    const syncAuthState = () => {
+      const token = localStorage.getItem("accessToken") || "";
+      const refresh = localStorage.getItem("refreshToken") || "";
+
+      setAccessToken(token);
+      setRefreshToken(refresh);
+      setUser(parseTokenPayload(token));
+    };
+
+    window.addEventListener("storage", syncAuthState);
+    return () => window.removeEventListener("storage", syncAuthState);
   }, []);
 
-  const login = (userData, token) => {
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    setIsLoggedIn(true);
-    setIsAdmin(userData.role === 'admin');
+  const login = async ({ email, password }) => {
+    setLoading(true);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const isAdmin =
+          email?.toLowerCase().includes("admin") ||
+          email?.toLowerCase().includes("superadmin");
+
+        const payload = {
+          email,
+          role: isAdmin ? "ADMIN" : "USER",
+          nickname: (email?.split("@")[0] || "matey_user").replace(/[^a-zA-Z0-9_]/g, ""),
+          name: (email?.split("@")[0] || "matey_user").replace(/[^a-zA-Z0-9_]/g, ""),
+        };
+
+        const newAccessToken = createMockToken(payload);
+        const newRefreshToken = `refresh-${Date.now()}`;
+
+        setAccessToken(newAccessToken);
+        setRefreshToken(newRefreshToken);
+        setUser(payload);
+        setLoading(false);
+
+        resolve({
+          success: true,
+          user: payload,
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
+      }, 600);
+    });
+  };
+
+  const signup = async ({ name, nickname, email, password }) => {
+    setLoading(true);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const normalizedName =
+          (name || email?.split("@")[0] || "matey_user").replace(/[^a-zA-Z0-9가-힣_]/g, "");
+        const normalizedNickname =
+          (nickname || email?.split("@")[0] || "matey_user").replace(/[^a-zA-Z0-9가-힣_]/g, "");
+
+        const payload = {
+          email,
+          role: "USER",
+          nickname: normalizedNickname || "matey_user",
+          name: normalizedName || "matey_user",
+        };
+
+        const newAccessToken = createMockToken(payload);
+        const newRefreshToken = `refresh-${Date.now()}`;
+
+        setAccessToken(newAccessToken);
+        setRefreshToken(newRefreshToken);
+        setUser(payload);
+        setLoading(false);
+
+        resolve({
+          success: true,
+          user: payload,
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
+      }, 700);
+    });
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    setAccessToken("");
+    setRefreshToken("");
     setUser(null);
-    setIsLoggedIn(false);
-    setIsAdmin(false);
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
   };
 
-  const updateUser = (updatedUserData) => {
-    const newUser = { ...user, ...updatedUserData };
-    localStorage.setItem('user', JSON.stringify(newUser));
-    setUser(newUser);
+  const updateUser = (nextUser) => {
+    if (!nextUser) return;
+
+    const mergedUser = {
+      ...(user || {}),
+      ...nextUser,
+    };
+
+    const nextAccessToken = createMockToken(mergedUser);
+
+    setUser(mergedUser);
+    setAccessToken(nextAccessToken);
+    localStorage.setItem("accessToken", nextAccessToken);
   };
 
-  return (
-    <AuthContext.Provider value={{
+  const value = useMemo(
+    () => ({
+      accessToken,
+      refreshToken,
       user,
-      isLoggedIn,
-      isAdmin,
       loading,
+      isAuthenticated: !!accessToken,
+      isAdmin: user?.role === "ADMIN" || user?.role === "SUPERADMIN",
       login,
+      signup,
       logout,
-      updateUser
-    }}>
-      {children}
-    </AuthContext.Provider>
+      updateUser,
+    }),
+    [accessToken, refreshToken, user, loading]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

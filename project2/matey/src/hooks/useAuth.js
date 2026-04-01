@@ -1,10 +1,14 @@
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-export const useAuth = () => {
+const useAuth = () => {
   const context = useContext(AuthContext);
+
   if (!context) {
-    throw new Error('useAuth는 AuthProvider 내에서만 사용 가능합니다');
+    throw new Error("useAuth는 AuthProvider 내부에서 사용되어야 합니다.");
   }
+
   return context;
 };
+
+export default useAuth;
