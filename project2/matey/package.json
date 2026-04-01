@@ -2,5 +2,13 @@
   "dependencies": {
     "html-webpack-plugin": "^5.5.0",
     "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development --open"
+  },
+  "devDependencies": {
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3"
   }
 }

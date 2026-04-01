@@ -1,143 +1,198 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import './Header.css';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import "./Header.css";
 
-function Header() {
+const Header = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, isAdmin, logout } = useAuth();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setUserName] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const token = localStorage.getItem("accessToken");
+    const name = localStorage.getItem("userName");
+    
+    if (token) {
+      setIsLoggedIn(true);
+      setUserName(name || "사용자");
+      
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.role === "ADMIN" || payload.role === "SUPERADMIN") {
+          setIsAdmin(true);
+        }
+      } catch (e) {
+        console.error("토큰 파싱 실패:", e);
+      }
+    }
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleLogout = () => {
-    logout();
-    navigate('/');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userName");
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+    navigate("/");
+    setIsMenuOpen(false);
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="header-inner container">
+    <header className={`header ${scrolled ? "scrolled" : ""}`}>
+      <div className="header-container">
         {/* 로고 */}
-        <a href="/" className="logo" onClick={() => navigate('/')}>
-          <div className="logo-icon">
-            <span className="logo-emoji">🫧</span>
-          </div>
-          <span className="logo-text">메이티</span>
-        </a>
+        <Link to="/" className="logo">
+          <div className="logo-icon">🐰</div>
+          <span className="logo-text">Matey</span>
+        </Link>
 
-        {/* 미로그인 상태: 데스크톱 네비 */}
-        {!isLoggedIn && (
-          <nav className="nav-desktop">
-            <a href="#features" className="nav-link">서비스 소개</a>
-            <a href="#how-it-works" className="nav-link">이용 방법</a>
-            <a href="#pricing" className="nav-link">가격</a>
-            <a href="#help" className="nav-link">도움말</a>
-            <a href="#demo" className="nav-link">무료 체험</a>
-            <a href="#download" className="nav-link">다운로드</a>
-          </nav>
-        )}
+        {/* 네비게이션 - 데스크톱 */}
+        <nav className="nav-desktop">
+          <a href="/#about" className="nav-link">소개</a>
+          <a href="/#pricing" className="nav-link">가격</a>
+          <a href="/#help" className="nav-link">도움말</a>
+        </nav>
 
-        {/* 로그인 상태: 대시보드 네비 */}
-        {isLoggedIn && !isAdmin && (
-          <nav className="nav-desktop">
-            <a href="/dashboard" className="nav-link">대시보드</a>
-            <a href="/mypage" className="nav-link">마이페이지</a>
-          </nav>
-        )}
-
-        {/* 관리자 상태: 관리자 네비 */}
-        {isLoggedIn && isAdmin && (
-          <nav className="nav-desktop">
-            <a href="/dashboard" className="nav-link">대시보드</a>
-            <a href="/admin" className="nav-link">관리자 페이지</a>
-            <a href="/mypage" className="nav-link">마이페이지</a>
-          </nav>
-        )}
-
-        {/* CTA 버튼 - 상태별 다름 */}
-        <div className="header-cta">
-          {!isLoggedIn ? (
-            <>
+        {/* 우측 액션 */}
+        <div className="header-actions">
+          {isLoggedIn ? (
+            <div className="user-section">
               <button 
-                className="btn-login"
-                onClick={() => navigate('/login')}
+                className="btn-free-trial"
+                onClick={() => navigate("/chat")}
               >
-                로그인
+                <i className="fas fa-comments" />
+                무료 체험
               </button>
+              
               <button 
-                className="btn-start"
-                onClick={() => navigate('/signup')}
+                className="btn-download"
+                onClick={() => navigate("/download")}
               >
-                무료 체험 ✨
+                <i className="fas fa-download" />
+                다운로드
+              </button>
+
+              <div className="user-menu">
+                <button className="user-btn">
+                  <span className="user-avatar">{userName[0]}</span>
+                  <span className="user-name">{userName}</span>
+                  <i className="fas fa-chevron-down" />
+                </button>
+
+                <div className="dropdown-menu">
+                  <Link to="/mypage" className="dropdown-item">
+                    <i className="fas fa-user" />
+                    마이페이지
+                  </Link>
+                  <Link to="/dashboard" className="dropdown-item">
+                    <i className="fas fa-chart-line" />
+                    대시보드
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="dropdown-item admin-item">
+                      <i className="fas fa-user-shield" />
+                      관리자 패널
+                    </Link>
+                  )}
+                  <div className="dropdown-divider" />
+                  <button onClick={handleLogout} className="dropdown-item logout">
+                    <i className="fas fa-sign-out-alt" />
+                    로그아웃
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="auth-section">
+              <button 
+                className="btn-free-trial"
+                onClick={() => navigate("/chat")}
+              >
+                <i className="fas fa-comments" />
+                무료 체험
+              </button>
+              
+              <button 
+                className="btn-download"
+                onClick={() => navigate("/download")}
+              >
+                <i className="fas fa-download" />
+                다운로드
+              </button>
+
+              <Link to="/login" className="btn-login">
+                로그인
+              </Link>
+
+              <Link to="/signup" className="btn-signup">
+                회원가입
+              </Link>
+            </div>
+          )}
+
+          {/* 모바일 메뉴 버튼 */}
+          <button 
+            className="menu-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <i className={`fas fa-${isMenuOpen ? "times" : "bars"}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* 모바일 메뉴 */}
+      {isMenuOpen && (
+        <div className="mobile-menu">
+          <a href="/#about" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+            소개
+          </a>
+          <a href="/#pricing" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+            가격
+          </a>
+          <a href="/#help" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+            도움말
+          </a>
+          
+          {isLoggedIn ? (
+            <>
+              <Link to="/dashboard" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+                <i className="fas fa-chart-line" /> 대시보드
+              </Link>
+              {isAdmin && (
+                <Link to="/admin" className="mobile-nav-link admin-link" onClick={() => setIsMenuOpen(false)}>
+                  <i className="fas fa-user-shield" /> 관리자
+                </Link>
+              )}
+              <button onClick={handleLogout} className="mobile-nav-link logout-link">
+                <i className="fas fa-sign-out-alt" /> 로그아웃
               </button>
             </>
           ) : (
             <>
-              <span className="user-greeting">
-                {isAdmin ? '👑 관리자' : '👤 사용자'}
-              </span>
-              <button 
-                className="btn-logout"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </button>
+              <Link to="/login" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+                로그인
+              </Link>
+              <Link to="/signup" className="mobile-nav-link signup-link" onClick={() => setIsMenuOpen(false)}>
+                회원가입
+              </Link>
             </>
           )}
-        </div>
-
-        {/* 모바일 햄버거 */}
-        <button 
-          className="hamburger" 
-          onClick={() => setMenuOpen(!menuOpen)} 
-          aria-label="메뉴"
-        >
-          <span className={`bar ${menuOpen ? 'open' : ''}`}></span>
-          <span className={`bar ${menuOpen ? 'open' : ''}`}></span>
-          <span className={`bar ${menuOpen ? 'open' : ''}`}></span>
-        </button>
-      </div>
-
-      {/* 모바일 메뉴 */}
-      {menuOpen && (
-        <div className="mobile-menu">
-          {!isLoggedIn && (
-            <>
-              <a href="#features" onClick={() => setMenuOpen(false)}>서비스 소개</a>
-              <a href="#how-it-works" onClick={() => setMenuOpen(false)}>이용 방법</a>
-              <a href="#pricing" onClick={() => setMenuOpen(false)}>가격</a>
-              <a href="#help" onClick={() => setMenuOpen(false)}>도움말</a>
-              <a href="#demo" onClick={() => setMenuOpen(false)}>무료 체험</a>
-              <a href="#download" onClick={() => setMenuOpen(false)}>다운로드</a>
-            </>
-          )}
-          {isLoggedIn && (
-            <>
-              <a href="/dashboard" onClick={() => setMenuOpen(false)}>대시보드</a>
-              <a href="/mypage" onClick={() => setMenuOpen(false)}>마이페이지</a>
-              {isAdmin && <a href="/admin" onClick={() => setMenuOpen(false)}>관리자 페이지</a>}
-            </>
-          )}
-          <div className="mobile-btns">
-            {!isLoggedIn ? (
-              <>
-                <button className="btn-login" onClick={() => navigate('/login')}>로그인</button>
-                <button className="btn-start" onClick={() => navigate('/signup')}>무료 체험</button>
-              </>
-            ) : (
-              <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
-            )}
-          </div>
         </div>
       )}
     </header>
   );
-}
+};
 
 export default Header;

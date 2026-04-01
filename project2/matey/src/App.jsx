@@ -1,52 +1,101 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import Header from "./components/1_Header/Header";
+import Footer from "./components/2_Footer/Footer";
+import HomePage from "./pages/HomePage";
+import ChatPage from "./pages/ChatPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import LoginPage from "./components/5_Auth/LoginPage";
+import SignupPage from "./components/5_Auth/SignupPage";
+import MyPage from "./components/7_MyPage/MyPage";
+import AdminPage from "./components/8_AdminPage/AdminPage";
+import Dashboard from "./components/6_Dashboard/Dashboard";
+import DownloadPage from "./pages/DownloadPage";
+import "./App.css";
 
-// Layouts
-import MainLayout from './components/3_Layout/MainLayout';
-import DashboardLayout from './components/3_Layout/DashboardLayout';
+const ProtectedRoute = ({ children, requiredRole = null }) => {
+  const token = localStorage.getItem("accessToken");
+  
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 
-// Pages
-import HomePage from './components/4_Home/HomePage';
-import LoginPage from './components/5_Auth/LoginPage';
-import SignupPage from './components/5_Auth/SignupPage';
-import Dashboard from './components/6_Dashboard/Dashboard';
-import MyPage from './components/7_MyPage/MyPage';
-import AdminPage from './components/8_AdminPage/AdminPage';
+  if (requiredRole) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload.role !== requiredRole && payload.role !== "SUPERADMIN") {
+        return <Navigate to="/" replace />;
+      }
+    } catch (e) {
+      return <Navigate to="/login" replace />;
+    }
+  }
 
-// Context
-import { AuthProvider } from './context/AuthContext';
+  return children;
+};
 
 function App() {
   return (
-    <Router>
+    <ThemeProvider>
       <AuthProvider>
-        <Routes>
-          {/* 미로그인 상태 라우트 */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Route>
+        <Router>
+          <div className="app-wrapper">
+            <Header />
+            <main className="main-content">
+              <Routes>
+                {/* 공개 페이지 */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/download" element={<DownloadPage />} />
 
-          {/* 로그인 후 라우트 */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard activeTab="overview" />} />
-            <Route path="/dashboard/chat-history" element={<Dashboard activeTab="chat-history" />} />
-            <Route path="/dashboard/security" element={<Dashboard activeTab="security" />} />
-            <Route path="/dashboard/reports" element={<Dashboard activeTab="reports" />} />
-            <Route path="/dashboard/personal-info" element={<Dashboard activeTab="personal-info" />} />
-            <Route path="/dashboard/settings" element={<Dashboard activeTab="settings" />} />
-            
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Route>
+                {/* 보호된 페이지 */}
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mypage"
+                  element={
+                    <ProtectedRoute>
+                      <MyPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-          {/* 404 */}
-          <Route path="*" element={<div style={{textAlign:'center', padding:'100px 20px'}}>페이지를 찾을 수 없습니다 😅</div>} />
-        </Routes>
+                {/* 관리자 페이지 */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute requiredRole="ADMIN">
+                      <AdminPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* 404 */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
       </AuthProvider>
-    </Router>
+    </ThemeProvider>
   );
 }
 
