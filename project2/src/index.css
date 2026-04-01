@@ -1,0 +1,130 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #6C9EFF;
+  --primary-light: #A8C4FF;
+  --primary-dark: #4B7EE8;
+  --secondary: #FF8FAB;
+  --secondary-light: #FFB8CB;
+  --accent: #FFB347;
+  --accent-light: #FFD08A;
+  --bg-gradient: linear-gradient(145deg, #EEF4FF 0%, #F9F0FF 40%, #FFF0F5 100%);
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(255, 255, 255, 0.9);
+  --text-dark: #2D2D3F;
+  --text-medium: #5A5A7A;
+  --text-light: #9090B0;
+  --shadow-soft: 0 8px 32px rgba(108, 158, 255, 0.12);
+  --shadow-card: 0 4px 24px rgba(108, 158, 255, 0.10);
+  --shadow-hover: 0 12px 40px rgba(108, 158, 255, 0.22);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-full: 9999px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* 유틸리티 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 애니메이션 키프레임 */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(108, 158, 255, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(108, 158, 255, 0.6); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes chat-bubble-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
