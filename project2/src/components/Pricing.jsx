@@ -1,118 +1,56 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Pricing.css';
+import React from "react";
+import "./Pricing.css";
 
-const pricingPlans = [
+const plans = [
   {
-    name: 'Lite',
-    price: '무료',
-    desc: '처음 가볍게 시작해보는 분에게',
-    badge: '입문',
-    tone: 'blue',
-    features: [
-      '기본 캐릭터 대화',
-      '오늘 체크인',
-      '최근 감정 기록 보기',
-      '기본 말풍선 선택지',
-    ],
-    cta: '무료로 시작하기',
-    href: '/signup',
+    name: "Free",
+    price: "₩0",
+    desc: "메이티를 가볍게 시작하는 플랜",
+    features: ["기본 대화", "하루 요약", "웹 계정 사용"],
   },
   {
-    name: 'Care',
-    price: '₩9,900',
-    sub: '/월',
-    desc: '꾸준히 감정 기록과 리포트를 보고 싶은 분에게',
-    badge: '추천',
-    tone: 'peach',
-    featured: true,
-    features: [
-      '무제한 캐릭터 대화',
-      '주간 감정 리포트',
-      '봇 일기 자동 정리',
-      '대화 스타일 개인화',
-      '우선 지원',
-    ],
-    cta: '추천 플랜 시작',
-    href: '/signup',
+    name: "Plus",
+    price: "₩4,900",
+    desc: "감정 분석과 기록 기능이 강화된 플랜",
+    features: ["감정 분석", "기록 저장", "캐릭터 커스터마이징"],
+    highlight: true,
   },
   {
-    name: 'Companion',
-    price: '₩19,900',
-    sub: '/월',
-    desc: '더 깊은 인사이트와 개인화가 필요한 분에게',
-    badge: '확장',
-    tone: 'mint',
-    features: [
-      '고급 감정 흐름 분석',
-      '루틴 추천',
-      '캐릭터 반응 세부 설정',
-      '상세 리포트 보관',
-      '프리미엄 업데이트 우선 제공',
-    ],
-    cta: '프리미엄 시작',
-    href: '/signup',
+    name: "Premium",
+    price: "₩9,900",
+    desc: "더 깊은 관계형 경험을 위한 플랜",
+    features: ["고급 패턴 분석", "데스크톱 기능 확장", "우선 지원"],
   },
 ];
 
-export default function Pricing() {
+const Pricing = () => {
   return (
-    <section className="matey-pricing" id="pricing">
-      <div className="matey-pricing__container">
-        <div className="matey-pricing__heading">
-          <span className="matey-pricing__kicker">요금 안내</span>
-          <h2>
-            부담 없이 시작하고,
-            <br />
-            <strong>필요할 때 더 깊게 함께해요</strong>
-          </h2>
-          <p>
-            무료로 경험해본 뒤, 감정 기록과 리포트를 더 꾸준히 보고 싶을 때
-            확장할 수 있게 설계했어요.
-          </p>
+    <section id="pricing" className="pricing-section">
+      <div className="container">
+        <div className="section-head">
+          <span>PRICING</span>
+          <h2>메이티와 가까워지는 방식</h2>
+          <p>가볍게 시작하고, 필요에 따라 더 깊게 연결될 수 있어요.</p>
         </div>
 
-        <div className="matey-pricing__grid">
-          {pricingPlans.map((plan) => (
-            <article
-              key={plan.name}
-              className={`matey-pricing__card matey-pricing__card--${plan.tone} ${
-                plan.featured ? 'is-featured' : ''
-              }`}
-            >
-              <div className="matey-pricing__badge-row">
-                <span className="matey-pricing__badge">{plan.badge}</span>
-                {plan.featured && <span className="matey-pricing__featured">Most Loved</span>}
-              </div>
-
+        <div className="pricing-grid">
+          {plans.map((plan) => (
+            <article key={plan.name} className={`pricing-card ${plan.highlight ? "highlight" : ""}`}>
               <h3>{plan.name}</h3>
-              <p className="matey-pricing__desc">{plan.desc}</p>
-
-              <div className="matey-pricing__price">
-                <strong>{plan.price}</strong>
-                {plan.sub && <span>{plan.sub}</span>}
-              </div>
-
-              <div className="matey-pricing__visual">
-                <img
-                  src={plan.name === 'Companion' ? '/images/cat.png' : '/images/rabbit.png'}
-                  alt={plan.name}
-                />
-              </div>
-
-              <ul className="matey-pricing__features">
-                {plan.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
+              <strong>{plan.price}</strong>
+              <p>{plan.desc}</p>
+              <ul>
+                {plan.features.map((item) => (
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
-
-              <Link to={plan.href} className="matey-pricing__btn">
-                {plan.cta}
-              </Link>
+              <button>시작하기</button>
             </article>
           ))}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Pricing;

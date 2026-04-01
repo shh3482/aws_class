@@ -1,216 +1,414 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './AuthPage.css';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
-const companions = [
-  {
-    id: 'rabbit',
-    name: '하루',
-    desc: '차분하고 다정한 공감형',
-    image: '/images/rabbit.png',
-  },
-  {
-    id: 'cat',
-    name: '루미',
-    desc: '밝고 귀여운 에너지형',
-    image: '/images/cat.png',
-  },
-];
+const SignupPage = () => {
+  const navigate = useNavigate();
+  const { signup, loading, isAuthenticated } = useAuth();
 
-function SignupPage() {
   const [form, setForm] = useState({
-    nickname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    companion: 'rabbit',
-    agree: true,
+    name: "",
+    nickname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agree: false,
   });
 
-  const handleChange = (key, value) => {
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const onChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setForm((prev) => ({
       ...prev,
-      [key]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
 
-    // TODO:
-    // 여기에 기존 회원가입 API / AuthContext / useAuth 로직 연결
-    // 예:
-    // await signup({ ...form });
+    if (!form.name.trim()) {
+      setError("이름을 입력해주세요.");
+      return;
+    }
 
-    console.log('signup form:', form);
+    if (!form.email.trim()) {
+      setError("이메일을 입력해주세요.");
+      return;
+    }
+
+    if (!form.password.trim()) {
+      setError("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    if (form.password.length < 4) {
+      setError("비밀번호는 4자 이상으로 입력해주세요.");
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError("비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    if (!form.agree) {
+      setError("서비스 이용 동의에 체크해주세요.");
+      return;
+    }
+
+    try {
+      const result = await signup({
+        name: form.name,
+        nickname: form.nickname,
+        email: form.email,
+        password: form.password,
+      });
+
+      if (result?.success) {
+        navigate("/dashboard", { replace: true });
+      }
+    } catch (err) {
+      console.error(err);
+      setError("회원가입 중 문제가 발생했어요. 다시 시도해주세요.");
+    }
   };
 
   return (
-    <section className="auth-shell auth-shell--signup">
-      <div className="auth-shell__blur auth-shell__blur--one" />
-      <div className="auth-shell__blur auth-shell__blur--two" />
-      <div className="auth-shell__blur auth-shell__blur--three" />
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "var(--grad-soft)",
+        display: "grid",
+        placeItems: "center",
+        padding: "24px",
+      }}
+    >
+      <div
+        style={{
+          width: "min(1180px, 100%)",
+          display: "grid",
+          gridTemplateColumns: "1.02fr 0.98fr",
+          gap: "20px",
+        }}
+      >
+        <section
+          style={{
+            padding: "36px",
+            borderRadius: "32px",
+            background: "rgba(255,255,255,0.78)",
+            border: "1px solid rgba(255,255,255,0.82)",
+            boxShadow: "0 18px 44px rgba(104, 116, 200, 0.12)",
+            backdropFilter: "blur(18px)",
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "22px",
+            }}
+          >
+            <div
+              style={{
+                width: "42px",
+                height: "42px",
+                borderRadius: "14px",
+                display: "grid",
+                placeItems: "center",
+                color: "#fff",
+                fontWeight: 900,
+                background:
+                  "linear-gradient(135deg, #7c8cff 0%, #9aa6ff 44%, #ffb7d5 100%)",
+              }}
+            >
+              M
+            </div>
+            <div>
+              <strong style={{ display: "block", color: "var(--text)" }}>메이티</strong>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                먼저 다가오는 AI 메이트
+              </span>
+            </div>
+          </Link>
 
-      <div className="container auth-grid">
-        <div className="auth-showcase glass-card">
-          <div className="auth-showcase__badge">First Connection with Matey</div>
+          <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                padding: "8px 14px",
+                borderRadius: "999px",
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid var(--line)",
+                color: "var(--primary-dark)",
+                fontWeight: 800,
+                fontSize: "0.84rem",
+                marginBottom: "16px",
+              }}
+            >
+              SIGN UP
+            </div>
 
-          <h1 className="auth-showcase__title">
-            나만의
-            <br />
-            <span className="gradient-text">AI 펫 친구와 첫 연결 시작</span>
-          </h1>
+            <h1
+              style={{
+                margin: "0 0 12px",
+                fontSize: "clamp(2rem, 4vw, 3rem)",
+                lineHeight: 1.18,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              메이티와 처음 인사를 나눠볼까요?
+            </h1>
 
-          <p className="auth-showcase__desc">
-            회원가입은 단순 계정 생성이 아니라,
-            메이티 안에서 나와 가장 잘 맞는 작은 AI 친구를 처음 연결하는 과정입니다.
-            가볍고 예쁜 온보딩 경험으로 시작해보세요.
+            <p
+              style={{
+                margin: 0,
+                color: "var(--text-soft)",
+                lineHeight: 1.85,
+                fontSize: "1rem",
+              }}
+            >
+              회원가입 후 메이티의 대시보드, 감정 리포트, 보안 설정,
+              개인 맞춤 메이트 설정을 사용할 수 있어요.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gap: "14px" }}>
+            <div
+              style={{
+                padding: "16px 18px",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "1px solid var(--line)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "6px" }}>
+                회원가입 후 가능한 것
+              </strong>
+              <span style={{ color: "var(--text-soft)", fontSize: "0.92rem", lineHeight: 1.7 }}>
+                대화 내역 확인, 감정 분석 리포트, 보안 설정, 개인 설정, 웹-앱 연동 관리
+              </span>
+            </div>
+
+            <div
+              style={{
+                padding: "16px 18px",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "1px solid var(--line)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "6px" }}>
+                메이티의 핵심 가치
+              </strong>
+              <span style={{ color: "var(--text-soft)", fontSize: "0.92rem", lineHeight: 1.7 }}>
+                검색엔진처럼 답변만 하는 AI가 아니라, 먼저 관심을 보여주는 관계형 동반자 경험
+              </span>
+            </div>
+
+            <div
+              style={{
+                padding: "16px 18px",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "1px solid var(--line)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "6px" }}>
+                프라이버시 제어
+              </strong>
+              <span style={{ color: "var(--text-soft)", fontSize: "0.92rem", lineHeight: 1.7 }}>
+                모니터링 ON/OFF, 기록 저장 여부, 알림 방식 등은 사용자가 직접 선택하도록 설계합니다.
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style={{
+            padding: "36px 30px",
+            borderRadius: "32px",
+            background: "#fff",
+            border: "1px solid var(--line)",
+            boxShadow: "0 18px 44px rgba(104, 116, 200, 0.10)",
+          }}
+        >
+          <h2
+            style={{
+              margin: "0 0 8px",
+              fontSize: "1.6rem",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            회원가입
+          </h2>
+
+          <p
+            style={{
+              margin: "0 0 24px",
+              color: "var(--text-soft)",
+              lineHeight: 1.8,
+            }}
+          >
+            간단한 정보만 입력하면 바로 메이티를 시작할 수 있어요.
           </p>
 
-          <div className="auth-showcase__duo-card">
-            <div className="auth-showcase__duo-copy">
-              <span className="auth-mini-badge">Matey Companions</span>
-              <strong>하루와 루미 중 나에게 더 맞는 친구를 골라보세요</strong>
-              <p>
-                차분한 공감형, 밝은 에너지형처럼
-                캐릭터의 분위기를 고르고 나면 이후 대시보드와 대화 경험도
-                더 자연스럽게 이어집니다.
-              </p>
-            </div>
+          <form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
+            <Field
+              label="이름"
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={onChange}
+              placeholder="이름을 입력해주세요"
+            />
 
-            <div className="auth-showcase__duo-visual">
-              <img src="/images/rabbit-duo.png" alt="Matey companions" />
-            </div>
-          </div>
+            <Field
+              label="닉네임"
+              type="text"
+              name="nickname"
+              value={form.nickname}
+              onChange={onChange}
+              placeholder="선택 입력 (비워도 됩니다)"
+            />
 
-          <div className="auth-highlight-list">
-            <div className="auth-highlight-item">
-              <strong>부담 적은 AI 친구</strong>
-              <span>상담사보다 편한 동반자 톤</span>
-            </div>
-            <div className="auth-highlight-item">
-              <strong>데스크톱 상주형 경험</strong>
-              <span>웹과 앱을 자연스럽게 연결</span>
-            </div>
-            <div className="auth-highlight-item">
-              <strong>프라이버시 중심 구조</strong>
-              <span>통제 가능한 감정 기록과 설정</span>
-            </div>
-          </div>
-        </div>
+            <Field
+              label="이메일"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={onChange}
+              placeholder="user@matey.com"
+            />
 
-        <div className="auth-form-card glass-card">
-          <div className="auth-form-card__top">
-            <div>
-              <span className="auth-form-card__eyebrow">Sign Up</span>
-              <h2>첫 AI 친구 연결하기</h2>
-              <p>계정을 만들고, 메이티 안에서 나와 가장 잘 맞는 친구를 골라보세요.</p>
-            </div>
+            <Field
+              label="비밀번호"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={onChange}
+              placeholder="비밀번호를 입력해주세요"
+            />
 
-            <div className="auth-form-card__avatar auth-form-card__avatar--large">
-              <img src="/images/rabbit-duo.png" alt="Matey duo" />
-            </div>
-          </div>
+            <Field
+              label="비밀번호 확인"
+              type="password"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={onChange}
+              placeholder="비밀번호를 다시 입력해주세요"
+            />
 
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <div className="auth-field">
-              <label htmlFor="signup-nickname">닉네임</label>
-              <input
-                id="signup-nickname"
-                type="text"
-                className="input"
-                placeholder="메이티에서 불리고 싶은 이름"
-                value={form.nickname}
-                onChange={(e) => handleChange('nickname', e.target.value)}
-              />
-            </div>
-
-            <div className="auth-field">
-              <label htmlFor="signup-email">이메일</label>
-              <input
-                id="signup-email"
-                type="email"
-                className="input"
-                placeholder="matey@example.com"
-                value={form.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-              />
-            </div>
-
-            <div className="auth-two-grid">
-              <div className="auth-field">
-                <label htmlFor="signup-password">비밀번호</label>
-                <input
-                  id="signup-password"
-                  type="password"
-                  className="input"
-                  placeholder="8자 이상 입력"
-                  value={form.password}
-                  onChange={(e) => handleChange('password', e.target.value)}
-                />
-              </div>
-
-              <div className="auth-field">
-                <label htmlFor="signup-password-confirm">비밀번호 확인</label>
-                <input
-                  id="signup-password-confirm"
-                  type="password"
-                  className="input"
-                  placeholder="한 번 더 입력"
-                  value={form.confirmPassword}
-                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="auth-field">
-              <label>처음 연결할 메이티 친구</label>
-
-              <div className="auth-companion-grid">
-                {companions.map((companion) => (
-                  <button
-                    key={companion.id}
-                    type="button"
-                    className={`auth-companion-card ${
-                      form.companion === companion.id ? 'is-active' : ''
-                    }`}
-                    onClick={() => handleChange('companion', companion.id)}
-                  >
-                    <div className="auth-companion-card__thumb">
-                      <img src={companion.image} alt={companion.name} />
-                    </div>
-
-                    <div className="auth-companion-card__copy">
-                      <strong>{companion.name}</strong>
-                      <span>{companion.desc}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <label className="auth-check auth-check--agree">
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "10px",
+                color: "var(--text-soft)",
+                fontSize: "0.94rem",
+                fontWeight: 600,
+                lineHeight: 1.7,
+              }}
+            >
               <input
                 type="checkbox"
+                name="agree"
                 checked={form.agree}
-                onChange={(e) => handleChange('agree', e.target.checked)}
+                onChange={onChange}
+                style={{ marginTop: "4px" }}
               />
-              <span>개인정보 처리 및 메이티 이용약관에 동의합니다.</span>
+              서비스 이용 및 기본적인 계정 정보 저장에 동의합니다.
             </label>
 
-            <button type="submit" className="btn btn-primary auth-submit-btn">
-              AI 친구 연결 시작하기
+            {error && (
+              <div
+                style={{
+                  padding: "14px 16px",
+                  borderRadius: "16px",
+                  background: "rgba(255, 127, 150, 0.12)",
+                  color: "#e05e79",
+                  fontWeight: 700,
+                  fontSize: "0.92rem",
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            <button type="submit" className="primary-btn" disabled={loading}>
+              {loading ? "가입 중..." : "회원가입 완료"}
+            </button>
+
+            <button
+              type="button"
+              className="secondary-btn"
+              onClick={() => navigate("/")}
+            >
+              홈으로 돌아가기
             </button>
           </form>
 
-          <div className="auth-bottom-note">
-            이미 계정이 있다면?
-            <Link to="/login"> 다시 연결하러 가기</Link>
+          <div
+            style={{
+              marginTop: "22px",
+              paddingTop: "18px",
+              borderTop: "1px solid var(--line)",
+              color: "var(--text-soft)",
+              fontSize: "0.94rem",
+            }}
+          >
+            이미 계정이 있으신가요?{" "}
+            <Link
+              to="/login"
+              style={{ color: "var(--primary-dark)", fontWeight: 800 }}
+            >
+              로그인하러 가기
+            </Link>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
+    </main>
   );
-}
+};
+
+const Field = ({ label, ...props }) => {
+  return (
+    <label style={{ display: "grid", gap: "8px" }}>
+      <span
+        style={{
+          color: "var(--text)",
+          fontWeight: 800,
+          fontSize: "0.95rem",
+        }}
+      >
+        {label}
+      </span>
+      <input
+        {...props}
+        style={{
+          width: "100%",
+          minHeight: "54px",
+          borderRadius: "16px",
+          border: "1px solid var(--line)",
+          padding: "0 16px",
+          outline: "none",
+          background: "#fff",
+          color: "var(--text)",
+          fontSize: "0.96rem",
+        }}
+      />
+    </label>
+  );
+};
 
 export default SignupPage;

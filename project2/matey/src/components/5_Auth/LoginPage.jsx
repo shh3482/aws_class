@@ -1,173 +1,350 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './AuthPage.css';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
-function LoginPage() {
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const { login, loading, isAuthenticated, isAdmin } = useAuth();
+
   const [form, setForm] = useState({
-    email: '',
-    password: '',
+    email: localStorage.getItem("savedEmail") || "",
+    password: "",
     remember: true,
   });
 
-  const handleChange = (key, value) => {
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(isAdmin ? "/admin" : "/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, isAdmin, navigate]);
+
+  const onChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setForm((prev) => ({
       ...prev,
-      [key]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
 
-    // TODO:
-    // 여기에 기존 로그인 API / AuthContext / useAuth 로직 연결
-    // 예:
-    // await login(form.email, form.password);
+    if (!form.email.trim()) {
+      setError("이메일을 입력해주세요.");
+      return;
+    }
 
-    console.log('login form:', form);
+    if (!form.password.trim()) {
+      setError("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const result = await login({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (form.remember) {
+        localStorage.setItem("savedEmail", form.email);
+      } else {
+        localStorage.removeItem("savedEmail");
+      }
+
+      if (result?.success) {
+        navigate(result.user.role === "ADMIN" ? "/admin" : "/dashboard", {
+          replace: true,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setError("로그인 중 문제가 발생했어요. 다시 시도해주세요.");
+    }
   };
 
   return (
-    <section className="auth-shell auth-shell--login">
-      <div className="auth-shell__blur auth-shell__blur--one" />
-      <div className="auth-shell__blur auth-shell__blur--two" />
-      <div className="auth-shell__blur auth-shell__blur--three" />
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "var(--grad-soft)",
+        display: "grid",
+        placeItems: "center",
+        padding: "24px",
+      }}
+    >
+      <div
+        style={{
+          width: "min(1100px, 100%)",
+          display: "grid",
+          gridTemplateColumns: "1.05fr 0.95fr",
+          gap: "20px",
+        }}
+      >
+        <section
+          style={{
+            padding: "36px",
+            borderRadius: "32px",
+            background: "rgba(255,255,255,0.78)",
+            border: "1px solid rgba(255,255,255,0.82)",
+            boxShadow: "0 18px 44px rgba(104, 116, 200, 0.12)",
+            backdropFilter: "blur(18px)",
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "22px",
+            }}
+          >
+            <div
+              style={{
+                width: "42px",
+                height: "42px",
+                borderRadius: "14px",
+                display: "grid",
+                placeItems: "center",
+                color: "#fff",
+                fontWeight: 900,
+                background:
+                  "linear-gradient(135deg, #7c8cff 0%, #9aa6ff 44%, #ffb7d5 100%)",
+              }}
+            >
+              M
+            </div>
+            <div>
+              <strong style={{ display: "block", color: "var(--text)" }}>메이티</strong>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                먼저 다가오는 AI 메이트
+              </span>
+            </div>
+          </Link>
 
-      <div className="container auth-grid">
-        <div className="auth-showcase glass-card">
-          <div className="auth-showcase__badge">Welcome Back to Matey</div>
+          <div style={{ marginBottom: "24px" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                padding: "8px 14px",
+                borderRadius: "999px",
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid var(--line)",
+                color: "var(--primary-dark)",
+                fontWeight: 800,
+                fontSize: "0.84rem",
+                marginBottom: "16px",
+              }}
+            >
+              LOGIN
+            </div>
 
-          <h1 className="auth-showcase__title">
-            다시,
-            <br />
-            <span className="gradient-text">나의 AI 펫 친구와 연결하기</span>
-          </h1>
+            <h1
+              style={{
+                margin: "0 0 12px",
+                fontSize: "clamp(2rem, 4vw, 3rem)",
+                lineHeight: 1.18,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              메이티와 다시 연결될 시간이에요
+            </h1>
 
-          <p className="auth-showcase__desc">
-            메이티는 차가운 로그인 화면 대신, 다시 돌아온 사용자를
-            작은 펫 친구가 반겨주는 느낌으로 시작합니다.
-            오늘의 감정, 지난 대화, 맞춤 리포트가 이 계정에 이어집니다.
+            <p
+              style={{
+                margin: 0,
+                color: "var(--text-soft)",
+                lineHeight: 1.85,
+                fontSize: "1rem",
+              }}
+            >
+              웹 대시보드에서 대화 기록과 감정 리포트를 확인하고,
+              메이티의 설정을 이어서 관리할 수 있어요.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gap: "14px", marginBottom: "18px" }}>
+            <div
+              style={{
+                padding: "16px 18px",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "1px solid var(--line)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "6px" }}>일반 사용자</strong>
+              <span style={{ color: "var(--text-soft)", fontSize: "0.92rem", lineHeight: 1.7 }}>
+                예시 이메일: <b>user@matey.com</b>
+              </span>
+            </div>
+
+            <div
+              style={{
+                padding: "16px 18px",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "1px solid var(--line)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "6px" }}>관리자 데모 로그인</strong>
+              <span style={{ color: "var(--text-soft)", fontSize: "0.92rem", lineHeight: 1.7 }}>
+                이메일에 <b>admin</b> 이 포함되면 관리자 권한으로 로그인됩니다.
+                <br />
+                예시: <b>admin@matey.com</b>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style={{
+            padding: "36px 30px",
+            borderRadius: "32px",
+            background: "#fff",
+            border: "1px solid var(--line)",
+            boxShadow: "0 18px 44px rgba(104, 116, 200, 0.10)",
+          }}
+        >
+          <h2
+            style={{
+              margin: "0 0 8px",
+              fontSize: "1.6rem",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            로그인
+          </h2>
+
+          <p
+            style={{
+              margin: "0 0 24px",
+              color: "var(--text-soft)",
+              lineHeight: 1.8,
+            }}
+          >
+            메이티 계정으로 로그인하고 나만의 대시보드를 확인해보세요.
           </p>
 
-          <div className="auth-showcase__pet-card">
-            <div className="auth-showcase__pet-copy">
-              <span className="auth-mini-badge">오늘의 메이트</span>
-              <strong>하루가 기다리고 있어요</strong>
-              <p>
-                “오늘도 와줘서 고마워요.
-                무슨 마음이든 천천히 얘기해도 괜찮아요.”
-              </p>
+          <form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
+            <Field
+              label="이메일"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={onChange}
+              placeholder="user@matey.com"
+            />
 
-              <div className="auth-chip-row">
-                <span>감정 기록 이어보기</span>
-                <span>데스크톱 펫 연결</span>
-                <span>개인화 반응 유지</span>
-              </div>
-            </div>
+            <Field
+              label="비밀번호"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={onChange}
+              placeholder="비밀번호를 입력해주세요"
+            />
 
-            <div className="auth-showcase__pet-visual">
-              <img src="/images/rabbit.png" alt="하루" />
-              <div className="auth-floating-bubble">
-                좋은 아침이에요 ☁️
-              </div>
-            </div>
-          </div>
-
-          <div className="auth-proof-grid">
-            <div className="auth-proof-card">
-              <strong>Desktop Sync</strong>
-              <span>웹과 데스크톱 상태 연동</span>
-            </div>
-            <div className="auth-proof-card">
-              <strong>Gentle UX</strong>
-              <span>부담 적은 감정형 인터페이스</span>
-            </div>
-            <div className="auth-proof-card">
-              <strong>Privacy First</strong>
-              <span>통제 가능한 모니터링과 기록</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="auth-form-card glass-card">
-          <div className="auth-form-card__top">
-            <div>
-              <span className="auth-form-card__eyebrow">Log In</span>
-              <h2>메이티와 다시 만나기</h2>
-              <p>이전에 연결한 계정으로 로그인하고, 이어서 대화를 시작해보세요.</p>
-            </div>
-
-            <div className="auth-form-card__avatar">
-              <img src="/images/cat.png" alt="루미" />
-            </div>
-          </div>
-
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <div className="auth-field">
-              <label htmlFor="login-email">이메일</label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                color: "var(--text-soft)",
+                fontSize: "0.94rem",
+                fontWeight: 600,
+              }}
+            >
               <input
-                id="login-email"
-                type="email"
-                className="input"
-                placeholder="matey@example.com"
-                value={form.email}
-                onChange={(e) => handleChange('email', e.target.value)}
+                type="checkbox"
+                name="remember"
+                checked={form.remember}
+                onChange={onChange}
               />
-            </div>
+              이메일 기억하기
+            </label>
 
-            <div className="auth-field">
-              <label htmlFor="login-password">비밀번호</label>
-              <input
-                id="login-password"
-                type="password"
-                className="input"
-                placeholder="비밀번호를 입력해주세요"
-                value={form.password}
-                onChange={(e) => handleChange('password', e.target.value)}
-              />
-            </div>
+            {error && (
+              <div
+                style={{
+                  padding: "14px 16px",
+                  borderRadius: "16px",
+                  background: "rgba(255, 127, 150, 0.12)",
+                  color: "#e05e79",
+                  fontWeight: 700,
+                  fontSize: "0.92rem",
+                }}
+              >
+                {error}
+              </div>
+            )}
 
-            <div className="auth-form__row">
-              <label className="auth-check">
-                <input
-                  type="checkbox"
-                  checked={form.remember}
-                  onChange={(e) => handleChange('remember', e.target.checked)}
-                />
-                <span>로그인 상태 유지</span>
-              </label>
+            <button type="submit" className="primary-btn" disabled={loading}>
+              {loading ? "로그인 중..." : "로그인"}
+            </button>
 
-              <button type="button" className="auth-text-btn">
-                비밀번호 찾기
-              </button>
-            </div>
-
-            <button type="submit" className="btn btn-primary auth-submit-btn">
-              다시 연결하기
+            <button
+              type="button"
+              className="secondary-btn"
+              onClick={() => navigate("/")}
+            >
+              홈으로 돌아가기
             </button>
           </form>
 
-          <div className="auth-divider">
-            <span>또는</span>
+          <div
+            style={{
+              marginTop: "22px",
+              paddingTop: "18px",
+              borderTop: "1px solid var(--line)",
+              color: "var(--text-soft)",
+              fontSize: "0.94rem",
+            }}
+          >
+            계정이 없으신가요?{" "}
+            <Link
+              to="/signup"
+              style={{ color: "var(--primary-dark)", fontWeight: 800 }}
+            >
+              회원가입하러 가기
+            </Link>
           </div>
-
-          <div className="auth-alt-actions">
-            <button type="button" className="auth-social-btn">
-              Google로 계속하기
-            </button>
-            <button type="button" className="auth-social-btn">
-              Apple로 계속하기
-            </button>
-          </div>
-
-          <div className="auth-bottom-note">
-            아직 메이티가 없다면?
-            <Link to="/signup"> AI 친구 연결하러 가기</Link>
-          </div>
-        </div>
+        </section>
       </div>
-    </section>
+    </main>
   );
-}
+};
+
+const Field = ({ label, ...props }) => {
+  return (
+    <label style={{ display: "grid", gap: "8px" }}>
+      <span
+        style={{
+          color: "var(--text)",
+          fontWeight: 800,
+          fontSize: "0.95rem",
+        }}
+      >
+        {label}
+      </span>
+      <input
+        {...props}
+        style={{
+          width: "100%",
+          minHeight: "54px",
+          borderRadius: "16px",
+          border: "1px solid var(--line)",
+          padding: "0 16px",
+          outline: "none",
+          background: "#fff",
+          color: "var(--text)",
+          fontSize: "0.96rem",
+        }}
+      />
+    </label>
+  );
+};
 
 export default LoginPage;
