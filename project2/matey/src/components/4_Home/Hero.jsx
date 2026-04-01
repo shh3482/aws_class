@@ -1,73 +1,171 @@
-import React from "react";
-import "./Hero.css";
+import React, { useMemo, useState } from 'react';
+import './Hero.css';
 
-const Hero = () => {
+const companions = [
+  {
+    id: 'rabbit',
+    name: '하루',
+    image: '/images/rabbit.png',
+    mood: '차분하고 다정한 공감형',
+    greeting: '좋은 아침입니다. 오늘 기분은 어떠신가요? ☁️😊',
+    detail:
+      '메이티는 사용자가 먼저 도움을 요청하지 않아도, 부담스럽지 않은 방식으로 먼저 안부를 묻는 AI 펫 상담사예요.',
+    chips: ['아침 인사', '감정 체크', '부드러운 시작'],
+  },
+  {
+    id: 'cat',
+    name: '루미',
+    image: '/images/cat.png',
+    mood: '밝고 귀여운 에너지형',
+    greeting: '오늘 하루에서 제일 먼저 떠오르는 감정 하나만 말해볼래요? ✨',
+    detail:
+      '귀엽고 가벼운 톤으로 먼저 다가오고, 말 걸기 부담을 줄여주는 컴패니언형 캐릭터입니다.',
+    chips: ['공감 시작', '짧은 대화', '친구 같은 톤'],
+  },
+];
+
+const heroStats = [
+  { label: '대화 시작 부담', value: '낮춤' },
+  { label: '상황 인식 기반', value: 'Proactive' },
+  { label: '웹 · 데스크톱 연결', value: 'Seamless' },
+];
+
+function Hero() {
+  const [activeId, setActiveId] = useState('rabbit');
+
+  const active = useMemo(
+    () => companions.find((item) => item.id === activeId) || companions[0],
+    [activeId]
+  );
+
   return (
-    <section className="matey-hero">
-      <div className="matey-hero__bg blob-1" />
-      <div className="matey-hero__bg blob-2" />
-      <div className="matey-hero__inner">
-        <div className="matey-hero__left">
-          <div className="hero-badge">Desktop AI Companion · Web/App Sync</div>
+    <section className="home-hero" id="home">
+      <div className="home-hero__blur home-hero__blur--one" />
+      <div className="home-hero__blur home-hero__blur--two" />
+      <div className="home-hero__blur home-hero__blur--three" />
 
-          <h1 className="hero-title">
-            힘든 날에도,<br />
-            <span>먼저 말을 걸어주는 AI 친구</span>
+      <div className="container home-hero__grid">
+        <div className="home-hero__copy">
+          <div className="section-badge">Desktop Pet Companion Counseling</div>
+
+          <h1 className="home-hero__title">
+            힘들다고 말하기 전에
+            <br />
+            <span className="gradient-text">먼저 다가오는 AI 펫 상담사</span>
           </h1>
 
-          <p className="hero-desc">
-            메이티는 단순한 상담 챗봇이 아니에요.
-            바탕화면에서 조용히 함께 머물며,
-            당신의 패턴과 맥락을 이해하고 먼저 다가오는 동반자예요.
+          <p className="home-hero__desc">
+            메이티는 흔한 상담 챗봇처럼 입력창 앞에서 기다리지 않습니다.
+            바탕화면과 웹에서 함께 머물며, 사용자의 흐름을 가볍게 읽고
+            먼저 안부를 묻는 작은 친구 같은 서비스예요.
           </p>
 
-          <div className="hero-actions">
-            <button className="hero-btn primary">무료 체험 시작하기</button>
-            <button className="hero-btn secondary">앱 다운로드</button>
+          <div className="home-hero__actions">
+            <a href="/signup" className="btn btn-primary">
+              메이티 시작하기
+            </a>
+            <a href="/#character-hub" className="btn btn-secondary">
+              캐릭터 체험 보기
+            </a>
           </div>
 
-          <div className="hero-highlights">
-            <div className="highlight-card">
-              <strong>능동형 대화</strong>
-              <span>사용자를 기다리지 않고 먼저 관심을 보여줘요</span>
-            </div>
-            <div className="highlight-card">
-              <strong>상황 인식</strong>
-              <span>오래 머문 화면 맥락을 읽고 맞춤형 반응을 해요</span>
-            </div>
-            <div className="highlight-card">
-              <strong>감정 리포트</strong>
-              <span>하루의 고민과 감정 패턴을 웹에서 정리해줘요</span>
-            </div>
+          <div className="home-hero__switch">
+            {companions.map((companion) => (
+              <button
+                key={companion.id}
+                type="button"
+                className={`home-hero__switch-btn ${
+                  activeId === companion.id ? 'is-active' : ''
+                }`}
+                onClick={() => setActiveId(companion.id)}
+              >
+                <span className="home-hero__switch-thumb">
+                  <img src={companion.image} alt={companion.name} />
+                </span>
+                <span className="home-hero__switch-copy">
+                  <strong>{companion.name}</strong>
+                  <small>{companion.mood}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="home-hero__trust">
+            {active.chips.map((chip) => (
+              <span key={chip}>{chip}</span>
+            ))}
           </div>
         </div>
 
-        <div className="matey-hero__right">
-          <div className="companion-card">
-            <div className="companion-card__top">
-              <img src="/images/rabbit-duo.png" alt="메이티 캐릭터" />
+        <div className="home-hero__visual">
+          <div className="home-hero__card glass-card">
+            <div className="home-hero__top">
+              <div className="home-hero__live">
+                <span className="dot" />
+                Matey Live Companion
+              </div>
+
+              <div className="home-hero__tabs">
+                <span className="active">Desktop</span>
+                <span>Emotion</span>
+                <span>Care</span>
+              </div>
             </div>
 
-            <div className="bubble bubble-main">
-              계속 같은 화면에서 멈춰 있었네.
-              <br />
-              오늘 조금 버거운 날이야?
+            <div className="home-hero__scene">
+              <div className="home-hero__bubble">
+                <span>{active.name}</span>
+                <p>{active.greeting}</p>
+              </div>
+
+              <div className="home-hero__desktop">
+                <div className="home-hero__desktop-window">
+                  <div className="window-top">
+                    <div className="window-dots">
+                      <span className="red" />
+                      <span className="yellow" />
+                      <span className="green" />
+                    </div>
+                    <div className="window-title">Matey Companion</div>
+                  </div>
+
+                  <div className="window-body">
+                    <div className="chat-line ai">오늘도 오래 버텼죠. 천천히 말해도 괜찮아요.</div>
+                    <div className="chat-line user">조금 지치긴 했어요.</div>
+                    <div className="chat-line ai">그럴 때는 무리해서 괜찮은 척 안 해도 돼요.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="home-hero__pet-shadow" />
+              <div className="home-hero__pet">
+                <img src={active.image} alt={active.name} />
+                <span className="spark spark-1" />
+                <span className="spark spark-2" />
+                <span className="spark spark-3" />
+              </div>
             </div>
 
-            <div className="bubble bubble-sub">
-              잠깐 숨 고르고, 같이 정리해볼까?
-            </div>
+            <div className="home-hero__bottom">
+              <div className="home-hero__note">
+                <strong>{active.name}</strong>
+                <p>{active.detail}</p>
+              </div>
 
-            <div className="status-pills">
-              <span>화면 맥락 인식</span>
-              <span>실시간 상호작용</span>
-              <span>감정 패턴 분석</span>
+              <div className="home-hero__stats">
+                {heroStats.map((item) => (
+                  <div className="home-hero__stat-card" key={item.label}>
+                    <strong>{item.value}</strong>
+                    <span>{item.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-};
+}
 
 export default Hero;

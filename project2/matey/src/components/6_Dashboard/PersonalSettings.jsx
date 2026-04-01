@@ -1,166 +1,187 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import './Dashboard.css';
 
-const PersonalSettings = () => {
-  const [characterStyle, setCharacterStyle] = useState("다정한 현실형");
-  const [theme, setTheme] = useState("파스텔 라이트");
-  const [responseTone, setResponseTone] = useState("균형형");
-  const [desktopPet, setDesktopPet] = useState("토끼 메이트");
+const personas = [
+  {
+    id: 'gentle',
+    name: '하루',
+    desc: '차분하고 다정한 공감형',
+    image: '/images/rabbit.png',
+  },
+  {
+    id: 'bright',
+    name: '루미',
+    desc: '밝고 귀여운 에너지형',
+    image: '/images/cat.png',
+  },
+];
+
+const themes = ['Soft Purple', 'Ocean Blue', 'Cherry Pink', 'Mint Glow'];
+
+function PersonalSettings() {
+  const [selectedPet, setSelectedPet] = useState('gentle');
+  const [theme, setTheme] = useState('Soft Purple');
+  const [sliders, setSliders] = useState({
+    friendliness: 78,
+    humor: 54,
+    formality: 30,
+    empathy: 88,
+  });
+
+  const selected = personas.find((item) => item.id === selectedPet) || personas[0];
+
+  const updateSlider = (key, value) => {
+    setSliders((prev) => ({
+      ...prev,
+      [key]: Number(value),
+    }));
+  };
 
   return (
-    <section className="dashboard-page">
-      <div className="dashboard-page__hero">
-        <div className="dashboard-page__hero-top">
-          <div>
-            <h1>개인 설정</h1>
-            <p>
-              메이티의 성격, 말투, 분위기, 데스크톱 캐릭터 스타일을 나에게 맞게 조정해보세요.
-            </p>
-          </div>
-
-          <div className="dashboard-page__hero-badges">
-            <div className="dashboard-badge">🎭 메이트 성격</div>
-            <div className="dashboard-badge">🎨 화면 테마</div>
-            <div className="dashboard-badge">🐰 데스크톱 캐릭터</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="dashboard-grid-2">
-        <article className="dashboard-card">
-          <h3>메이트 성격 설정</h3>
-          <p style={{ marginBottom: "14px" }}>
-            너무 맹목적으로 편들기만 하지 않고, 때로는 다정하고 때로는 냉철한 실제 사람 같은 톤을 목표로 설정할 수 있어요.
-          </p>
-
-          <div className="dashboard-field">
-            <label>기본 성격</label>
-            <div className="preference-options">
-              {["다정한 현실형", "차분한 공감형", "장난기 있는 친구형", "단호한 정리형"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${characterStyle === item ? "active" : ""}`}
-                  onClick={() => setCharacterStyle(item)}
-                >
-                  {item}
-                </button>
-              ))}
+    <div className="petdash-page">
+      <section className="petdash-settings-grid">
+        <article className="petdash-card glass-card">
+          <div className="petdash-card__head">
+            <div>
+              <span className="petdash-mini-badge">Pet Persona</span>
+              <h3>메이티 외형 / 성격 설정</h3>
             </div>
           </div>
 
-          <div style={{ height: "16px" }} />
+          <div className="petdash-persona-preview">
+            <div className="petdash-persona-preview__stage">
+              <img src={selected.image} alt={selected.name} />
+            </div>
 
-          <div className="dashboard-field">
-            <label>응답 온도</label>
-            <div className="preference-options">
-              {["따뜻함 중심", "균형형", "현실 조언 강화"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${responseTone === item ? "active" : ""}`}
-                  onClick={() => setResponseTone(item)}
-                >
-                  {item}
-                </button>
-              ))}
+            <div className="petdash-persona-preview__copy">
+              <strong>{selected.name}</strong>
+              <p>{selected.desc}</p>
+            </div>
+          </div>
+
+          <div className="petdash-persona-grid">
+            {personas.map((persona) => (
+              <button
+                key={persona.id}
+                type="button"
+                className={`petdash-persona-card ${
+                  selectedPet === persona.id ? 'is-active' : ''
+                }`}
+                onClick={() => setSelectedPet(persona.id)}
+              >
+                <div className="thumb">
+                  <img src={persona.image} alt={persona.name} />
+                </div>
+                <div className="copy">
+                  <strong>{persona.name}</strong>
+                  <span>{persona.desc}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </article>
+
+        <article className="petdash-card glass-card">
+          <div className="petdash-card__head">
+            <div>
+              <span className="petdash-mini-badge">Personality Sliders</span>
+              <h3>반응 스타일 조절</h3>
+            </div>
+          </div>
+
+          <div className="petdash-slider-list">
+            <div className="petdash-slider-item">
+              <div className="top">
+                <strong>친절함</strong>
+                <span>{sliders.friendliness}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliders.friendliness}
+                onChange={(e) => updateSlider('friendliness', e.target.value)}
+              />
+            </div>
+
+            <div className="petdash-slider-item">
+              <div className="top">
+                <strong>유머감</strong>
+                <span>{sliders.humor}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliders.humor}
+                onChange={(e) => updateSlider('humor', e.target.value)}
+              />
+            </div>
+
+            <div className="petdash-slider-item">
+              <div className="top">
+                <strong>격식도</strong>
+                <span>{sliders.formality}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliders.formality}
+                onChange={(e) => updateSlider('formality', e.target.value)}
+              />
+            </div>
+
+            <div className="petdash-slider-item">
+              <div className="top">
+                <strong>공감 강도</strong>
+                <span>{sliders.empathy}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliders.empathy}
+                onChange={(e) => updateSlider('empathy', e.target.value)}
+              />
             </div>
           </div>
         </article>
 
-        <article className="dashboard-card">
-          <h3>디자인 및 캐릭터 설정</h3>
-
-          <div className="dashboard-field" style={{ marginBottom: "16px" }}>
-            <label>테마 선택</label>
-            <div className="preference-options">
-              {["파스텔 라이트", "소프트 라벤더", "민트 스카이", "크림 핑크"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${theme === item ? "active" : ""}`}
-                  onClick={() => setTheme(item)}
-                >
-                  {item}
-                </button>
-              ))}
+        <article className="petdash-card glass-card petdash-card--full">
+          <div className="petdash-card__head">
+            <div>
+              <span className="petdash-mini-badge">Theme</span>
+              <h3>대시보드 무드 테마</h3>
             </div>
           </div>
 
-          <div className="dashboard-field">
-            <label>데스크톱 메이트 외형</label>
-            <div className="preference-options">
-              {["토끼 메이트", "고양이 메이트", "듀오 메이트"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${desktopPet === item ? "active" : ""}`}
-                  onClick={() => setDesktopPet(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+          <div className="petdash-theme-row">
+            {themes.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className={`petdash-theme-card ${theme === item ? 'is-active' : ''}`}
+                onClick={() => setTheme(item)}
+              >
+                <div className={`swatch swatch-${item.toLowerCase().replace(/\s+/g, '-')}`} />
+                <strong>{item}</strong>
+              </button>
+            ))}
+          </div>
+
+          <div className="petdash-form-actions">
+            <button type="button" className="btn btn-primary">
+              설정 저장하기
+            </button>
+            <button type="button" className="btn btn-secondary">
+              기본 설정으로 되돌리기
+            </button>
           </div>
         </article>
-      </div>
-
-      <article className="dashboard-card">
-        <h3>알림 및 상호작용 스타일</h3>
-
-        <div className="dashboard-form-grid">
-          <div className="dashboard-field">
-            <label>알림 빈도</label>
-            <select className="dashboard-select" defaultValue="중간">
-              <option>낮음</option>
-              <option>중간</option>
-              <option>높음</option>
-            </select>
-          </div>
-
-          <div className="dashboard-field">
-            <label>먼저 다가오는 강도</label>
-            <select className="dashboard-select" defaultValue="자연스럽게">
-              <option>조용하게</option>
-              <option>자연스럽게</option>
-              <option>조금 적극적으로</option>
-            </select>
-          </div>
-
-          <div className="dashboard-field">
-            <label>대화 길이 선호</label>
-            <select className="dashboard-select" defaultValue="중간">
-              <option>짧게</option>
-              <option>중간</option>
-              <option>길게</option>
-            </select>
-          </div>
-
-          <div className="dashboard-field">
-            <label>잡담 허용 정도</label>
-            <select className="dashboard-select" defaultValue="높음">
-              <option>낮음</option>
-              <option>중간</option>
-              <option>높음</option>
-            </select>
-          </div>
-        </div>
-
-        <div style={{ marginTop: "16px" }}>
-          <button type="button" className="dashboard-button">
-            개인 설정 저장
-          </button>
-        </div>
-      </article>
-
-      <article className="dashboard-card">
-        <h3>현재 설정 요약</h3>
-        <p>
-          현재 메이티는 <strong>{characterStyle}</strong> 성격과 <strong>{responseTone}</strong> 응답 스타일,
-          <strong> {theme}</strong> 테마, <strong>{desktopPet}</strong> 외형을 기준으로 맞춰져 있어요.
-        </p>
-      </article>
-    </section>
+      </section>
+    </div>
   );
-};
+}
 
 export default PersonalSettings;
