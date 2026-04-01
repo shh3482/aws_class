@@ -1,79 +1,77 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const menuGroups = [
-  {
-    title: "메인",
-    items: [
-      { label: "대시보드 홈", to: "/dashboard", icon: "🏠" },
-    ],
-  },
-  {
-    title: "상담 기록",
-    items: [
-      { label: "대화 내역", to: "/dashboard/chat-history", icon: "💬" },
-    ],
-  },
-  {
-    title: "보안",
-    items: [
-      { label: "보안 설정", to: "/dashboard/security", icon: "🔐" },
-    ],
-  },
-  {
-    title: "리포트",
-    items: [
-      { label: "고민 히스토리 / 감정 분석 / 하루 요약", to: "/dashboard/reports", icon: "📊" },
-    ],
-  },
-  {
-    title: "계정 관리",
-    items: [
-      { label: "개인정보 관리", to: "/dashboard/personal-info", icon: "👤" },
-      { label: "개인 설정", to: "/dashboard/settings", icon: "⚙️" },
-    ],
-  },
-];
+function DashboardSidebar({ isAdmin }) {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-const DashboardSidebar = () => {
+  const mainMenuItems = [
+    { icon: '🏠', label: '대시보드', path: '/dashboard' },
+    { icon: '💬', label: '대화 내역', path: '/dashboard/chat-history' },
+    { icon: '🔒', label: '보안 설정', path: '/dashboard/security' },
+    { icon: '📊', label: '리포트', path: '/dashboard/reports' },
+    { icon: '👤', label: '개인정보 관리', path: '/dashboard/personal-info' },
+    { icon: '⚙️', label: '개인 설정', path: '/dashboard/settings' },
+  ];
+
+  const adminMenuItems = [
+    { icon: '👥', label: '사용자 관리', path: '/admin' },
+    { icon: '📈', label: '통계', path: '/admin/stats' },
+    { icon: '⚙️', label: '시스템 설정', path: '/admin/system' },
+  ];
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     <aside className="dashboard-sidebar">
-      <div className="dashboard-sidebar__profile">
-        <div className="dashboard-sidebar__avatar">🐰</div>
-        <div>
-          <strong>메이티 대시보드</strong>
-          <p>오늘의 감정 흐름과 기록을 확인해보세요</p>
+      <div className="sidebar-section">
+        <div className="sidebar-title">메뉴</div>
+        <div className="sidebar-menu">
+          {mainMenuItems.map(item => (
+            <button
+              key={item.path}
+              className={`sidebar-item ${isActive(item.path) ? 'active' : ''}`}
+              onClick={() => navigate(item.path)}
+            >
+              <span className="sidebar-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="dashboard-sidebar__notice">
-        <span>오늘의 한마디</span>
-        <strong>“너를 먼저 알아차리는 메이트가 여기 있어.”</strong>
-      </div>
-
-      {menuGroups.map((group) => (
-        <div className="dashboard-sidebar__group" key={group.title}>
-          <h4>{group.title}</h4>
-
-          <div className="dashboard-sidebar__links">
-            {group.items.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === "/dashboard"}
-                className={({ isActive }) =>
-                  `dashboard-sidebar__link ${isActive ? "active" : ""}`
-                }
+      {isAdmin && (
+        <div className="sidebar-section">
+          <div className="sidebar-title">관리자</div>
+          <div className="sidebar-menu">
+            {adminMenuItems.map(item => (
+              <button
+                key={item.path}
+                className={`sidebar-item ${isActive(item.path) ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
               >
-                <span className="dashboard-sidebar__icon">{item.icon}</span>
+                <span className="sidebar-icon">{item.icon}</span>
                 <span>{item.label}</span>
-              </NavLink>
+              </button>
             ))}
           </div>
         </div>
-      ))}
+      )}
+
+      <div className="sidebar-section">
+        <div className="sidebar-title">계정</div>
+        <div className="sidebar-menu">
+          <button
+            className={`sidebar-item ${isActive('/mypage') ? 'active' : ''}`}
+            onClick={() => navigate('/mypage')}
+          >
+            <span className="sidebar-icon">🧑‍💼</span>
+            <span>내 정보</span>
+          </button>
+        </div>
+      </div>
     </aside>
   );
-};
+}
 
 export default DashboardSidebar;

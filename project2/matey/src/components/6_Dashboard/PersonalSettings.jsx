@@ -1,166 +1,164 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const PersonalSettings = () => {
-  const [characterStyle, setCharacterStyle] = useState("다정한 현실형");
-  const [theme, setTheme] = useState("파스텔 라이트");
-  const [responseTone, setResponseTone] = useState("균형형");
-  const [desktopPet, setDesktopPet] = useState("토끼 메이트");
+function PersonalSettings() {
+  const [settings, setSettings] = useState({
+    character: 'rabbit',
+    characterColor: '#6C9EFF',
+    characterPersonality: '차분함',
+    notifications: true,
+    emailNotifications: false,
+    soundEnabled: true,
+    darkMode: false,
+    language: 'ko'
+  });
+
+  const handleToggle = (key) => {
+    const newSettings = { ...settings, [key]: !settings[key] };
+    setSettings(newSettings);
+  };
+
+  const handleChange = (key, value) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+  };
 
   return (
-    <section className="dashboard-page">
-      <div className="dashboard-page__hero">
-        <div className="dashboard-page__hero-top">
-          <div>
-            <h1>개인 설정</h1>
-            <p>
-              메이티의 성격, 말투, 분위기, 데스크톱 캐릭터 스타일을 나에게 맞게 조정해보세요.
-            </p>
-          </div>
+    <div className="dashboard-section">
+      <h1>⚙️ 개인 설정</h1>
+      <p className="section-subtitle">메이티를 나만의 방식으로 커스터마이징하세요</p>
 
-          <div className="dashboard-page__hero-badges">
-            <div className="dashboard-badge">🎭 메이트 성격</div>
-            <div className="dashboard-badge">🎨 화면 테마</div>
-            <div className="dashboard-badge">🐰 데스크톱 캐릭터</div>
+      <div className="settings-card">
+        <h2>🤖 내 AI 친구</h2>
+
+        <div className="setting-group">
+          <label>캐릭터 선택</label>
+          <div className="character-options">
+            <button
+              className={`char-option ${settings.character === 'rabbit' ? 'selected' : ''}`}
+              onClick={() => handleChange('character', 'rabbit')}
+            >
+              <span>🐰</span>
+              <span>하루</span>
+            </button>
+            <button
+              className={`char-option ${settings.character === 'cat' ? 'selected' : ''}`}
+              onClick={() => handleChange('character', 'cat')}
+            >
+              <span>🐱</span>
+              <span>루미</span>
+            </button>
           </div>
+        </div>
+
+        <div className="setting-group">
+          <label>캐릭터 색상</label>
+          <div className="color-picker">
+            {['#6C9EFF', '#FF8FAB', '#9B7FFF', '#FFB347', '#4BC8A0'].map(color => (
+              <button
+                key={color}
+                className={`color-option ${settings.characterColor === color ? 'selected' : ''}`}
+                style={{ backgroundColor: color }}
+                onClick={() => handleChange('characterColor', color)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="setting-group">
+          <label>성격 설정</label>
+          <select
+            value={settings.characterPersonality}
+            onChange={(e) => handleChange('characterPersonality', e.target.value)}
+          >
+            <option>차분함</option>
+            <option>활발함</option>
+            <option>섬세함</option>
+            <option>밝음</option>
+          </select>
         </div>
       </div>
 
-      <div className="dashboard-grid-2">
-        <article className="dashboard-card">
-          <h3>메이트 성격 설정</h3>
-          <p style={{ marginBottom: "14px" }}>
-            너무 맹목적으로 편들기만 하지 않고, 때로는 다정하고 때로는 냉철한 실제 사람 같은 톤을 목표로 설정할 수 있어요.
-          </p>
+      <div className="settings-card">
+        <h2>🔔 알림 설정</h2>
 
-          <div className="dashboard-field">
-            <label>기본 성격</label>
-            <div className="preference-options">
-              {["다정한 현실형", "차분한 공감형", "장난기 있는 친구형", "단호한 정리형"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${characterStyle === item ? "active" : ""}`}
-                  onClick={() => setCharacterStyle(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+        <div className="setting-toggle">
+          <div className="toggle-label">
+            <span>앱 알림</span>
+            <p>메이티의 알림을 받을지 설정합니다</p>
           </div>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.notifications}
+              onChange={() => handleToggle('notifications')}
+            />
+            <span className="toggle-slider"></span>
+          </label>
+        </div>
 
-          <div style={{ height: "16px" }} />
-
-          <div className="dashboard-field">
-            <label>응답 온도</label>
-            <div className="preference-options">
-              {["따뜻함 중심", "균형형", "현실 조언 강화"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${responseTone === item ? "active" : ""}`}
-                  onClick={() => setResponseTone(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+        <div className="setting-toggle">
+          <div className="toggle-label">
+            <span>이메일 알림</span>
+            <p>중요한 알림을 이메일로 받을지 설정합니다</p>
           </div>
-        </article>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.emailNotifications}
+              onChange={() => handleToggle('emailNotifications')}
+            />
+            <span className="toggle-slider"></span>
+          </label>
+        </div>
 
-        <article className="dashboard-card">
-          <h3>디자인 및 캐릭터 설정</h3>
-
-          <div className="dashboard-field" style={{ marginBottom: "16px" }}>
-            <label>테마 선택</label>
-            <div className="preference-options">
-              {["파스텔 라이트", "소프트 라벤더", "민트 스카이", "크림 핑크"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${theme === item ? "active" : ""}`}
-                  onClick={() => setTheme(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+        <div className="setting-toggle">
+          <div className="toggle-label">
+            <span>소리 활성화</span>
+            <p>메이티가 말할 때 음성을 들을지 설정합니다</p>
           </div>
-
-          <div className="dashboard-field">
-            <label>데스크톱 메이트 외형</label>
-            <div className="preference-options">
-              {["토끼 메이트", "고양이 메이트", "듀오 메이트"].map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`preference-chip ${desktopPet === item ? "active" : ""}`}
-                  onClick={() => setDesktopPet(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-        </article>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.soundEnabled}
+              onChange={() => handleToggle('soundEnabled')}
+            />
+            <span className="toggle-slider"></span>
+          </label>
+        </div>
       </div>
 
-      <article className="dashboard-card">
-        <h3>알림 및 상호작용 스타일</h3>
+      <div className="settings-card">
+        <h2>🎨 앱 설정</h2>
 
-        <div className="dashboard-form-grid">
-          <div className="dashboard-field">
-            <label>알림 빈도</label>
-            <select className="dashboard-select" defaultValue="중간">
-              <option>낮음</option>
-              <option>중간</option>
-              <option>높음</option>
-            </select>
+        <div className="setting-toggle">
+          <div className="toggle-label">
+            <span>다크 모드</span>
+            <p>어두운 테마로 변경합니다</p>
           </div>
-
-          <div className="dashboard-field">
-            <label>먼저 다가오는 강도</label>
-            <select className="dashboard-select" defaultValue="자연스럽게">
-              <option>조용하게</option>
-              <option>자연스럽게</option>
-              <option>조금 적극적으로</option>
-            </select>
-          </div>
-
-          <div className="dashboard-field">
-            <label>대화 길이 선호</label>
-            <select className="dashboard-select" defaultValue="중간">
-              <option>짧게</option>
-              <option>중간</option>
-              <option>길게</option>
-            </select>
-          </div>
-
-          <div className="dashboard-field">
-            <label>잡담 허용 정도</label>
-            <select className="dashboard-select" defaultValue="높음">
-              <option>낮음</option>
-              <option>중간</option>
-              <option>높음</option>
-            </select>
-          </div>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.darkMode}
+              onChange={() => handleToggle('darkMode')}
+            />
+            <span className="toggle-slider"></span>
+          </label>
         </div>
 
-        <div style={{ marginTop: "16px" }}>
-          <button type="button" className="dashboard-button">
-            개인 설정 저장
-          </button>
+        <div className="setting-group">
+          <label>언어 설정</label>
+          <select
+            value={settings.language}
+            onChange={(e) => handleChange('language', e.target.value)}
+          >
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+          </select>
         </div>
-      </article>
-
-      <article className="dashboard-card">
-        <h3>현재 설정 요약</h3>
-        <p>
-          현재 메이티는 <strong>{characterStyle}</strong> 성격과 <strong>{responseTone}</strong> 응답 스타일,
-          <strong> {theme}</strong> 테마, <strong>{desktopPet}</strong> 외형을 기준으로 맞춰져 있어요.
-        </p>
-      </article>
-    </section>
+      </div>
+    </div>
   );
-};
+}
 
 export default PersonalSettings;

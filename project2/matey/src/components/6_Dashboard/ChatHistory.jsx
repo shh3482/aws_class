@@ -1,155 +1,62 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from 'react';
 
-const chatData = [
-  {
-    date: "2026-04-01 21:40",
-    topic: "취업 준비 불안",
-    mood: "불안",
-    summary: "채용 사이트를 오래 보던 상황에서 메이티가 먼저 말을 걸었고, 비교와 조급함에 대한 대화를 나눴어요.",
-  },
-  {
-    date: "2026-04-01 15:10",
-    topic: "집중 정체",
-    mood: "피로",
-    summary: "과제를 진행하던 도중 작업 흐름이 멈춰 메이티가 짧은 체크인 대화를 시작했어요.",
-  },
-  {
-    date: "2026-03-31 23:52",
-    topic: "늦은 밤 자기비판",
-    mood: "우울",
-    summary: "하루를 마무리하는 시간에 비교와 후회가 반복되어, 감정 정리 중심 대화를 진행했어요.",
-  },
-  {
-    date: "2026-03-31 18:25",
-    topic: "면접 걱정",
-    mood: "긴장",
-    summary: "예상 질문을 생각하며 긴장하던 흐름에서 현실적인 조언과 감정 안정 대화를 나눴어요.",
-  },
-  {
-    date: "2026-03-30 20:03",
-    topic: "잡담과 회복",
-    mood: "안정",
-    summary: "가벼운 잡담 위주로 대화를 나누며 감정 회복과 루틴 유지에 도움을 줬어요.",
-  },
-];
+function ChatHistory() {
+  const [chatHistory] = useState([
+    { id: 1, character: '🐰 하루', date: '오늘 3:45 PM', preview: '지금 많이 힘들어 보여요' },
+    { id: 2, character: '🐱 루미', date: '어제 2:30 PM', preview: '에러가 계속 나네, 같이 볼까요?' },
+    { id: 3, character: '🐰 하루', date: '3일 전', preview: '취업 준비 많이 힘들지?' },
+    { id: 4, character: '🐱 루미', date: '1주일 전', preview: '벌써 새벽 2시네요...' },
+    { id: 5, character: '🐰 하루', date: '2주일 전', preview: '아늑하고 편한 마음이 보여요' },
+  ]);
 
-const moodColor = {
-  불안: "warning",
-  피로: "danger",
-  우울: "danger",
-  긴장: "warning",
-  안정: "success",
-};
-
-const ChatHistory = () => {
-  const [keyword, setKeyword] = useState("");
-  const [mood, setMood] = useState("전체");
-
-  const filteredData = useMemo(() => {
-    return chatData.filter((item) => {
-      const matchesKeyword =
-        item.topic.includes(keyword) || item.summary.includes(keyword);
-      const matchesMood = mood === "전체" ? true : item.mood === mood;
-      return matchesKeyword && matchesMood;
-    });
-  }, [keyword, mood]);
+  const [selectedChat, setSelectedChat] = useState(null);
 
   return (
-    <section className="dashboard-page">
-      <div className="dashboard-page__hero">
-        <div className="dashboard-page__hero-top">
-          <div>
-            <h1>대화 내역</h1>
-            <p>
-              메이티와 나눈 최근 대화를 날짜, 감정 태그, 주제별로 확인할 수 있어요.
-            </p>
-          </div>
+    <div className="dashboard-section">
+      <h1>대화 내역</h1>
+      <p className="section-subtitle">메이티와 나눈 모든 대화를 확인하세요</p>
 
-          <div className="dashboard-page__hero-badges">
-            <div className="dashboard-badge">💬 최근 상호작용 기록</div>
-            <div className="dashboard-badge">🔎 검색 및 필터</div>
-          </div>
-        </div>
-      </div>
-
-      <article className="dashboard-card">
-        <h3>검색 및 필터</h3>
-
-        <div className="dashboard-searchbar">
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="주제나 내용으로 검색해보세요"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-
-          <select
-            className="dashboard-select"
-            value={mood}
-            onChange={(e) => setMood(e.target.value)}
-          >
-            <option>전체</option>
-            <option>불안</option>
-            <option>피로</option>
-            <option>우울</option>
-            <option>긴장</option>
-            <option>안정</option>
-          </select>
-
-          <button
-            type="button"
-            className="dashboard-button--ghost"
-            onClick={() => {
-              setKeyword("");
-              setMood("전체");
-            }}
-          >
-            초기화
-          </button>
-        </div>
-      </article>
-
-      <article className="dashboard-card">
-        <h3>대화 목록</h3>
-
-        <div className="dashboard-list">
-          {filteredData.map((item) => (
-            <div className="dashboard-list__item" key={`${item.date}-${item.topic}`}>
-              <div>
-                <strong>{item.topic}</strong>
-                <p style={{ marginBottom: "6px" }}>{item.summary}</p>
-                <p style={{ margin: 0, color: "#98a1b3", fontSize: "0.84rem" }}>
-                  {item.date}
-                </p>
-              </div>
-
-              <div className={`dashboard-chip ${moodColor[item.mood] || ""}`}>
-                {item.mood}
+      <div className="chat-history-grid">
+        <div className="chat-list">
+          {chatHistory.map(chat => (
+            <div
+              key={chat.id}
+              className={`chat-item ${selectedChat?.id === chat.id ? 'selected' : ''}`}
+              onClick={() => setSelectedChat(chat)}
+            >
+              <div className="chat-character">{chat.character}</div>
+              <div className="chat-details">
+                <div className="chat-date">{chat.date}</div>
+                <div className="chat-preview">{chat.preview}</div>
               </div>
             </div>
           ))}
+        </div>
 
-          {filteredData.length === 0 && (
-            <div className="dashboard-list__item">
-              <div>
-                <strong>검색 결과가 없어요</strong>
-                <p>다른 키워드나 감정 태그로 다시 찾아보세요.</p>
+        <div className="chat-viewer">
+          {selectedChat ? (
+            <div className="chat-detail">
+              <div className="chat-header">
+                <span>{selectedChat.character}</span>
+                <span className="chat-time">{selectedChat.date}</span>
               </div>
+              <div className="chat-messages">
+                <div className="message ai">지금 많이 힘들어 보여요 🥺</div>
+                <div className="message user">네, 요즘 좀 힘들어요</div>
+                <div className="message ai">어떤 부분이 제일 힘들었어요?</div>
+                <div className="message user">취업 준비하면서 스트레스를 많이 받고 있어요</div>
+                <div className="message ai">그렇구나, 많이 쌓인 게 있겠다 😔</div>
+              </div>
+            </div>
+          ) : (
+            <div className="chat-empty">
+              <p>대화를 선택하면 내용을 확인할 수 있습니다</p>
             </div>
           )}
         </div>
-      </article>
-
-      <article className="dashboard-card">
-        <h3>대화 내역 활용 포인트</h3>
-        <p>
-          이 페이지는 단순 로그가 아니라, “메이티가 언제 먼저 다가왔고 사용자가 어떻게 반응했는지”를 보여주는 관계 기록으로 활용할 수 있어요.
-          발표 때도 상담 기록보다 상호작용 히스토리라는 표현이 더 강하게 먹힙니다.
-        </p>
-      </article>
-    </section>
+      </div>
+    </div>
   );
-};
+}
 
 export default ChatHistory;
