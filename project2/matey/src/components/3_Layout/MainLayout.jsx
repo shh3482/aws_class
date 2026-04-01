@@ -1,17 +1,18 @@
-import React from "react";
-import Header from "../1_Header/Header";
-import Footer from "../2_Footer/Footer";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Header from '../1_Header/Header';
+import Footer from '../2_Footer/Footer';
 
-const MainLayout = ({ children, showHeader = true, showFooter = true }) => {
+function MainLayout() {
   return (
-    <>
-      {showHeader && <Header />}
-
-      <main>{children}</main>
-
-      {showFooter && <Footer />}
-    </>
+    <div className="main-layout">
+      <Header />
+      <main className="main-content">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   );
-};
+}
 
 export default MainLayout;
