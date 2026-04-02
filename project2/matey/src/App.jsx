@@ -1,52 +1,75 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/9_Common/ProtectedRoute';
 
-// Layouts
-import MainLayout from './components/3_Layout/MainLayout';
-import DashboardLayout from './components/3_Layout/DashboardLayout';
+// 레이아웃
+import Header from './components/1_Header/Header';
+import Footer from './components/2_Footer/Footer';
 
-// Pages
-import HomePage from './components/4_Home/HomePage';
+// 페이지들
+import HomePage from './pages/HomePage';
 import LoginPage from './components/5_Auth/LoginPage';
 import SignupPage from './components/5_Auth/SignupPage';
-import Dashboard from './components/6_Dashboard/Dashboard';
-import MyPage from './components/7_MyPage/MyPage';
-import AdminPage from './components/8_AdminPage/AdminPage';
+import ChatPage from './pages/ChatPage';
+import DownloadPage from './pages/DownloadPage';
+import NotFoundPage from './pages/NotFoundPage';
 
-// Context
-import { AuthProvider } from './context/AuthContext';
+// 대시보드 페이지들
+import Dashboard from './components/6_Dashboard/Dashboard';
+// import MyPage from './components/7_MyPage/MyPage';
+// import AdminPage from './components/8_AdminPage/AdminPage';
+
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          {/* 미로그인 상태 라우트 */}
-          <Route element={<MainLayout />}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Header />
+        <main>
+          <Routes>
+            {/* 공개 라우트 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-          </Route>
+            <Route path="/download" element={<DownloadPage />} />
+            <Route path="/chat" element={<ChatPage />} />
 
-          {/* 로그인 후 라우트 */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard activeTab="overview" />} />
-            <Route path="/dashboard/chat-history" element={<Dashboard activeTab="chat-history" />} />
-            <Route path="/dashboard/security" element={<Dashboard activeTab="security" />} />
-            <Route path="/dashboard/reports" element={<Dashboard activeTab="reports" />} />
-            <Route path="/dashboard/personal-info" element={<Dashboard activeTab="personal-info" />} />
-            <Route path="/dashboard/settings" element={<Dashboard activeTab="settings" />} />
-            
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Route>
+            {/* 보호된 라우트 */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route
+              path="/mypage"
+              element={
+                <ProtectedRoute>
+                  <MyPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="ADMIN">
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            /> */}
 
-          {/* 404 */}
-          <Route path="*" element={<div style={{textAlign:'center', padding:'100px 20px'}}>페이지를 찾을 수 없습니다 😅</div>} />
-        </Routes>
-      </AuthProvider>
-    </Router>
+            {/* 404 */}
+            <Route path="/404" element={<NotFoundPage />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
+          </Routes>
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

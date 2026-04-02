@@ -1,4 +1,4 @@
-/* src/components/8_AdminPage/AdminPage.css */
+@import '../../styles/variables.css';
 
 .admin-page {
   width: 100%;

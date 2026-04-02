@@ -1,6 +1,5 @@
-/* src/components/9_Common/Common.css */
+@import '../../styles/variables.css';
 
-/* Loading Spinner */
 .loading-spinner {
   display: flex;
   flex-direction: column;

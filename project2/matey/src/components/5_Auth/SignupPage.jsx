@@ -5,177 +5,498 @@ import './AuthPage.css';
 
 function SignupPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { signup, isLoading } = useAuth();
 
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    name: '',
-    agreeTerms: false
+    passwordConfirm: '',
+    character: '하루',
+    termsAgreed: false,
+    privacyAgreed: false,
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
+  };
+
+  const validateStep1 = () => {
+    const newErrors = {};
+    
+    if (!formData.name || formData.name.length < 2) {
+      newErrors.name = '이름은 2글자 이상이어야 합니다.';
+    }
+    
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = '올바른 이메일을 입력하세요.';
+    }
+    
+    if (!formData.password || formData.password.length < 8) {
+      newErrors.password = '비밀번호는 8글자 이상이어야 합니다.';
+    }
+    
+    if (formData.password !== formData.passwordConfirm) {
+      newErrors.passwordConfirm = '비밀번호가 일치하지 않습니다.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const newErrors = {};
+    
+    if (!formData.termsAgreed) {
+      newErrors.termsAgreed = '이용약관에 동의해야 합니다.';
+    }
+    
+    if (!formData.privacyAgreed) {
+      newErrors.privacyAgreed = '개인정보처리방침에 동의해야 합니다.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (step === 1 && validateStep1()) {
+      setStep(2);
+    } else if (step === 2 && validateStep2()) {
+      setStep(3);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    if (!formData.email || !formData.password || !formData.name) {
-      setError('모든 필드를 입력하세요');
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('비밀번호는 6자 이상이어야 합니다');
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다');
-      return;
-    }
-
-    if (!formData.agreeTerms) {
-      setError('약관에 동의해주세요');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const mockUser = {
-        id: Date.now().toString(),
-        email: formData.email,
-        name: formData.name,
-        role: 'user',
-        createdAt: new Date().toISOString(),
-        profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.email}`
-      };
-      const mockToken = 'mock-token-' + Date.now();
-
-      login(mockUser, mockToken);
+    
+    const result = await signup(formData);
+    
+    if (result.success) {
       navigate('/dashboard');
-    } catch (err) {
-      setError('회원가입 중 오류가 발생했습니다');
-      console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page signup-page">
       <div className="auth-container">
-        <div className="auth-visual">
-          <div className="auth-visual-blob blob1"></div>
-          <div className="auth-visual-blob blob2"></div>
-          <div className="auth-visual-content">
-            <h2>메이티와 시작하는 변화</h2>
-            <ul className="auth-benefits">
-              <li>🎯 맞춤형 감정 상담</li>
-              <li>💬 자유로운 표현</li>
-              <li>🌟 성장의 기록</li>
-              <li>🔐 비밀 보호</li>
-            </ul>
-          </div>
-        </div>
-
         <div className="auth-card">
-          <div className="auth-header">
-            <h1>메이티 회원가입</h1>
-            <p>당신의 마음 친구를 만나보세요</p>
+          <h1 className="auth-title">메이티 가입하기</h1>
+          
+          {/* 진행도 표시 */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '32px',
+          }}>
+            {[1, 2, 3].map((s) => (
+              <React.Fragment key={s}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: step >= s ? 'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%)' : 'var(--bg-lighter)',
+                  color: step >= s ? 'white' : 'var(--text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease',
+                }}>
+                  {s}
+                </div>
+                {s < 3 && (
+                  <div style={{
+                    width: '30px',
+                    height: '3px',
+                    background: step > s ? 'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%)' : 'var(--bg-lighter)',
+                    transition: 'all 0.3s ease',
+                  }} />
+                )}
+              </React.Fragment>
+            ))}
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
-            {error && <div className="auth-error">{error}</div>}
+            {/* Step 1: 기본 정보 */}
+            {step === 1 && (
+              <>
+                <p style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  marginBottom: '24px',
+                }}>
+                  기본 정보를 입력해주세요
+                </p>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    이름
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="홍길동"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: errors.name ? '1.5px solid #FF8FAB' : '1.5px solid var(--border-color)',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                    }}
+                  />
+                  {errors.name && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>}
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="name">이름</label>
-              <input
-                id="name"
-                type="text"
-                placeholder="홍길동"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                disabled={loading}
-              />
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    이메일
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: errors.email ? '1.5px solid #FF8FAB' : '1.5px solid var(--border-color)',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                    }}
+                  />
+                  {errors.email && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>}
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    비밀번호
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: errors.password ? '1.5px solid #FF8FAB' : '1.5px solid var(--border-color)',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                    }}
+                  />
+                  {errors.password && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>{errors.password}</span>}
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    비밀번호 확인
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordConfirm"
+                    value={formData.passwordConfirm}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: errors.passwordConfirm ? '1.5px solid #FF8FAB' : '1.5px solid var(--border-color)',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                    }}
+                  />
+                  {errors.passwordConfirm && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>{errors.passwordConfirm}</span>}
+                </div>
+              </>
+            )}
+
+            {/* Step 2: 약관 동의 */}
+            {step === 2 && (
+              <>
+                <p style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  marginBottom: '24px',
+                }}>
+                  약관에 동의해주세요
+                </p>
+                
+                <div style={{
+                  background: 'var(--bg-lighter)',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  marginBottom: '20px',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                }}>
+                  <h4 style={{ marginBottom: '12px', color: 'var(--text-primary)' }}>이용약관</h4>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                    메이티 AI 상담 서비스 이용약관입니다. 개인정보 보호 및 서비스 이용 규칙을 준수해주세요. 본 약관을 위반한 경우 서비스 이용이 제한될 수 있습니다.
+                  </p>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '20px',
+                }}>
+                  <input
+                    type="checkbox"
+                    id="termsAgreed"
+                    name="termsAgreed"
+                    checked={formData.termsAgreed}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="termsAgreed" style={{
+                    cursor: 'pointer',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    이용약관에 동의합니다 (필수)
+                  </label>
+                </div>
+                {errors.termsAgreed && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', display: 'block', marginBottom: '12px' }}>{errors.termsAgreed}</span>}
+
+                <div style={{
+                  background: 'var(--bg-lighter)',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  marginBottom: '20px',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                }}>
+                  <h4 style={{ marginBottom: '12px', color: 'var(--text-primary)' }}>개인정보처리방침</h4>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                    메이티는 사용자의 개인정보를 안전하게 보호합니다. 모든 데이터는 암호화되어 관리되며, 사용자 동의 없이 제3자에게 공유되지 않습니다.
+                  </p>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '20px',
+                }}>
+                  <input
+                    type="checkbox"
+                    id="privacyAgreed"
+                    name="privacyAgreed"
+                    checked={formData.privacyAgreed}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="privacyAgreed" style={{
+                    cursor: 'pointer',
+                    color: 'var(--text-primary)',
+                    fontWeight: '500',
+                  }}>
+                    개인정보처리방침에 동의합니다 (필수)
+                  </label>
+                </div>
+                {errors.privacyAgreed && <span style={{ color: '#FF8FAB', fontSize: '0.85rem', display: 'block' }}>{errors.privacyAgreed}</span>}
+              </>
+            )}
+
+            {/* Step 3: 캐릭터 선택 */}
+            {step === 3 && (
+              <>
+                <p style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  marginBottom: '24px',
+                }}>
+                  AI 친구를 선택해주세요
+                </p>
+                
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '20px',
+                }}>
+                  <div
+                    onClick={() => setFormData(prev => ({ ...prev, character: '하루' }))}
+                    style={{
+                      padding: '20px',
+                      background: formData.character === '하루' 
+                        ? 'linear-gradient(135deg, var(--primary-blue-lighter) 0%, var(--primary-blue-lighter) 100%)'
+                        : 'var(--bg-light)',
+                      border: formData.character === '하루'
+                        ? '2px solid var(--primary-blue)'
+                        : '2px solid var(--border-color)',
+                      borderRadius: '16px',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🐰</div>
+                    <h4 style={{ color: 'var(--text-primary)', marginBottom: '8px' }}>하루</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>활발하고 긍정적인 토끼 친구</p>
+                  </div>
+
+                  <div
+                    onClick={() => setFormData(prev => ({ ...prev, character: '루미' }))}
+                    style={{
+                      padding: '20px',
+                      background: formData.character === '루미' 
+                        ? 'linear-gradient(135deg, var(--primary-pink-lighter) 0%, var(--primary-pink-lighter) 100%)'
+                        : 'var(--bg-light)',
+                      border: formData.character === '루미'
+                        ? '2px solid var(--primary-pink)'
+                        : '2px solid var(--border-color)',
+                      borderRadius: '16px',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🐱</div>
+                    <h4 style={{ color: 'var(--text-primary)', marginBottom: '8px' }}>루미</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>침착하고 현명한 고양이 친구</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* 버튼 */}
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              marginTop: '32px',
+            }}>
+              {step > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setStep(step - 1)}
+                  disabled={isLoading}
+                  style={{
+                    flex: 1,
+                    padding: '14px 20px',
+                    background: 'var(--bg-lighter)',
+                    color: 'var(--text-primary)',
+                    border: '1.5px solid var(--border-color)',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => !isLoading && (e.target.style.background = 'var(--border-light)')}
+                  onMouseLeave={(e) => e.target.style.background = 'var(--bg-lighter)'}
+                >
+                  이전
+                </button>
+              )}
+
+              {step < 3 && (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={isLoading}
+                  style={{
+                    flex: 1,
+                    padding: '14px 20px',
+                    background: 'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => !isLoading && (e.target.style.transform = 'translateY(-2px)')}
+                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  다음
+                </button>
+              )}
+
+              {step === 3 && (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  style={{
+                    flex: 1,
+                    padding: '14px 20px',
+                    background: isLoading 
+                      ? 'var(--border-color)' 
+                      : 'linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-pink-light) 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => !isLoading && (e.target.style.transform = 'translateY(-2px)')}
+                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  {isLoading ? '가입 중...' : '가입 완료'}
+                </button>
+              )}
             </div>
-
-            <div className="form-group">
-              <label htmlFor="email">이메일</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">비밀번호</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="confirmPassword">비밀번호 확인</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="••••••"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="form-group checkbox">
-              <input
-                id="agreeTerms"
-                type="checkbox"
-                name="agreeTerms"
-                checked={formData.agreeTerms}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              <label htmlFor="agreeTerms">
-                <a href="#terms">이용약관</a>과 <a href="#privacy">개인정보 처리방침</a>에 동의합니다
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              className="auth-btn"
-              disabled={loading}
-            >
-              {loading ? '가입 중...' : '회원가입'}
-            </button>
           </form>
 
-          <div className="auth-footer">
-            <p>이미 계정이 있으신가요? <a href="/login">로그인</a></p>
-          </div>
+          <p style={{
+            marginTop: '24px',
+            textAlign: 'center',
+            color: 'var(--text-secondary)',
+            fontSize: '0.95rem',
+          }}>
+            이미 계정이 있으신가요?{' '}
+            <a 
+              onClick={() => navigate('/login')}
+              style={{
+                color: 'var(--primary-blue)',
+                fontWeight: '600',
+                cursor: 'pointer',
+              }}
+            >
+              로그인
+            </a>
+          </p>
         </div>
       </div>
     </div>
