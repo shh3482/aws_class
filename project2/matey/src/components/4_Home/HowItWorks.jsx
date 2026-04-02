@@ -1,237 +1,220 @@
-import React, { useState, useEffect } from 'react';
+// src/components/4_Home/HowItWorks.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './HowItWorks.css';
 
-const steps = [
+const STEPS = [
   {
-    step: '01', icon: '💻', color: '#6C9EFF',
-    title: '앱 설치',
-    desc: '마음친구 데스크톱 앱을 설치하세요. Windows와 macOS를 모두 지원합니다.',
-    detail: 'Electron.js 기반으로 가볍게 동작하며, 설치 후 바탕화면에서 바로 실행됩니다.'
+    number: '01',
+    icon: '✨',
+    title: '가입하고 바로 시작해요',
+    description:
+      '복잡한 설치나 긴 설정 없이 계정만 만들면 바로 메이티를 경험할 수 있어요.',
+    note: '설정은 최소로',
   },
   {
-    step: '02', icon: '🔑', color: '#FF8FAB',
-    title: '회원가입 & 로그인',
-    desc: '웹사이트에서 계정을 만들고, 앱과 자동으로 연동됩니다.',
-    detail: 'WebSocket으로 실시간 동기화되어 웹과 앱 어디서든 이어서 대화할 수 있어요.'
+    number: '02',
+    icon: '🐰',
+    title: '나와 맞는 메이트를 골라요',
+    description:
+      '하루, 루미처럼 분위기가 다른 캐릭터 중 지금 내 상태에 더 편한 메이트를 선택해요.',
+    note: '분위기부터 맞추기',
   },
   {
-    step: '03', icon: '🎨', color: '#9B7FFF',
-    title: '내 AI 친구 꾸미기',
-    desc: '토끼 하루 또는 고양이 루미를 선택하고 성격과 외형을 커스터마이징하세요.',
-    detail: '공감 레벨, 대화 스타일, 적극성을 조절해 나만의 상담 파트너를 만들어요.'
+    number: '03',
+    icon: '💬',
+    title: '필요한 순간 자연스럽게 대화해요',
+    description:
+      '메이티가 먼저 말을 걸어오기도 하고, 내가 먼저 마음 상태를 말해도 부드럽게 이어져요.',
+    note: '부담 없이 대화',
   },
   {
-    step: '04', icon: '🤖', color: '#FFB347',
-    title: '마음친구가 먼저 다가와요',
-    desc: '이제부터는 마음친구가 바탕화면에 상주하며 당신의 상태를 감지합니다.',
-    detail: '화면을 인식해 맞춤형 말을 걸고, 필요하면 깊은 대화로 이어집니다.'
-  }
+    number: '04',
+    icon: '📘',
+    title: '기록을 다시 보며 정리해요',
+    description:
+      '웹에서 대화 흐름과 감정 기록을 다시 보면서 내 상태를 조금 더 편하게 돌아볼 수 있어요.',
+    note: '흐름을 다시 보기',
+  },
 ];
 
-const scenarios = [
+const HIGHLIGHTS = [
+  '복잡한 설정 없이 바로 시작',
+  '캐릭터 선택형 대화 경험',
+  '부담 없는 공감형 인터페이스',
+  '웹에서 기록과 흐름 다시 보기',
+];
+
+const PREVIEW_ITEMS = [
   {
-    icon: '😤',
-    context: '에러 화면 발생',
-    bgApp: '💻 VS Code — main.js',
-    message: '계속 안 풀리는 거 있어? 잠깐 같이 볼까요? 🛠️',
-    choices: ['도움받고 싶어요', '괜찮아요 혼자 할게요'],
-    time: '오후 11:32',
-    color: '#6C9EFF',
-    char: 'rabbit'
+    label: '가입',
+    copy: '시작 장벽을 낮춰서 바로 경험할 수 있어요.',
   },
   {
-    icon: '😔',
-    context: '채용 사이트 장시간 접속',
-    bgApp: '🌐 사람인 — 채용공고',
-    message: '취업 준비 많이 힘들지? 잠깐 쉬면서 얘기할래요? 💙',
-    choices: ['힘들어요 얘기할게요', '괜찮아요 계속 볼게요'],
-    time: '오후 2:18',
-    color: '#FF8FAB',
-    char: 'cat'
+    label: '메이트 선택',
+    copy: '지금 나와 더 잘 맞는 분위기의 캐릭터를 고를 수 있어요.',
   },
   {
-    icon: '😴',
-    context: '새벽 2시 장시간 작업',
-    bgApp: '📝 Notion — 보고서 작성',
-    message: '벌써 새벽 2시네요... 오늘 많이 수고했어요. 좀 쉬어요 🌙',
-    choices: ['조금만 더 할게요', '그럴게요 고마워요 🌙'],
-    time: '오전 2:07',
-    color: '#9B7FFF',
-    char: 'rabbit'
-  }
+    label: '대화 시작',
+    copy: '먼저 다가오거나 내가 먼저 말을 걸 수 있어요.',
+  },
+  {
+    label: '기록 확인',
+    copy: '지나간 대화 흐름과 감정 정리를 나중에 다시 볼 수 있어요.',
+  },
 ];
 
 function HowItWorks() {
-  const [activeScenario, setActiveScenario] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [showChoices, setShowChoices] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
-
-  const sc = scenarios[activeScenario];
-
-  // 시나리오 변경 시 타이핑 효과 재실행
-  useEffect(() => {
-    setDisplayText('');
-    setShowChoices(false);
-    setAnimKey(k => k + 1);
-
-    const text = sc.message;
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText(text.slice(0, i + 1));
-        i++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => setShowChoices(true), 300);
-      }
-    }, 35);
-
-    return () => clearInterval(interval);
-  }, [activeScenario]);
+  const navigate = useNavigate();
 
   return (
-    <section className="how-it-works" id="how-it-works">
-      <div className="section-header container">
-        <div className="section-badge">🚀 시작 방법</div>
-        <h2 className="section-title">
-          4단계로 <span className="gradient-text">시작하세요</span>
-        </h2>
-        <p className="section-subtitle">
-          설치부터 첫 대화까지 단 5분이면 충분합니다
-        </p>
-      </div>
+    <section className="matey-how" id="how-it-works">
+      <div className="matey-how__ambient matey-how__ambient--one" aria-hidden="true" />
+      <div className="matey-how__ambient matey-how__ambient--two" aria-hidden="true" />
 
-      {/* 스텝 카드 */}
-      <div className="steps-container container">
-        {steps.map((s, i) => (
-          <div
-            key={i}
-            className="step-card"
-            style={{ '--step-color': s.color, '--step-delay': `${i * 0.15}s` }}
-          >
-            <div className="step-number" style={{ color: s.color, borderColor: `${s.color}30`, background: `${s.color}10` }}>
-              {s.step}
-            </div>
-            <div className="step-icon-wrap" style={{ background: `${s.color}15` }}>
-              <span>{s.icon}</span>
-            </div>
-            <h3 className="step-title">{s.title}</h3>
-            <p className="step-desc">{s.desc}</p>
-            <p className="step-detail">{s.detail}</p>
-          </div>
-        ))}
-      </div>
+      <div className="matey-how__inner">
+        <div className="matey-how__header">
+          <span className="matey-how__badge">🫶 이용 방법</span>
 
-      {/* 시나리오 시연 */}
-      <div className="scenario-section container">
-        <div className="scenario-text">
-          <div className="section-badge" style={{ display: 'inline-flex', marginBottom: '16px' }}>💬 실제 시나리오</div>
-          <h3 className="scenario-title">이런 순간에<br /><span className="gradient-text">먼저 다가와요</span></h3>
-          <p className="scenario-desc">
-            마음친구는 GPT-4o Vision으로 현재 화면 맥락을 이해하고,
-            당신에게 가장 필요한 말을 먼저 건네요.
+          <h2 className="matey-how__title">
+            메이티는 어렵지 않아요.
+            <br />
+            <span>처음부터 끝까지 흐름이 아주 자연스러워요</span>
+          </h2>
+
+          <p className="matey-how__subtitle">
+            설치나 학습보다 경험이 먼저 와닿도록,
+            메이티는 시작부터 기록까지 한 번에 이해되는 구조로 만들었어요.
           </p>
-          <div className="scenario-tabs">
-            {scenarios.map((s, i) => (
-              <button
-                key={i}
-                className={`scenario-tab ${activeScenario === i ? 'active' : ''}`}
-                style={{ '--tab-color': s.color }}
-                onClick={() => setActiveScenario(i)}
-              >
-                <span className="tab-icon">{s.icon}</span>
-                <span>{s.context}</span>
-                {activeScenario === i && <span className="tab-active-dot" style={{ background: s.color }}></span>}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* ✅ 리디자인된 데스크톱 시뮬레이터 */}
-        <div className="scenario-preview">
-          <div className="desktop-simulator">
-            {/* 상단 타이틀바 */}
-            <div className="simulator-bar">
-              <div className="sim-dots">
-                <span className="sim-dot red"></span>
-                <span className="sim-dot yellow"></span>
-                <span className="sim-dot green"></span>
+        <div className="matey-how__journey">
+          <div className="matey-how__journey-line" aria-hidden="true" />
+
+          {STEPS.map((step, index) => (
+            <article
+              className={`matey-how__step matey-how__step--${index + 1}`}
+              key={step.number}
+            >
+              <div className="matey-how__step-head">
+                <span className="matey-how__step-badge">STEP {step.number}</span>
+                <span className="matey-how__step-icon" aria-hidden="true">
+                  {step.icon}
+                </span>
               </div>
-              <span className="sim-title">🖥️ 내 바탕화면</span>
-              <span className="sim-time">{sc.time}</span>
+
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+
+              <div className="matey-how__step-foot">
+                <span className="matey-how__step-note">{step.note}</span>
+                {index < STEPS.length - 1 ? (
+                  <span className="matey-how__step-arrow" aria-hidden="true">
+                    →
+                  </span>
+                ) : (
+                  <span className="matey-how__step-dot" aria-hidden="true" />
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="matey-how__feature-board">
+          <div className="matey-how__feature-copy">
+            <span className="matey-how__summary-label">한눈에 보는 시작 흐름</span>
+
+            <h3>기능 설명보다, 직접 써보면 바로 감이 오는 구조예요</h3>
+
+            <p>
+              메이티는 복잡한 기능을 길게 익혀야 하는 서비스가 아니라,
+              가입하고 메이트를 고르고 대화를 시작하는 순간
+              자연스럽게 사용 흐름이 이해되도록 설계했어요.
+              시작은 가볍고, 대화는 부드럽고, 기록은 다시 보기 쉽게 이어져요.
+            </p>
+
+            <div className="matey-how__chips">
+              {HIGHLIGHTS.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
             </div>
 
-            {/* 화면 */}
-            <div className="simulator-screen">
-              {/* 배경 앱 창 */}
-              <div className="bg-code-window">
-                <div className="bcw-bar">
-                  <span className="bcw-dot"></span>
-                  <span className="bcw-dot"></span>
-                  <span className="bcw-dot"></span>
-                  <span className="bcw-label">{sc.bgApp}</span>
+            <div className="matey-how__metrics">
+              <div className="matey-how__metric">
+                <strong>4-step</strong>
+                <span>시작부터 다시 보기까지 한 번에</span>
+              </div>
+              <div className="matey-how__metric">
+                <strong>2 mates</strong>
+                <span>분위기가 다른 캐릭터 선택</span>
+              </div>
+              <div className="matey-how__metric">
+                <strong>Web recap</strong>
+                <span>대화 기록과 흐름을 편하게 확인</span>
+              </div>
+            </div>
+
+            <div className="matey-how__actions">
+              <button
+                type="button"
+                className="matey-how__button matey-how__button--primary"
+                onClick={() => navigate('/signup')}
+              >
+                무료로 시작하기
+              </button>
+
+              <button
+                type="button"
+                className="matey-how__button matey-how__button--secondary"
+                onClick={() => navigate('/download')}
+              >
+                다운로드
+              </button>
+            </div>
+          </div>
+
+          <div className="matey-how__feature-visual" aria-hidden="true">
+            <div className="matey-how__visual-card">
+              <div className="matey-how__visual-top">
+                <div className="matey-how__visual-traffic">
+                  <span />
+                  <span />
+                  <span />
                 </div>
-                <div className="bcw-content">
-                  <div className="bcw-line"><span className="ln">1</span><span className="lc kw">import</span><span className="lc"> React </span><span className="lc kw">from</span><span className="lc str"> 'react'</span></div>
-                  <div className="bcw-line"><span className="ln">2</span><span className="lc kw">const</span><span className="lc fn"> App</span><span className="lc"> = () =&gt; {'{'}</span></div>
-                  <div className="bcw-line"><span className="ln">3</span><span className="lc">  <span className="kw">return</span> &lt;<span className="fn">div</span>&gt;...&lt;/<span className="fn">div</span>&gt;</span></div>
-                  <div className="bcw-line"><span className="ln">4</span><span className="lc">{'}'}</span></div>
-                </div>
+                <strong>Matey Journey Preview</strong>
               </div>
 
-              {/* ✅ 캐릭터 팝업 — ChatDemo와 동일한 스타일 */}
-              <div className="hw-character-popup" key={animKey} style={{ '--char-color': sc.color }}>
-
-                {/* 말풍선 */}
-                <div className="hw-speech-bubble" style={{ borderColor: `${sc.color}30` }}>
-                  <p className="hw-bubble-text">
-                    {displayText}
-                    {displayText.length < sc.message.length && (
-                      <span className="hw-typing-cursor" style={{ color: sc.color }}>▌</span>
-                    )}
-                  </p>
+              <div className="matey-how__visual-body">
+                <div className="matey-how__visual-pill-row">
+                  {STEPS.map((step) => (
+                    <span key={step.number}>{step.title}</span>
+                  ))}
                 </div>
 
-                {/* 선택지 버튼들 */}
-                {showChoices && (
-                  <div className="hw-choices">
-                    {sc.choices.map((choice, i) => (
-                      <button
-                        key={i}
-                        className="hw-choice-btn"
-                        style={{
-                          '--btn-color': sc.color,
-                          animationDelay: `${i * 0.08}s`
-                        }}
-                      >
-                        {choice}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div className="matey-how__visual-bubble">
+                  처음엔 가볍게 시작하고, 대화는 자연스럽게 이어지고,
+                  나중엔 흐름을 다시 돌아볼 수 있어요.
+                </div>
 
-                {/* 캐릭터 이미지 */}
-                <div className="hw-char-img-wrap">
-                  <img
-                    src={sc.char === 'rabbit' ? '/images/rabbit.png' : '/images/cat.png'}
-                    alt={sc.char === 'rabbit' ? '하루' : '루미'}
-                    className="hw-char-img"
-                  />
-                  <div className="hw-sparkle s1">✦</div>
-                  <div className="hw-sparkle s2">✦</div>
+                <div className="matey-how__visual-list">
+                  {PREVIEW_ITEMS.map((item, index) => (
+                    <div className="matey-how__visual-item" key={item.label}>
+                      <strong>{String(index + 1).padStart(2, '0')}</strong>
+                      <div>
+                        <span>{item.label}</span>
+                        <p>{item.copy}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            </div>
 
-              {/* 태스크바 */}
-              <div className="sim-taskbar">
-                <span className="sim-tb-icon">🪟</span>
-                <div className="sim-tb-apps">
-                  <span className="sim-tb-app active">📝 프로젝트</span>
-                  <span className="sim-tb-app">🌐 Chrome</span>
-                </div>
-                <span className="sim-tb-time">{sc.time}</span>
-              </div>
+            <div className="matey-how__floating matey-how__floating--one">
+              처음 써도 바로 이해되는 흐름
+            </div>
+            <div className="matey-how__floating matey-how__floating--two">
+              설정은 줄이고 경험은 바로
             </div>
           </div>
         </div>

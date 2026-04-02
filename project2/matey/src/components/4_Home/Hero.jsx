@@ -1,139 +1,154 @@
-import React from 'react';
+// src/components/4_Home/Hero.jsx
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 
+const HERO_CHARACTERS = [
+  {
+    id: 'rabbit',
+    name: '하루',
+    role: '차분하게 정리해주는 메이트',
+    image: '/images/rabbit.png',
+    message:
+      '오늘 조금 복잡해 보이네요. 괜찮다면 지금 가장 마음에 걸리는 것부터 천천히 말해줘도 돼요.',
+    tone: 'blue',
+  },
+  {
+    id: 'cat',
+    name: '루미',
+    role: '다정하게 먼저 다가오는 메이트',
+    image: '/images/cat.png',
+    message:
+      '완벽하게 설명하지 않아도 괜찮아요. 지금 기분이 어떤지만 말해줘도 내가 같이 정리해줄게요.',
+    tone: 'pink',
+  },
+];
+
 function Hero() {
+  const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+
+  const activeCharacter = useMemo(
+    () => HERO_CHARACTERS[activeIndex],
+    [activeIndex]
+  );
+
+  useEffect(() => {
+    let fadeTimer;
+    let switchTimer;
+
+    const startCycle = () => {
+      fadeTimer = setTimeout(() => {
+        setIsVisible(false);
+      }, 3200);
+
+      switchTimer = setTimeout(() => {
+        setActiveIndex((prev) => (prev + 1) % HERO_CHARACTERS.length);
+        setIsVisible(true);
+      }, 4000);
+    };
+
+    startCycle();
+    const interval = setInterval(startCycle, 4000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(switchTimer);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const moveToSection = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const headerOffset = 84;
+    const top =
+      target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <section className="hero" id="home">
-      {/* 배경 장식 요소들 */}
-      <div className="hero-bg">
-        <div className="bg-blob blob1"></div>
-        <div className="bg-blob blob2"></div>
-        <div className="bg-blob blob3"></div>
-        <div className="stars">
-          <span className="star s1">✦</span>
-          <span className="star s2">✦</span>
-          <span className="star s3">✦</span>
-          <span className="star s4">✦</span>
-          <span className="star s5">✦</span>
-        </div>
-      </div>
+    <section className="matey-hero" id="hero">
+      <div className="matey-hero__inner">
+        <div className="matey-hero__content">
+          <span className="matey-hero__badge">감정을 먼저 이해하는 AI 메이트</span>
 
-      <div className="hero-inner container">
-        {/* 텍스트 영역 */}
-        <div className="hero-text">
-          <div className="hero-badge">
-            <span>🤖</span>
-            <span>AI 기반 정서 지원 서비스</span>
-          </div>
-
-          <h1 className="hero-title">
-            먼저 다가가는<br />
-            <span className="gradient-text">AI 친구</span>
+          <h1 className="matey-hero__title">
+            힘든 순간에도,
+            <br />
+            <span>메이티는 먼저
+              <br />
+              다정하게
+              <br />
+              말을 걸어요</span>
           </h1>
 
-          <p className="hero-subtitle">
-            당신이 힘들다고 말하기 전에, 이미 눈치채고 있어요.<br />
-            바탕화면에 상주하며 당신의 마음을 먼저 알아채는 상담 파트너
+          <p className="matey-hero__description">
+            메이티는 감정 공감, 대화 정리, 화면 기반 도움을 자연스럽게 연결해주는
+            AI 메이트예요.
+            <br />
+            너무 길게 설명하지 않아도 지금 상황을 이해하고,
+            부담 없는 다음 한마디를 함께 찾아드려요.
           </p>
 
-          {/* 특징 뱃지 */}
-          <div className="hero-features">
-            <div className="feature-badge">
-              <span>💬</span>
-              <span>24/7 실시간 대화</span>
-            </div>
-            <div className="feature-badge">
-              <span>🧠</span>
-              <span>AI 감정 분석</span>
-            </div>
-            <div className="feature-badge">
-              <span>🔒</span>
-              <span>완벽한 비밀 보장</span>
-            </div>
-          </div>
-
-          {/* CTA 버튼들 */}
-          <div className="hero-cta">
-            <button className="btn-primary-hero">
-              <span>무료로 시작하기</span>
-              <span className="btn-arrow">→</span>
+          <div className="matey-hero__actions">
+            <button
+              type="button"
+              className="matey-hero__button matey-hero__button--primary"
+              onClick={() => navigate('/signup')}
+            >
+              무료로 시작하기
             </button>
-            <div className="download-group">
-              <span className="download-label">데스크톱 앱</span>
-              <button className="btn-download">
-                <span>🪟</span>
-                <span>Windows</span>
-              </button>
-              <button className="btn-download">
-                <span>🍎</span>
-                <span>macOS</span>
-              </button>
-            </div>
+
+            <button
+              type="button"
+              className="matey-hero__button matey-hero__button--secondary"
+              onClick={() => moveToSection('chat-demo')}
+            >
+              대화 예시 보기
+            </button>
           </div>
 
-          {/* 신뢰 지표 */}
-          <div className="hero-trust">
-            <div className="trust-avatars">
-              <div className="avatar">🐰</div>
-              <div className="avatar">🐱</div>
-              <div className="avatar">🌟</div>
-              <div className="avatar">💙</div>
-            </div>
-            <p className="trust-text"><strong>2,400+</strong> 명이 매일 마음친구와 대화 중</p>
+          <div className="matey-hero__platforms">
+            <span className="matey-hero__platform-chip">Web 바로 시작 가능</span>
+            <span className="matey-hero__platform-chip">iOS 준비중</span>
+            <span className="matey-hero__platform-chip">Android 준비중</span>
           </div>
         </div>
 
-        {/* 캐릭터 & 미리보기 영역 */}
-        <div className="hero-visual">
-          {/* 메인 캐릭터 카드 */}
-          <div className="character-card">
-            {/* 배경 링 */}
-            <div className="character-glow"></div>
+        <div className="matey-hero__visual" aria-hidden="true">
+          <div className="matey-hero__visual-glow matey-hero__visual-glow--one" />
+          <div className="matey-hero__visual-glow matey-hero__visual-glow--two" />
 
-            {/* ✅ 실제 이미지 사용 */}
-            <img
-              src="/images/rabbit-duo.png"
-              alt="마음친구 캐릭터 하루와 루미"
-              className="character-duo-img"
-            />
-
-            {/* 캐릭터 이름 태그 */}
-            <div className="char-names">
-              <span className="char-name-tag rabbit-tag">🐰 하루</span>
-              <span className="char-name-tag cat-tag">🐱 루미</span>
+          <div
+            className={`matey-hero__character-scene is-${activeCharacter.tone} ${
+              isVisible ? 'is-visible' : 'is-hidden'
+            }`}
+          >
+            <div className="matey-hero__speech">
+              <p>{activeCharacter.message}</p>
             </div>
 
-            {/* 말풍선 */}
-            <div className="chat-bubble bubble1">
-              <span>지금 많이 힘들어 보여요 🥺</span>
-            </div>
-            <div className="chat-bubble bubble2">
-              <span>에러가 계속 나네, 같이 볼까요? 💙</span>
-            </div>
-          </div>
-
-          {/* 미니 상태 카드 */}
-          <div className="status-card card1">
-            <span className="status-icon">💚</span>
-            <div>
-              <div className="status-title">오늘 기분</div>
-              <div className="status-value">많이 호전되었어요</div>
-            </div>
-          </div>
-          <div className="status-card card2">
-            <span className="status-icon">📊</span>
-            <div>
-              <div className="status-title">감정 패턴</div>
-              <div className="status-value">분석 중...</div>
+            <div className="matey-hero__character-wrap">
+              <div className="matey-hero__character-shadow" />
+              <img
+                src={activeCharacter.image}
+                alt={activeCharacter.name}
+                className="matey-hero__character-image"
+              />
+              <div className="matey-hero__character-meta">
+                <strong>{activeCharacter.name}</strong>
+                <span>{activeCharacter.role}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* 스크롤 인디케이터 */}
-      <div className="scroll-indicator">
-        <div className="scroll-dot"></div>
-        <span>아래로 스크롤</span>
       </div>
     </section>
   );

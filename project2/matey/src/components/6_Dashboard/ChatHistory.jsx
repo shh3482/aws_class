@@ -1,59 +1,67 @@
 import React, { useState } from 'react';
 
 function ChatHistory() {
-  const [chatHistory] = useState([
-    { id: 1, character: '🐰 하루', date: '오늘 3:45 PM', preview: '지금 많이 힘들어 보여요' },
-    { id: 2, character: '🐱 루미', date: '어제 2:30 PM', preview: '에러가 계속 나네, 같이 볼까요?' },
-    { id: 3, character: '🐰 하루', date: '3일 전', preview: '취업 준비 많이 힘들지?' },
-    { id: 4, character: '🐱 루미', date: '1주일 전', preview: '벌써 새벽 2시네요...' },
-    { id: 5, character: '🐰 하루', date: '2주일 전', preview: '아늑하고 편한 마음이 보여요' },
+  const [chats] = useState([
+    {
+      id: 1,
+      date: '2024-04-02',
+      time: '14:30',
+      character: '하루',
+      topic: '스트레스 관리',
+      messages: 12,
+      emoji: '😊',
+    },
+    {
+      id: 2,
+      date: '2024-04-01',
+      time: '10:15',
+      character: '루미',
+      topic: '감정 표현',
+      messages: 18,
+      emoji: '😔',
+    },
+    {
+      id: 3,
+      date: '2024-03-31',
+      time: '19:45',
+      character: '하루',
+      topic: '일상의 고민',
+      messages: 25,
+      emoji: '😟',
+    },
+    {
+      id: 4,
+      date: '2024-03-30',
+      time: '15:20',
+      character: '루미',
+      topic: '자신감 회복',
+      messages: 14,
+      emoji: '💪',
+    },
   ]);
-
-  const [selectedChat, setSelectedChat] = useState(null);
 
   return (
     <div className="dashboard-section">
-      <h1>대화 내역</h1>
-      <p className="section-subtitle">메이티와 나눈 모든 대화를 확인하세요</p>
+      <h2 className="section-title">대화 내역</h2>
+      <p className="section-subtitle">최근 상담 기록을 확인하세요</p>
 
-      <div className="chat-history-grid">
-        <div className="chat-list">
-          {chatHistory.map(chat => (
-            <div
-              key={chat.id}
-              className={`chat-item ${selectedChat?.id === chat.id ? 'selected' : ''}`}
-              onClick={() => setSelectedChat(chat)}
-            >
-              <div className="chat-character">{chat.character}</div>
-              <div className="chat-details">
-                <div className="chat-date">{chat.date}</div>
-                <div className="chat-preview">{chat.preview}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="chat-viewer">
-          {selectedChat ? (
-            <div className="chat-detail">
+      <div className="chat-history-list">
+        {chats.map((chat) => (
+          <div key={chat.id} className="chat-history-item">
+            <div className="chat-emoji">{chat.emoji}</div>
+            <div className="chat-info">
               <div className="chat-header">
-                <span>{selectedChat.character}</span>
-                <span className="chat-time">{selectedChat.date}</span>
+                <span className="chat-topic">{chat.topic}</span>
+                <span className="chat-character">🤖 {chat.character}</span>
               </div>
-              <div className="chat-messages">
-                <div className="message ai">지금 많이 힘들어 보여요 🥺</div>
-                <div className="message user">네, 요즘 좀 힘들어요</div>
-                <div className="message ai">어떤 부분이 제일 힘들었어요?</div>
-                <div className="message user">취업 준비하면서 스트레스를 많이 받고 있어요</div>
-                <div className="message ai">그렇구나, 많이 쌓인 게 있겠다 😔</div>
+              <div className="chat-meta">
+                <span>{chat.date} {chat.time}</span>
+                <span>💬 {chat.messages}개 메시지</span>
               </div>
             </div>
-          ) : (
-            <div className="chat-empty">
-              <p>대화를 선택하면 내용을 확인할 수 있습니다</p>
-            </div>
-          )}
-        </div>
+            <button className="chat-view-btn">보기</button>
+          </div>
+        ))}
       </div>
     </div>
   );
