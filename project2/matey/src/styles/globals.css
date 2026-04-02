@@ -1,3 +1,4 @@
+/* src/styles/globals.css */
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap');
 
 * {
@@ -6,8 +7,15 @@
   box-sizing: border-box;
 }
 
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #a06dff rgba(248, 244, 255, 0.96);
 }
 
 body {
@@ -20,22 +28,53 @@ body {
 }
 
 /* 스크롤바 커스터마이징 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-light);
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: linear-gradient(
+    180deg,
+    rgba(248, 245, 255, 0.98) 0%,
+    rgba(255, 246, 251, 0.98) 52%,
+    rgba(246, 249, 255, 0.98) 100%
+  );
+  border-radius: 999px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-pink) 100%);
-  border-radius: var(--radius-full);
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #8f86ff 0%,
+    #a06dff 28%,
+    #c06cff 58%,
+    #f58aba 100%
+  );
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 6px 18px rgba(160, 109, 255, 0.2),
+    0 2px 8px rgba(245, 138, 186, 0.14);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-pink-light) 100%);
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #9a93ff 0%,
+    #ab79ff 28%,
+    #cb7aff 58%,
+    #f89ac3 100%
+  );
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* 링크 */
@@ -103,8 +142,12 @@ select:disabled {
 
 /* 공통 애니메이션 */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -130,17 +173,29 @@ select:disabled {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -152,5 +207,11 @@ select:disabled {
 @media (max-width: 640px) {
   .section {
     padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 }

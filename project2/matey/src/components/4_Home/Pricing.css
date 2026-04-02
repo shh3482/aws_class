@@ -1,9 +1,13 @@
+/* src/components/4_Home/Pricing.css */
 @import '../../styles/variables.css';
 
 .matey-pricing {
   position: relative;
   overflow: hidden;
-  padding: var(--matey-section-py-lg) var(--matey-page-gutter-desktop);
+  padding:
+    calc(var(--matey-section-py-desktop) + 28px)
+    var(--matey-page-gutter-desktop)
+    var(--matey-section-py-desktop);
   background:
     radial-gradient(circle at 12% 18%, rgba(108, 158, 255, 0.12), transparent 24%),
     radial-gradient(circle at 88% 16%, rgba(255, 147, 183, 0.12), transparent 24%),
@@ -17,7 +21,7 @@
 
 .matey-pricing__header {
   max-width: 860px;
-  margin: 0 auto 48px;
+  margin: 0 auto 56px;
   text-align: center;
 }
 
@@ -72,6 +76,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
+  align-items: stretch;
 }
 
 .matey-pricing__card {
@@ -307,16 +312,19 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
-  margin-top: 28px;
-  max-width: 420px;
+  margin: 34px auto 0;
+  max-width: 560px;
+  justify-items: center;
 }
 
 .matey-pricing__footnote-card {
-  padding: 18px;
+  width: 100%;
+  padding: 18px 20px;
   border-radius: 22px;
   border: 1px solid rgba(130, 146, 186, 0.14);
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 12px 26px rgba(112, 129, 176, 0.08);
+  text-align: center;
 }
 
 .matey-pricing__footnote-card strong {
@@ -328,24 +336,39 @@
 }
 
 .matey-pricing__footnote-card span {
+  display: block;
   color: #66728b;
   font-size: 13px;
   line-height: 1.7;
 }
 
 @media (max-width: 1100px) {
+  .matey-pricing {
+    padding:
+      calc(var(--matey-section-py-tablet) + 18px)
+      var(--matey-page-gutter-tablet)
+      var(--matey-section-py-tablet);
+  }
+
   .matey-pricing__grid {
     grid-template-columns: 1fr;
   }
 
   .matey-pricing__footnote {
-    max-width: none;
+    max-width: 560px;
   }
 }
 
 @media (max-width: 768px) {
   .matey-pricing {
-    padding: var(--matey-section-py-md) var(--matey-page-gutter-mobile);
+    padding:
+      calc(var(--matey-section-py-mobile) + 14px)
+      var(--matey-page-gutter-mobile)
+      var(--matey-section-py-mobile);
+  }
+
+  .matey-pricing__header {
+    margin-bottom: 40px;
   }
 
   .matey-pricing__title {
@@ -364,14 +387,20 @@
   .matey-pricing__card-badge {
     left: 18px;
   }
+
+  .matey-pricing__footnote {
+    margin-top: 26px;
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 560px) {
-  .matey-pricing {
-    padding: var(--matey-section-py-sm) var(--matey-page-gutter-mobile);
-  }
-
   .matey-pricing__price-wrap strong {
     font-size: 34px;
+  }
+
+  .matey-pricing__footnote-card {
+    padding: 16px 16px;
+    border-radius: 18px;
   }
 }

@@ -1,76 +1,153 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/9_Common/ProtectedRoute';
-
-// 레이아웃
-import Header from './components/1_Header/Header';
-import Footer from './components/2_Footer/Footer';
-
-// 페이지들
-import HomePage from './pages/HomePage';
-import LoginPage from './components/5_Auth/LoginPage';
-import SignupPage from './components/5_Auth/SignupPage';
-import ChatPage from './pages/ChatPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import MainLayout from './components/3_Layout/MainLayout';
+import MainPage from './pages/HomePage';
 import DownloadPage from './pages/DownloadPage';
-import NotFoundPage from './pages/NotFoundPage';
+import AuthPage from './components/5_Auth/AuthPage';
+import ForgotPasswordPage from './components/5_Auth/ForgotPasswordPage';
+import MyPage from './components/7_MyPage/MyPage';
+import AdminPage from './components/8_AdminPage/AdminPage';
+import AdminAccessDeniedPage from './pages/AdminAccessDeniedPage';
 
-// 대시보드 페이지들
-import Dashboard from './components/6_Dashboard/Dashboard';
-// import MyPage from './components/7_MyPage/MyPage';
-// import AdminPage from './components/8_AdminPage/AdminPage';
-
-import './App.css';
-
-function App() {
+function AuthLoadingScreen() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Header />
-        <main>
-          <Routes>
-            {/* 공개 라우트 */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/download" element={<DownloadPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-
-            {/* 보호된 라우트 */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            {/* <Route
-              path="/mypage"
-              element={
-                <ProtectedRoute>
-                  <MyPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requiredRole="ADMIN">
-                  <AdminPage />
-                </ProtectedRoute>
-              }
-            /> */}
-
-            {/* 404 */}
-            <Route path="/404" element={<NotFoundPage />} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Routes>
-        </main>
-        <Footer />
-      </BrowserRouter>
-    </AuthProvider>
+    <div
+      style={{
+        minHeight: '40vh',
+        display: 'grid',
+        placeItems: 'center',
+        color: '#6f6883',
+        fontSize: '15px',
+        fontWeight: 700,
+      }}
+    >
+      로그인 상태를 확인하고 있어요...
+    </div>
   );
 }
 
-export default App;
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const { isAuthenticated, authLoading, user } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const role = String(user?.role || user?.roles?.[0] || '').toUpperCase();
+  const isAdmin = role === 'ADMIN' || role.includes('ADMIN');
+
+  if (!isAdmin) {
+    return <Navigate to="/admin-access-denied" replace />;
+  }
+
+  return children;
+}
+
+function PublicOnlyRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/mypage" replace />;
+  }
+
+  return children;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/download" element={<DownloadPage />} />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <AuthPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            <PublicOnlyRoute>
+              <AuthPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicOnlyRoute>
+              <ForgotPasswordPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-access-denied"
+          element={
+            <ProtectedRoute>
+              <AdminAccessDeniedPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}

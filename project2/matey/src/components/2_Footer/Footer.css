@@ -1,8 +1,9 @@
+/* src/components/2_Footer/Footer.css */
 @import '../../styles/variables.css';
 
 .matey-footer {
   position: relative;
-  padding: 56px var(--matey-page-gutter-desktop) 26px;
+  padding: 84px var(--matey-page-gutter-desktop) 26px;
   background:
     linear-gradient(180deg, #ffffff 0%, #fbfcff 46%, #f8fbff 100%);
   border-top: 1px solid rgba(123, 139, 176, 0.08);
@@ -82,7 +83,7 @@
   margin: 0;
   max-width: 520px;
   color: var(--matey-color-text-muted);
-  font-size: var(--matey-text-md);
+  font-size: 1rem;
   line-height: 1.8;
 }
 
@@ -119,7 +120,7 @@
   border: none;
   background: var(--matey-gradient-primary);
   color: #ffffff;
-  box-shadow: var(--matey-shadow-button);
+  box-shadow: var(--matey-shadow-primary);
 }
 
 .matey-footer__button--primary:hover,
@@ -130,7 +131,7 @@
 .matey-footer__button--secondary {
   border: 1px solid rgba(123, 139, 176, 0.16);
   background: #ffffff;
-  color: var(--matey-color-text-main);
+  color: var(--matey-color-text-strong);
 }
 
 .matey-footer__button--secondary:hover,
@@ -211,7 +212,7 @@
 
 @media (max-width: 1024px) {
   .matey-footer {
-    padding: 48px var(--matey-page-gutter-tablet) 24px;
+    padding: 72px var(--matey-page-gutter-tablet) 24px;
   }
 
   .matey-footer__main {
@@ -222,7 +223,7 @@
 
 @media (max-width: 640px) {
   .matey-footer {
-    padding: 40px var(--matey-page-gutter-mobile) 22px;
+    padding: 56px var(--matey-page-gutter-mobile) 22px;
   }
 
   .matey-footer__container {

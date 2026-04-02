@@ -1,9 +1,13 @@
+/* src/components/4_Home/FAQ.css */
 @import '../../styles/variables.css';
 
 .matey-faq {
   position: relative;
   overflow: hidden;
-  padding: var(--matey-section-py-lg) var(--matey-page-gutter-desktop);
+  padding:
+    var(--matey-section-py-desktop)
+    var(--matey-page-gutter-desktop)
+    calc(var(--matey-section-py-desktop) + 56px);
   background:
     radial-gradient(circle at 14% 16%, rgba(108, 158, 255, 0.08), transparent 24%),
     radial-gradient(circle at 84% 20%, rgba(255, 149, 187, 0.1), transparent 24%),
@@ -30,10 +34,10 @@
   min-height: 38px;
   padding: 0 14px;
   border-radius: var(--matey-radius-pill);
-  border: 1px solid var(--matey-color-border);
+  border: 1px solid var(--matey-color-border-soft);
   background: rgba(255, 255, 255, 0.86);
   color: var(--matey-color-text-soft);
-  font-size: var(--matey-text-xs);
+  font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -59,7 +63,7 @@
 .matey-faq__subtitle {
   margin: 0;
   color: var(--matey-color-text-muted);
-  font-size: var(--matey-text-md);
+  font-size: 1rem;
   line-height: 1.8;
 }
 
@@ -93,7 +97,7 @@
 .matey-faq__tab:focus-visible {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.95);
-  color: var(--matey-color-text-main);
+  color: var(--matey-color-text-strong);
   outline: none;
 }
 
@@ -282,7 +286,10 @@
 
 @media (max-width: 1100px) {
   .matey-faq {
-    padding: var(--matey-section-py-md) var(--matey-page-gutter-tablet);
+    padding:
+      var(--matey-section-py-tablet)
+      var(--matey-page-gutter-tablet)
+      calc(var(--matey-section-py-tablet) + 44px);
   }
 
   .matey-faq__accordion {
@@ -292,7 +299,10 @@
 
 @media (max-width: 640px) {
   .matey-faq {
-    padding: var(--matey-section-py-sm) var(--matey-page-gutter-mobile);
+    padding:
+      var(--matey-section-py-mobile)
+      var(--matey-page-gutter-mobile)
+      calc(var(--matey-section-py-mobile) + 30px);
   }
 
   .matey-faq__header {

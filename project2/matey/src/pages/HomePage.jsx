@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import Header from '../components/1_Header/Header';
 import Hero from '../components/4_Home/Hero';
 import Features from '../components/4_Home/Features';
-import HowItWorks from '../components/4_Home/HowItWorks';
 import ChatDemo from '../components/4_Home/ChatDemo';
 import Pricing from '../components/4_Home/Pricing';
 import FAQ from '../components/4_Home/FAQ';
@@ -45,7 +44,6 @@ function HomePage({ isLoggedIn, user, onLogout }) {
       <main className="matey-home-page__main">
         <Hero />
         <Features />
-        <HowItWorks />
         <ChatDemo />
         <Pricing />
         <FAQ />
