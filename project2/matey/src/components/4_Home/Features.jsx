@@ -1,98 +1,144 @@
-import React, { useMemo, useState } from 'react';
+// src/components/4_Home/Features.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Features.css';
 
 const FEATURES = [
   {
     id: 'emotion',
-    label: '감정 공감',
     icon: '💗',
-    title: '지금 마음 상태를 부드럽게 읽어줘요',
-    description:
-      '짧은 한마디 속 감정 흐름까지 살펴보고, 지금 필요한 반응을 너무 부담스럽지 않게 건네줘요.',
-    points: ['감정 흐름 파악', '공감형 응답', '부드러운 피드백'],
+    title: '감정을 먼저 읽어요',
+    description: '짧게 말해도 지금 마음을 부드럽게 이해해줘요.',
+    badge: '공감',
   },
   {
     id: 'character',
-    label: '캐릭터 대화',
     icon: '🐰',
-    title: '내 취향에 맞는 메이트와 이야기할 수 있어요',
-    description:
-      '차분한 타입, 밝은 타입처럼 성격이 다른 캐릭터와 대화하며 더 편한 분위기를 만들 수 있어요.',
-    points: ['성격별 말투', '분위기 선택', '더 편한 대화감'],
+    title: '편한 톤으로 말해줘요',
+    description: '하루, 루미처럼 내 취향에 맞는 메이트를 고를 수 있어요.',
+    badge: '캐릭터',
   },
   {
     id: 'screen',
-    label: '화면 기반 도움',
     icon: '🖥️',
-    title: '설명이 어려운 순간엔 화면을 함께 보며 도와줘요',
-    description:
-      '에러 화면, 과제 화면, 문서 내용처럼 말로 풀기 어려운 상황도 더 빠르게 이해할 수 있어요.',
-    points: ['설명 부담 감소', '빠른 상황 파악', '실행 가능한 안내'],
+    title: '화면도 같이 봐줘요',
+    description: '설명하기 어려운 순간엔 화면을 보며 더 빠르게 도와줘요.',
+    badge: '화면 도움',
   },
   {
     id: 'record',
-    label: '기록 정리',
     icon: '📘',
-    title: '대화 흐름과 기록을 나중에 다시 볼 수 있어요',
-    description:
-      '도움이 됐던 대화, 감정 변화, 기억하고 싶은 포인트를 정리해두고 나중에 다시 꺼내볼 수 있어요.',
-    points: ['대화 기록 확인', '감정 흐름 정리', '다시 보기 쉬움'],
+    title: '기록으로 다시 볼 수 있어요',
+    description: '도움이 됐던 대화와 흐름을 나중에 편하게 꺼내볼 수 있어요.',
+    badge: '기록',
   },
 ];
 
-function Features() {
-  const [activeId, setActiveId] = useState(FEATURES[0].id);
+const QUICK_CHIPS = [
+  '짧게 말해도 이해',
+  '캐릭터별 분위기',
+  '화면 기반 도움',
+  '기록 다시 보기',
+];
 
-  const activeFeature = useMemo(
-    () => FEATURES.find((item) => item.id === activeId) || FEATURES[0],
-    [activeId]
-  );
+function Features() {
+  const navigate = useNavigate();
+
+  const moveToSection = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const headerOffset = 96;
+    const top =
+      target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <section className="matey-features" id="features">
+      <div className="matey-features__bg-orb matey-features__bg-orb--one" aria-hidden="true" />
+      <div className="matey-features__bg-orb matey-features__bg-orb--two" aria-hidden="true" />
+
       <div className="matey-features__inner">
         <div className="matey-features__header">
-          <span className="matey-features__badge">✨ 메이티 핵심 기능</span>
+          <span className="matey-features__badge">✨이용 방법</span>
+
           <h2 className="matey-features__title">
-            어렵지 않고,
+            메이티는 어렵지 않아요.
             <br />
-            <span>바로 이해되는 기능만 담았어요</span>
+            <span>이 4가지만 보면 바로 이해돼요</span>
           </h2>
+
           <p className="matey-features__subtitle">
-            메이티는 복잡한 설명보다, 실제로 써봤을 때 편한 경험을 만드는 데 집중했어요.
+            마음을 읽고, 편하게 말 걸어주고, 화면을 함께 보고,
+            도움이 됐던 대화는 다시 볼 수 있어요.
           </p>
         </div>
 
-        <div className="matey-features__grid">
-          {FEATURES.map((feature) => (
-            <button
-              key={feature.id}
-              type="button"
-              className={`matey-features__card ${activeId === feature.id ? 'is-active' : ''}`}
-              onMouseEnter={() => setActiveId(feature.id)}
-              onFocus={() => setActiveId(feature.id)}
-              onClick={() => setActiveId(feature.id)}
-            >
-              <span className="matey-features__card-icon">{feature.icon}</span>
-              <strong className="matey-features__card-label">{feature.label}</strong>
-              <p className="matey-features__card-desc">{feature.description}</p>
-            </button>
-          ))}
-        </div>
+        <div className="matey-features__hero-card">
+          <div className="matey-features__hero-copy">
+            <span className="matey-features__hero-label">처음 쓰는 사람을 위한 한 줄 요약</span>
+            <h3>메이티는 “말 걸기 부담을 줄여주는 AI 메이트”예요</h3>
+            <p>
+              복잡한 기능보다, 지금 필요한 공감과 다음 한마디를
+              자연스럽게 이어주는 데 집중했어요.
+            </p>
 
-        <div className="matey-features__preview">
-          <div className="matey-features__preview-main">
-            <span className="matey-features__preview-icon">{activeFeature.icon}</span>
-            <div>
-              <h3>{activeFeature.title}</h3>
-              <p>{activeFeature.description}</p>
+            <div className="matey-features__chips">
+              {QUICK_CHIPS.map((chip) => (
+                <span key={chip}>{chip}</span>
+              ))}
             </div>
           </div>
 
-          <div className="matey-features__preview-points">
-            {activeFeature.points.map((point) => (
-              <span key={point}>{point}</span>
-            ))}
+          <div className="matey-features__hero-actions">
+            <button
+              type="button"
+              className="matey-features__button matey-features__button--primary"
+              onClick={() => moveToSection('chat-demo')}
+            >
+              대화 예시 보기
+            </button>
+
+            <button
+              type="button"
+              className="matey-features__button matey-features__button--secondary"
+              onClick={() => navigate('/signup')}
+            >
+              무료로 시작하기
+            </button>
+          </div>
+        </div>
+
+        <div className="matey-features__grid">
+          {FEATURES.map((feature, index) => (
+            <article className={`matey-features__card matey-features__card--${feature.id}`} key={feature.id}>
+              <div className="matey-features__card-top">
+                <span className="matey-features__card-index">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="matey-features__card-badge">{feature.badge}</span>
+              </div>
+
+              <div className="matey-features__card-icon" aria-hidden="true">
+                {feature.icon}
+              </div>
+
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="matey-features__bottom-note">
+          <div className="matey-features__bottom-bubble">
+            너무 길게 설명하지 않아도 괜찮아요.
+            <br />
+            메이티는 <strong>지금 상태를 먼저 이해하고, 편하게 이어주는 흐름</strong>에 집중해요.
           </div>
         </div>
       </div>

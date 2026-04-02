@@ -1,10 +1,9 @@
-/* src/components/4_Home/Hero.css */
 @import '../../styles/variables.css';
 
 .matey-hero {
   position: relative;
   overflow: hidden;
-  padding: 148px var(--matey-page-gutter-desktop) 108px;
+  padding: 188px var(--matey-page-gutter-desktop) 108px;
   background:
     radial-gradient(circle at 14% 18%, rgba(108, 158, 255, 0.16), transparent 28%),
     radial-gradient(circle at 86% 14%, rgba(255, 147, 183, 0.18), transparent 26%),
@@ -306,9 +305,16 @@
   }
 }
 
+/* 큰 태블릿/작은 데스크탑 */
+@media (max-width: 1200px) {
+  .matey-hero {
+    padding: 170px var(--matey-page-gutter-desktop) 102px;
+  }
+}
+
 @media (max-width: 960px) {
   .matey-hero {
-    padding: 126px var(--matey-page-gutter-tablet) 94px;
+    padding: 148px var(--matey-page-gutter-tablet) 94px;
   }
 
   .matey-hero__inner {
@@ -344,7 +350,7 @@
 
 @media (max-width: 640px) {
   .matey-hero {
-    padding: 116px var(--matey-page-gutter-mobile) 82px;
+    padding: 132px var(--matey-page-gutter-mobile) 82px;
   }
 
   .matey-hero__title {

@@ -1,32 +1,27 @@
+// src/components/1_Header/Header.jsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Header.css';
 
 const NAV_ITEMS = [
-  { label: '기능', hash: 'features' },
-  { label: '이용 방법', hash: 'how-it-works' },
+  { label: '이용 방법', hash: 'features' },
   { label: '대화 예시', hash: 'chat-demo' },
   { label: '요금제', hash: 'pricing' },
   { label: 'FAQ', hash: 'faq' },
 ];
 
-function Header({
-  isLoggedIn: controlledIsLoggedIn,
-  user: controlledUser,
-  onLogout,
-}) {
+function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const profileRef = useRef(null);
+
+  const { user, isAuthenticated, logout } = useAuth();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeHash, setActiveHash] = useState('');
-  const [authState, setAuthState] = useState({
-    isLoggedIn: false,
-    user: null,
-  });
 
   useEffect(() => {
     const resolveActiveSection = () => {
@@ -98,38 +93,7 @@ function Header({
   useEffect(() => {
     setIsMenuOpen(false);
     setIsProfileOpen(false);
-  }, [location.pathname, location.hash]);
-
-  useEffect(() => {
-    if (typeof controlledIsLoggedIn === 'boolean') {
-      setAuthState({
-        isLoggedIn: controlledIsLoggedIn,
-        user: controlledUser || null,
-      });
-      return;
-    }
-
-    const token =
-      window.localStorage.getItem('accessToken') ||
-      window.localStorage.getItem('mateyToken');
-
-    const storedUserRaw =
-      window.localStorage.getItem('mateyUser') ||
-      window.localStorage.getItem('user');
-
-    let parsedUser = null;
-
-    try {
-      parsedUser = storedUserRaw ? JSON.parse(storedUserRaw) : null;
-    } catch (error) {
-      parsedUser = null;
-    }
-
-    setAuthState({
-      isLoggedIn: Boolean(token || parsedUser),
-      user: parsedUser,
-    });
-  }, [controlledIsLoggedIn, controlledUser, location.pathname]);
+  }, [location.pathname, location.hash, isAuthenticated]);
 
   useEffect(() => {
     const handleOutside = (event) => {
@@ -156,15 +120,21 @@ function Header({
   }, []);
 
   const displayName = useMemo(() => {
-    if (!authState.user) return '사용자';
+    if (!user) return '사용자';
+
     return (
-      authState.user.nickname ||
-      authState.user.name ||
-      authState.user.username ||
-      authState.user.email?.split('@')?.[0] ||
+      user.nickname ||
+      user.name ||
+      user.username ||
+      user.email?.split('@')?.[0] ||
       '사용자'
     );
-  }, [authState.user]);
+  }, [user]);
+
+  const isAdmin = useMemo(() => {
+    const role = String(user?.role || user?.roles?.[0] || '').toUpperCase();
+    return role === 'ADMIN' || role.includes('ADMIN');
+  }, [user]);
 
   const moveToHash = (hash) => {
     const targetId = hash.replace('#', '');
@@ -211,22 +181,16 @@ function Header({
     }
   };
 
-  const handleLogout = () => {
-    if (typeof onLogout === 'function') onLogout();
-
-    window.localStorage.removeItem('accessToken');
-    window.localStorage.removeItem('mateyToken');
-    window.localStorage.removeItem('mateyUser');
-    window.localStorage.removeItem('user');
-
-    setAuthState({
-      isLoggedIn: false,
-      user: null,
-    });
-
-    setIsProfileOpen(false);
-    setIsMenuOpen(false);
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsProfileOpen(false);
+      setIsMenuOpen(false);
+      navigate('/');
+    }
   };
 
   return (
@@ -242,8 +206,10 @@ function Header({
             >
               <span className="matey-header__brand-mark">M</span>
               <span className="matey-header__brand-copy">
-                <span className="matey-header__brand-text">Matey</span>
-                <span className="matey-header__brand-sub">AI Mate for gentle conversations</span>
+                <span className="matey-header__brand-text">메이티</span>
+                <span className="matey-header__brand-sub">
+                  다정하고 귀여운 AI 상담 메이트
+                </span>
               </span>
             </Link>
           </div>
@@ -278,56 +244,81 @@ function Header({
                 다운로드
               </button>
 
-              {authState.isLoggedIn ? (
-                <div className="matey-header__profile" ref={profileRef}>
-                  <button
-                    type="button"
-                    className="matey-header__profile-trigger"
-                    aria-expanded={isProfileOpen}
-                    onClick={() => setIsProfileOpen((prev) => !prev)}
-                  >
-                    <span className="matey-header__avatar">
-                      {displayName.charAt(0)}
-                    </span>
-                    <span className="matey-header__profile-meta">
-                      <span className="matey-header__profile-label">반가워요</span>
-                      <span className="matey-header__profile-name">{displayName}</span>
-                    </span>
-                  </button>
+              {isAuthenticated ? (
+                <>
+                  {isAdmin && (
+                    <Link to="/admin" className="matey-header__text-button">
+                      관리자 대시보드
+                    </Link>
+                  )}
 
-                  <div className={`matey-header__dropdown ${isProfileOpen ? 'is-open' : ''}`}>
-                    <NavLink
-                      to="/dashboard"
-                      className="matey-header__dropdown-link"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      Dashboard
-                    </NavLink>
-                    <NavLink
-                      to="/mypage"
-                      className="matey-header__dropdown-link"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      MyPage
-                    </NavLink>
+                  <Link to="/mypage" className="matey-header__text-button">
+                    마이페이지
+                  </Link>
+
+                  <div className="matey-header__profile" ref={profileRef}>
                     <button
                       type="button"
-                      className="matey-header__dropdown-link matey-header__dropdown-link--danger"
-                      onClick={handleLogout}
+                      className={`matey-header__profile-trigger ${
+                        isProfileOpen ? 'is-open' : ''
+                      }`}
+                      aria-expanded={isProfileOpen}
+                      onClick={() => setIsProfileOpen((prev) => !prev)}
                     >
-                      로그아웃
+                      <span className="matey-header__avatar">
+                        {displayName.charAt(0).toUpperCase()}
+                      </span>
+                      <span className="matey-header__profile-meta">
+                        <span className="matey-header__profile-label">반가워요</span>
+                        <span className="matey-header__profile-name">
+                          {displayName}
+                        </span>
+                      </span>
+                      <span className="matey-header__profile-caret">⌄</span>
                     </button>
+
+                    <div
+                      className={`matey-header__dropdown ${
+                        isProfileOpen ? 'is-open' : ''
+                      }`}
+                    >
+                      {isAdmin && (
+                        <Link
+                          to="/admin"
+                          className="matey-header__dropdown-link"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          관리자 대시보드
+                        </Link>
+                      )}
+
+                      <Link
+                        to="/mypage"
+                        className="matey-header__dropdown-link"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        마이페이지
+                      </Link>
+
+                      <button
+                        type="button"
+                        className="matey-header__dropdown-link matey-header__dropdown-link--danger"
+                        onClick={handleLogout}
+                      >
+                        로그아웃
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </>
               ) : (
-                <>
+                <div className="matey-header__auth-group">
                   <Link to="/login" className="matey-header__text-button">
                     로그인
                   </Link>
                   <Link to="/signup" className="matey-header__primary">
                     회원가입
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
@@ -359,8 +350,8 @@ function Header({
             <div className="matey-header__mobile-brand">
               <span className="matey-header__mobile-brand-mark">M</span>
               <div className="matey-header__mobile-brand-copy">
-                <strong>Matey</strong>
-                <span>편안한 대화를 시작해보세요</span>
+                <strong>메이티</strong>
+                <span>다정하고 귀여운 AI 상담 메이트</span>
               </div>
             </div>
           </div>
@@ -373,7 +364,9 @@ function Header({
                 <button
                   key={item.hash}
                   type="button"
-                  className={`matey-header__mobile-link ${isActive ? 'is-active' : ''}`}
+                  className={`matey-header__mobile-link ${
+                    isActive ? 'is-active' : ''
+                  }`}
                   onClick={() => moveToHash(`#${item.hash}`)}
                 >
                   <span>{item.label}</span>
@@ -394,22 +387,26 @@ function Header({
               다운로드
             </button>
 
-            {authState.isLoggedIn ? (
+            {isAuthenticated ? (
               <div className="matey-header__mobile-auth">
-                <Link
-                  to="/dashboard"
-                  className="matey-header__mobile-secondary"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="matey-header__mobile-secondary"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    관리자 대시보드
+                  </Link>
+                )}
+
                 <Link
                   to="/mypage"
                   className="matey-header__mobile-secondary"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  MyPage
+                  마이페이지
                 </Link>
+
                 <button
                   type="button"
                   className="matey-header__mobile-primary"
