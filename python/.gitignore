@@ -2,7 +2,7 @@
 mnist_images/
 
 # 가상환경정보
-.venu
+.venv
 
 .classpath
 .project
