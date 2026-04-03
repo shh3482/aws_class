@@ -53,6 +53,20 @@ public class controller {
 		return ResponseEntity.ok(result);
 	}
 	
+	@PostMapping("/fashion/predict")
+	public String fashionPredict(@RequestParam("image")MultipartFile file) {
+	    MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+	    
+	    bodyBuilder.part("file", file.getResource()); 
+
+	    return webClient.post().uri("/fashion")
+	            .contentType(MediaType.MULTIPART_FORM_DATA)
+	            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+	            .retrieve()
+	            .bodyToMono(String.class)
+	            .block();
+	}
+	
 	@PostMapping("/text")
 	public String text(@RequestParam("msg")String msg) {
 		MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
