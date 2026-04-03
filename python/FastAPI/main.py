@@ -1,8 +1,8 @@
-from fastapi import FastAPI, UploadFile, Form, Query
+from fastapi import FastAPI, UploadFile, Form
 import uvicorn
 import mnist_learning as ml
-import movie_learning as mo
 import text_mining as tm
+import movie_learning as mo
 import numpy as np
 import pandas as pd
 import cv2
@@ -29,21 +29,27 @@ async def image(file:UploadFile):
 
 @app.get('/movies')
 async def movies():
-  return mo.get_movies()
+	return mo.get_movies()
 
 @app.post('/movies/recommend')
 async def movies_recommend(title:str=Form(...), type:str=Form(...)):
-  recommender = mo.MovieRecommender()
-  if type == 'content':
-    recommender.load_model('movie_model_content.pkl')
-  elif type == 'etc':
-    recommender.load_model('movie_model_etc.pkl')
-  elif type == 'director':
-    recommender.load_model('movie_model_director.pkl')
-  list = recommender.get_recommendations_movies(type, title)
-  
-  df = pd.DataFrame({'title' : list})
-  return df[['title']].to_dict(orient='records')
+	recommender = mo.MovieRecommender()
+	
+	if type == 'content':
+		recommender.load_model('movie_model_content.pkl')
+	elif type == 'etc':
+		recommender.load_model('movie_model_etc.pkl')
+	elif type == 'director':
+		recommender.load_model('movie_model_director.pkl')
+
+	
+	list = recommender.get_recommendations_movies(type, title)
+
+	# 영화 제목 리스트를 딕셔너리로 변환해서 전송하기 위해
+	# 제목 리스트를 데이터프레임으로 변환
+	df = pd.DataFrame({'title':list})
+	# 데이터 프레임을 제목만 딕셔너리로 변환
+	return df[['title']].to_dict(orient='records')
 
 @app.post('/text')
 async def text(msg:str=Form(...)):
@@ -54,5 +60,3 @@ if __name__ == '__main__':
 	# reload=True 사용시 주의 사항.
 	# 자동으로 변경 사항을 적용하면 시간이 오래 걸리는 경우 안 쓰는 것이 좋음
 	uvicorn.run('main:app', port=8000, reload=True)
- 
- 
