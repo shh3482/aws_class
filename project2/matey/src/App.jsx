@@ -1,53 +1,153 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-
-// Layouts
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import MainLayout from './components/3_Layout/MainLayout';
-import DashboardLayout from './components/3_Layout/DashboardLayout';
-
-// Pages
-import HomePage from './components/4_Home/HomePage';
-import LoginPage from './components/5_Auth/LoginPage';
-import SignupPage from './components/5_Auth/SignupPage';
-import Dashboard from './components/6_Dashboard/Dashboard';
+import MainPage from './pages/HomePage';
+import DownloadPage from './pages/DownloadPage';
+import AuthPage from './components/5_Auth/AuthPage';
+import ForgotPasswordPage from './components/5_Auth/ForgotPasswordPage';
 import MyPage from './components/7_MyPage/MyPage';
 import AdminPage from './components/8_AdminPage/AdminPage';
+import AdminAccessDeniedPage from './pages/AdminAccessDeniedPage';
 
-// Context
-import { AuthProvider } from './context/AuthContext';
-
-function App() {
+function AuthLoadingScreen() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          {/* 미로그인 상태 라우트 */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Route>
-
-          {/* 로그인 후 라우트 */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard activeTab="overview" />} />
-            <Route path="/dashboard/chat-history" element={<Dashboard activeTab="chat-history" />} />
-            <Route path="/dashboard/security" element={<Dashboard activeTab="security" />} />
-            <Route path="/dashboard/reports" element={<Dashboard activeTab="reports" />} />
-            <Route path="/dashboard/personal-info" element={<Dashboard activeTab="personal-info" />} />
-            <Route path="/dashboard/settings" element={<Dashboard activeTab="settings" />} />
-            
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Route>
-
-          {/* 404 */}
-          <Route path="*" element={<div style={{textAlign:'center', padding:'100px 20px'}}>페이지를 찾을 수 없습니다 😅</div>} />
-        </Routes>
-      </AuthProvider>
-    </Router>
+    <div
+      style={{
+        minHeight: '40vh',
+        display: 'grid',
+        placeItems: 'center',
+        color: '#6f6883',
+        fontSize: '15px',
+        fontWeight: 700,
+      }}
+    >
+      로그인 상태를 확인하고 있어요...
+    </div>
   );
 }
 
-export default App;
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const { isAuthenticated, authLoading, user } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const role = String(user?.role || user?.roles?.[0] || '').toUpperCase();
+  const isAdmin = role === 'ADMIN' || role.includes('ADMIN');
+
+  if (!isAdmin) {
+    return <Navigate to="/admin-access-denied" replace />;
+  }
+
+  return children;
+}
+
+function PublicOnlyRoute({ children }) {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/mypage" replace />;
+  }
+
+  return children;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/download" element={<DownloadPage />} />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <AuthPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            <PublicOnlyRoute>
+              <AuthPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicOnlyRoute>
+              <ForgotPasswordPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-access-denied"
+          element={
+            <ProtectedRoute>
+              <AdminAccessDeniedPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}

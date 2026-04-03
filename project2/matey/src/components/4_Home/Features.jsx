@@ -1,104 +1,146 @@
+// src/components/4_Home/Features.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Features.css';
 
-const features = [
+const FEATURES = [
   {
-    icon: '🤖',
-    color: '#6C9EFF',
-    bg: 'linear-gradient(135deg, #EEF4FF, #E0ECFF)',
-    title: '능동형 상담 방식',
-    subtitle: 'Proactive AI',
-    desc: '기다리지 않아요. 당신이 힘들어 보일 때 AI가 먼저 말을 걸어요. 상담 의지 없이도 무의식적 패턴을 잡아내 케어합니다.',
-    points: ['먼저 말 걸기', '패턴 감지', '24/7 대기 중']
+    id: 'emotion',
+    icon: '💗',
+    title: '감정을 먼저 읽어요',
+    description: '짧게 말해도 지금 마음을 부드럽게 이해해줘요.',
+    badge: '공감',
   },
   {
+    id: 'character',
+    icon: '🐰',
+    title: '편한 톤으로 말해줘요',
+    description: '하루, 루미처럼 내 취향에 맞는 메이트를 고를 수 있어요.',
+    badge: '캐릭터',
+  },
+  {
+    id: 'screen',
     icon: '🖥️',
-    color: '#FF8FAB',
-    bg: 'linear-gradient(135deg, #FFF0F5, #FFE4ED)',
-    title: '화면 인식 공감',
-    subtitle: 'Screen Context AI',
-    desc: '지금 보고 있는 화면까지 이해해요. 에러 화면을 띄워두면 "같이 볼까요?", 채용 사이트를 보면 "취업 스트레스 많지?" 라고 물어봐요.',
-    points: ['화면 맥락 파악', 'GPT-4o Vision', '상황 맞춤 위로'],
-    badge: '특허 출원 중'
+    title: '화면도 같이 봐줘요',
+    description: '설명하기 어려운 순간엔 화면을 보며 더 빠르게 도와줘요.',
+    badge: '화면 도움',
   },
   {
-    icon: '📊',
-    color: '#9B7FFF',
-    bg: 'linear-gradient(135deg, #F3EEFF, #EAE0FF)',
-    title: '감정 패턴 분석',
-    subtitle: 'Emotion Analytics',
-    desc: '대화 기록을 통해 나의 감정 흐름과 스트레스 패턴을 분석하고, 개인화된 심리 리포트를 제공합니다.',
-    points: ['주간 감정 리포트', 'AI 분석', '맞춤 솔루션']
+    id: 'record',
+    icon: '📘',
+    title: '기록으로 다시 볼 수 있어요',
+    description: '도움이 됐던 대화와 흐름을 나중에 편하게 꺼내볼 수 있어요.',
+    badge: '기록',
   },
-  {
-    icon: '🎨',
-    color: '#FFB347',
-    bg: 'linear-gradient(135deg, #FFF8EC, #FFEFD6)',
-    title: '캐릭터 커스터마이징',
-    subtitle: 'Your AI Friend',
-    desc: '토끼 하루와 고양이 루미 중 선택하고, 색상·성격·말투까지 나만의 AI 친구로 꾸밀 수 있어요.',
-    points: ['2종 캐릭터', '성격 설정', '색상·액세서리']
-  },
-  {
-    icon: '🔗',
-    color: '#4BC8A0',
-    bg: 'linear-gradient(135deg, #EEFBF6, #D8F5EB)',
-    title: '웹-앱 실시간 연동',
-    subtitle: 'Web + Desktop Sync',
-    desc: '웹과 데스크톱 앱이 WebSocket으로 실시간 동기화돼요. 어디서든 이어서 대화하고, 상담 기록을 확인할 수 있습니다.',
-    points: ['실시간 동기화', 'WebSocket', '멀티 디바이스']
-  },
-  {
-    icon: '🔒',
-    color: '#7EC8FF',
-    bg: 'linear-gradient(135deg, #EBF6FF, #DAEEFF)',
-    title: '완벽한 프라이버시',
-    subtitle: 'Privacy First',
-    desc: '모니터링 ON/OFF 토글로 언제든 제어 가능. 모든 대화는 암호화되며, 제3자에게 절대 공유되지 않습니다.',
-    points: ['모니터링 제어', 'E2E 암호화', '데이터 삭제 권한']
-  }
+];
+
+const QUICK_CHIPS = [
+  '짧게 말해도 이해',
+  '캐릭터별 분위기',
+  '화면 기반 도움',
+  '기록 다시 보기',
 ];
 
 function Features() {
-  return (
-    <section className="features" id="features">
-      {/* 섹션 헤더 */}
-      <div className="section-header container">
-        <div className="section-badge">✨ 마음친구만의 특별함</div>
-        <h2 className="section-title">
-          왜 마음친구가 <span className="gradient-text">특별한가요?</span>
-        </h2>
-        <p className="section-subtitle">
-          기존 AI 챗봇과 다르게, 마음친구는 당신의 일상에 자연스럽게 녹아들어 먼저 다가갑니다
-        </p>
-      </div>
+  const navigate = useNavigate();
 
-      {/* 피처 그리드 */}
-      <div className="features-grid container">
-        {features.map((f, i) => (
-          <div
-            key={i}
-            className={`feature-card ${i === 1 ? 'featured' : ''}`}
-            style={{ '--card-color': f.color, '--card-delay': `${i * 0.1}s` }}
-          >
-            {f.badge && <span className="card-badge">{f.badge}</span>}
-            <div className="feature-icon-wrap" style={{ background: f.bg }}>
-              <span className="feature-icon">{f.icon}</span>
-            </div>
-            <div className="feature-tag" style={{ color: f.color }}>
-              {f.subtitle}
-            </div>
-            <h3 className="feature-title">{f.title}</h3>
-            <p className="feature-desc">{f.desc}</p>
-            <div className="feature-points">
-              {f.points.map((p, j) => (
-                <span key={j} className="point-tag" style={{ borderColor: `${f.color}30`, color: f.color, background: `${f.color}10` }}>
-                  ✓ {p}
-                </span>
+  const moveToSection = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const headerOffset = 96;
+    const top =
+      target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <section className="matey-features" id="features">
+      <div className="matey-features__bg-orb matey-features__bg-orb--one" aria-hidden="true" />
+      <div className="matey-features__bg-orb matey-features__bg-orb--two" aria-hidden="true" />
+
+      <div className="matey-features__inner">
+        <div className="matey-features__header">
+          <span className="matey-features__badge">✨이용 방법</span>
+
+          <h2 className="matey-features__title">
+            메이티는 어렵지 않아요.
+            <br />
+            <span>이 4가지만 보면 바로 이해돼요</span>
+          </h2>
+
+          <p className="matey-features__subtitle">
+            마음을 읽고, 편하게 말 걸어주고, 화면을 함께 보고,
+            도움이 됐던 대화는 다시 볼 수 있어요.
+          </p>
+        </div>
+
+        <div className="matey-features__hero-card">
+          <div className="matey-features__hero-copy">
+            <span className="matey-features__hero-label">처음 쓰는 사람을 위한 한 줄 요약</span>
+            <h3>메이티는 “말 걸기 부담을 줄여주는 AI 메이트”예요</h3>
+            <p>
+              복잡한 기능보다, 지금 필요한 공감과 다음 한마디를
+              자연스럽게 이어주는 데 집중했어요.
+            </p>
+
+            <div className="matey-features__chips">
+              {QUICK_CHIPS.map((chip) => (
+                <span key={chip}>{chip}</span>
               ))}
             </div>
           </div>
-        ))}
+
+          <div className="matey-features__hero-actions">
+            <button
+              type="button"
+              className="matey-features__button matey-features__button--primary"
+              onClick={() => moveToSection('chat-demo')}
+            >
+              대화 예시 보기
+            </button>
+
+            <button
+              type="button"
+              className="matey-features__button matey-features__button--secondary"
+              onClick={() => navigate('/signup')}
+            >
+              무료로 시작하기
+            </button>
+          </div>
+        </div>
+
+        <div className="matey-features__grid">
+          {FEATURES.map((feature, index) => (
+            <article className={`matey-features__card matey-features__card--${feature.id}`} key={feature.id}>
+              <div className="matey-features__card-top">
+                <span className="matey-features__card-index">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="matey-features__card-badge">{feature.badge}</span>
+              </div>
+
+              <div className="matey-features__card-icon" aria-hidden="true">
+                {feature.icon}
+              </div>
+
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="matey-features__bottom-note">
+          <div className="matey-features__bottom-bubble">
+            너무 길게 설명하지 않아도 괜찮아요.
+            <br />
+            메이티는 <strong>지금 상태를 먼저 이해하고, 편하게 이어주는 흐름</strong>에 집중해요.
+          </div>
+        </div>
       </div>
     </section>
   );
