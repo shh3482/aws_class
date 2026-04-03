@@ -1,126 +1,181 @@
 import React, { useState } from 'react';
 
 function SecuritySettings() {
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [passwords, setPasswords] = useState({
+  const [passwordForm, setPasswordForm] = useState({
     current: '',
     new: '',
-    confirm: ''
+    confirm: '',
   });
 
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [sessions, setSessions] = useState([
+    {
+      id: 1,
+      device: 'Chrome on Windows',
+      ip: '192.168.1.1',
+      lastActive: '2분 전',
+      current: true,
+    },
+    {
+      id: 2,
+      device: 'Safari on iOS',
+      ip: '203.0.113.45',
+      lastActive: '1일 전',
+      current: false,
+    },
+  ]);
+
   const handlePasswordChange = (e) => {
-    e.preventDefault();
-    console.log('비밀번호 변경:', passwords);
-    setPasswords({ current: '', new: '', confirm: '' });
-    setShowPasswordForm(false);
+    const { name, value } = e.target;
+    setPasswordForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePasswordSubmit = () => {
+    if (passwordForm.new !== passwordForm.confirm) {
+      alert('새 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    alert('비밀번호가 변경되었습니다.');
+    setPasswordForm({ current: '', new: '', confirm: '' });
+  };
+
+  const handleLogoutOther = (id) => {
+    setSessions(prev => prev.filter(s => s.id !== id));
+    alert('해당 세션이 로그아웃되었습니다.');
   };
 
   return (
     <div className="dashboard-section">
-      <h1>🔒 보안 설정</h1>
-      <p className="section-subtitle">계정의 보안을 관리하세요</p>
+      <h2 className="section-title">보안 설정</h2>
+      <p className="section-subtitle">계정을 안전하게 관리하세요</p>
 
-      <div className="security-grid">
-        <div className="security-card">
-          <div className="security-icon">🔐</div>
-          <h3>로그인 보안</h3>
-          <p>안전한 비밀번호로 계정을 보호하세요</p>
-          <button
-            className="security-btn"
-            onClick={() => setShowPasswordForm(!showPasswordForm)}
-          >
-            비밀번호 변경
-          </button>
+      <div className="security-group">
+        <h3>비밀번호 변경</h3>
+        
+        <div className="security-form-group">
+          <label>현재 비밀번호</label>
+          <div className="password-input">
+            <input
+              type={showPasswords.current ? 'text' : 'password'}
+              name="current"
+              value={passwordForm.current}
+              onChange={handlePasswordChange}
+              placeholder="현재 비밀번호"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswords(prev => ({
+                ...prev,
+                current: !prev.current
+              }))}
+            >
+              {showPasswords.current ? '숨기기' : '보기'}
+            </button>
+          </div>
+        </div>
 
-          {showPasswordForm && (
-            <form onSubmit={handlePasswordChange} className="password-form">
-              <div className="form-group">
-                <label>현재 비밀번호</label>
-                <input
-                  type="password"
-                  value={passwords.current}
-                  onChange={(e) => setPasswords({...passwords, current: e.target.value})}
-                />
+        <div className="security-form-group">
+          <label>새 비밀번호</label>
+          <div className="password-input">
+            <input
+              type={showPasswords.new ? 'text' : 'password'}
+              name="new"
+              value={passwordForm.new}
+              onChange={handlePasswordChange}
+              placeholder="새 비밀번호"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswords(prev => ({
+                ...prev,
+                new: !prev.new
+              }))}
+            >
+              {showPasswords.new ? '숨기기' : '보기'}
+            </button>
+          </div>
+        </div>
+
+        <div className="security-form-group">
+          <label>비밀번호 확인</label>
+          <div className="password-input">
+            <input
+              type={showPasswords.confirm ? 'text' : 'password'}
+              name="confirm"
+              value={passwordForm.confirm}
+              onChange={handlePasswordChange}
+              placeholder="비밀번호 확인"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswords(prev => ({
+                ...prev,
+                confirm: !prev.confirm
+              }))}
+            >
+              {showPasswords.confirm ? '숨기기' : '보기'}
+            </button>
+          </div>
+        </div>
+
+        <button className="security-btn" onClick={handlePasswordSubmit}>
+          비밀번호 변경
+        </button>
+      </div>
+
+      <div className="security-group">
+        <h3>2단계 인증</h3>
+        
+        <div className="twofa-item">
+          <div className="twofa-info">
+            <span className="twofa-label">2단계 인증 활성화</span>
+            <span className="twofa-desc">앱을 통한 추가 보안 설정</span>
+          </div>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={twoFactorEnabled}
+              onChange={() => setTwoFactorEnabled(!twoFactorEnabled)}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div className="security-group">
+        <h3>활성 세션</h3>
+        
+        <div className="sessions-list">
+          {sessions.map((session) => (
+            <div key={session.id} className="session-item">
+              <div className="session-icon">🖥️</div>
+              <div className="session-info">
+                <span className="session-device">
+                  {session.device}
+                  {session.current && <span className="session-current">현재 기기</span>}
+                </span>
+                <span className="session-meta">{session.ip}</span>
+                <span className="session-time">마지막 활동: {session.lastActive}</span>
               </div>
-              <div className="form-group">
-                <label>새 비밀번호</label>
-                <input
-                  type="password"
-                  value={passwords.new}
-                  onChange={(e) => setPasswords({...passwords, new: e.target.value})}
-                />
-              </div>
-              <div className="form-group">
-                <label>비밀번호 확인</label>
-                <input
-                  type="password"
-                  value={passwords.confirm}
-                  onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
-                />
-              </div>
-              <div className="form-buttons">
-                <button type="submit" className="btn-primary">변경</button>
+              {!session.current && (
                 <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => setShowPasswordForm(false)}
+                  className="logout-btn"
+                  onClick={() => handleLogoutOther(session.id)}
                 >
-                  취소
+                  로그아웃
                 </button>
-              </div>
-            </form>
-          )}
-        </div>
-
-        <div className="security-card">
-          <div className="security-icon">📱</div>
-          <h3>2단계 인증</h3>
-          <p>추가 보안 인증으로 계정을 더욱 안전하게</p>
-          <div className="security-status">
-            <span className="status-badge disabled">비활성화</span>
-          </div>
-          <button className="security-btn">설정</button>
-        </div>
-
-        <div className="security-card">
-          <div className="security-icon">📋</div>
-          <h3>활동 로그</h3>
-          <p>계정 접근 이력을 확인하세요</p>
-          <button className="security-btn">로그 보기</button>
-        </div>
-
-        <div className="security-card">
-          <div className="security-icon">🖥️</div>
-          <h3>연결된 기기</h3>
-          <p>로그인된 모든 기기를 관리하세요</p>
-          <div className="device-list">
-            <div className="device-item">
-              <span>🖥️ Windows 10</span>
-              <span className="device-time">현재 활동 중</span>
+              )}
             </div>
-            <div className="device-item">
-              <span>📱 iPhone 12</span>
-              <span className="device-time">어제</span>
-            </div>
-          </div>
+          ))}
         </div>
 
-        <div className="security-card">
-          <div className="security-icon">👁️</div>
-          <h3>개인정보 공개</h3>
-          <p>모니터링 허용 여부를 설정하세요</p>
-          <div className="toggle-switch">
-            <input type="checkbox" id="monitoring" defaultChecked={false} />
-            <label htmlFor="monitoring">모니터링 OFF</label>
-          </div>
-        </div>
-
-        <div className="security-card danger">
-          <div className="security-icon">⚠️</div>
-          <h3>계정 삭제</h3>
-          <p>메이티 계정을 영구 삭제합니다</p>
-          <button className="security-btn danger">계정 삭제</button>
-        </div>
+        <button className="logout-all-btn">모든 기기에서 로그아웃</button>
       </div>
     </div>
   );
