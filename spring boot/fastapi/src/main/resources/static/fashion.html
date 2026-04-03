@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FastAPI</title>
+</head>
+<body>
+	<a href="/">메인페이지로</a>
+	
+	<form method="post" enctype="multipart/form-data" id="form">
+		<span>이미지 선택 : </span>
+		<input type="file" accept="image/*" name="image" id="imageFile">
+		<br>
+		<button id="btn" type="button" onclick="btnClick()">확인</button>
+	</form>
+	
+	<div id="resultDiv"></div>
+	
+	<script type="text/javascript">
+		const form = document.querySelector('#form')
+		const btn = document.querySelector('#btn')
+		const resultDiv = document.querySelector('#resultDiv')
+		
+		async function btnClick(){
+			const formData = new FormData(form)
+			btn.disabled = true
+			
+			try{
+				const response = await fetch('/api/v1/fashion/predict', {
+					method : 'post',
+					body : formData
+				})
+				if(!response.ok){
+					resultDiv.innerHTML = `<b>요청 실패</b>`
+					return;
+				}
+				const result = await response.json()
+				resultDiv.innerHTML = `<b>${result.msg}</b>`
+			}catch(e){
+				console.error(e)
+				resultDiv.innerHTML = `<b>요청 실패</b>`
+			}finally{
+				btn.disabled = false
+			}
+		}
+		
+	</script>
+</body>
+</html>

@@ -3,6 +3,7 @@ import uvicorn
 import mnist_learning as ml
 import text_mining as tm
 import movie_learning as mo
+import fashion as fs
 import numpy as np
 import pandas as pd
 import cv2
@@ -26,6 +27,18 @@ async def image(file:UploadFile):
 	print(f'URL : /image')
 
 	return {"msg" : res}
+
+@app.post('/fashion')
+async def image(file: UploadFile): 
+    contents = await file.read()
+    
+    res = fs.predict_from_upload_file(contents)
+    
+    predicted_class = int(np.argmax(res))
+    
+    print(f'URL : /fashion | 예측된 클래스 번호: {predicted_class}')
+
+    return {"msg" : f"예측 결과: {predicted_class}번 의류"}
 
 @app.get('/movies')
 async def movies():

@@ -4,6 +4,12 @@ mnist_images/
 # 가상환경정보
 .venu
 
+.classpath
+.project
+
 __pycache__
 
+*.model
+*.h5
 *.pkl
+*.keras
