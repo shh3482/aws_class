@@ -28,3 +28,7 @@ java_jik/.gitignore
 .project
 
 .ipynb_checkpoints/
+
+python/FastAPI/images/
+
+python/FastAPI/images/0/img_1377.png
