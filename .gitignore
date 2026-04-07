@@ -33,3 +33,4 @@ java_jik/.gitignore
 *.model
 *.h5
 *.pkl
+*.png
