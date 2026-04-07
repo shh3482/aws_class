@@ -19,8 +19,6 @@
 *.tar.gz
 *.rar
 
-*.pkl
-
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
@@ -31,6 +29,7 @@ java_jik/.gitignore
 
 .ipynb_checkpoints/
 
-python/FastAPI/images/
-
-python/FastAPI/images/0/img_1377.png
+*.keras
+*.model
+*.h5
+*.pkl
