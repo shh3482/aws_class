@@ -1,7 +1,0 @@
-# 학습용으로 다운로드 했던 mnist 숫자 이미지들
-mnist_images/
-
-# 가상 환경 정보
-.venv
-
-__pycache__
