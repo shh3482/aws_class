@@ -5,3 +5,5 @@ mnist_images/
 .venu
 
 __pycache__
+
+*.pkl
