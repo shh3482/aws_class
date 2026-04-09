@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import cv2
 import fashion as fs
+import requests
 
 app = FastAPI()
 
@@ -54,8 +55,12 @@ async def movies_recommend(title:str=Form(...), type:str=Form(...)):
 
 @app.post('/text')
 async def text(msg:str=Form(...)):
-	res = tm.predict(msg)
-	return {"msg" : '긍정' if res else '부정'}
+  
+    res = tm.predict(msg) 
+    
+    answer = f"분석 결과 이 메시지는 {'긍정' if res else '부정'}이네요!"
+    
+    return {"msg" : answer}
 
 @app.post('/fashion')
 async def fashion(file:UploadFile=Form(...)):

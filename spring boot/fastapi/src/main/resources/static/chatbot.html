@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>chatbot</title>
+<style>
+</style>
+</head>
+<body>
+	<a href="/">메인페이지로</a>
+	<div id="resultDiv"></div>
+	<form id="form">
+		<span>채팅 : </span> <input type="text" name="msg" id="msgInput">
+		<button id="btn" type="button">확인</button>
+	</form>
+	<script type="text/javascript">
+    async function btnClick() {
+        const msgInput = document.querySelector('#msgInput'); // 입력창
+        const resultDiv = document.querySelector('#resultDiv'); // 결과창
+        
+        // 2번 과정: 사용자가 입력한 내용을 담습니다.
+        const formData = new FormData();
+        formData.append("msg", msgInput.value);
+
+        try {
+            // 이클립스 서버의 /api/v1/text 경로로 데이터를 보냅니다.
+            const response = await fetch('/api/v1/text', {
+                method: 'POST',
+                body: formData
+            });
+
+            // 6번 과정: 서버(이클립스)에서 돌아온 답변을 화면에 보여줍니다.
+            const result = await response.json();
+            resultDiv.innerHTML = `<h3>AI 답변: ${result.msg}</h3>`;
+        } catch (e) {
+            console.error(e);
+            resultDiv.innerHTML = "연결 실패!";
+        }
+    }
+</script>
+</body>
+</html>
