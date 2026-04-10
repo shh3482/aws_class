@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, Form
+from contextlib import asynccontextmanager
 import uvicorn
 import mnist_learning as ml
 import text_mining as tm
@@ -9,7 +10,19 @@ import cv2
 import fashion as fs
 import requests
 
-app = FastAPI()
+# 모델들을 관리하는 전역 변수
+ml_models = {}
+
+@asynccontextmanager
+async def lifespan(app:FastAPI):
+  # 서버 시작시 무거운 모델을 미리 로드
+  print("모델 로딩 시작...")
+  ret_model = SentenceTransformer('jhgan/ko-sroberta-multitask')
+  ret_emb_data = load_emb_data('model/cached_emb_data.npy')
+  print("모델 로딩 완료...")
+  yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get('/')
 async def index():
@@ -72,7 +85,7 @@ async def fashion(file:UploadFile=Form(...)):
 	return {"msg" : res}
 
 @app.post('/chatbot')
-async def chatbot():
+async def chatbot(msg:str=Form(...)):
   return {"msg" : "아직 답변 준비중입니다..."}
 
 if __name__ == '__main__':
