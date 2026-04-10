@@ -36,7 +36,7 @@ def load_image_dataset(root_path:str, width:int, height:int):
 	images = images.astype('float32') / 255.0
 	return images, labels
 
-def train_model_save_model(X, y, file_name:str = 'mnist_model.pkl'):
+def train_model_save_model(X, y, file_name:str = 'model/mnist_model.pkl'):
 	# 데이터를 섞음
 	X, y = shuffle(X,y)
 	# 모델선정
@@ -84,9 +84,9 @@ def predict_from_upload_file(img, width:int, height:int, file_name:str = 'mnist_
 if __name__ == '__main__':
 	# download_mnist('images')
 	# print("이미지 다운로드 완료")
-	# images, labels = load_image_dataset('images', 28, 28)
+	images, labels = load_image_dataset('images', 28, 28)
 	# print("이미지 변환 완료")
-	# train_model_save_model(images, labels)
+	train_model_save_model(images, labels)
 	# print("학습 완료")
 	# print(load_model_predict('day13(ml)/6.jpg', 28, 28))
 	# print(load_model_predict('day13(ml)/2.png', 28, 28))

@@ -24,7 +24,7 @@ async def image(file:UploadFile):
 	# 배열을 이미지로 디코딩
 	img = cv2.imdecode(np_arr, cv2.IMREAD_GRAYSCALE)
 	#예측
-	res = ml.predict_from_upload_file(img, 28, 28)
+	res = ml.predict_from_upload_file(img, 28, 28, 'model/mnist_model.pkl')
 	print(f'URL : /image')
 
 	return {"msg" : res}
@@ -38,11 +38,11 @@ async def movies_recommend(title:str=Form(...), type:str=Form(...)):
 	recommender = mo.MovieRecommender()
 	
 	if type == 'content':
-		recommender.load_model('movie_model_content.pkl')
+		recommender.load_model('model/movie_model_content.pkl')
 	elif type == 'etc':
-		recommender.load_model('movie_model_etc.pkl')
+		recommender.load_model('model/movie_model_etc.pkl')
 	elif type == 'director':
-		recommender.load_model('movie_model_director.pkl')
+		recommender.load_model('model/movie_model_director.pkl')
 
 	
 	list = recommender.get_recommendations_movies(type, title)

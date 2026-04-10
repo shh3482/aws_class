@@ -26,7 +26,7 @@ public class controller {
 		MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 		bodyBuilder.part("msg", "데이터 갔나요?");
 		bodyBuilder.part("file", file.getResource());
-		return webClient.post().uri("/text")
+		return webClient.post().uri("/image")
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.body(BodyInserters.fromMultipartData(bodyBuilder.build()))
 				.retrieve()
