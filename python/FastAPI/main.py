@@ -71,6 +71,10 @@ async def fashion(file:UploadFile=Form(...)):
 	print(f'URL : /fashion')
 	return {"msg" : res}
 
+@app.post('/chatbot')
+async def chatbot():
+  return {"msg" : "아직 답변 준비중입니다..."}
+
 if __name__ == '__main__':
 	# reload=True 사용시 주의 사항.
 	# 자동으로 변경 사항을 적용하면 시간이 오래 걸리는 경우 안 쓰는 것이 좋음

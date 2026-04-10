@@ -105,4 +105,15 @@ public class controller {
 				.block();
 
 	}
+	@PostMapping("/chatbot")
+	public String chatbot(@RequestParam("msg")String msg) {
+		MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+		bodyBuilder.part("msg", msg);
+		return webClient.post().uri("/text")
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
+	}
 }
