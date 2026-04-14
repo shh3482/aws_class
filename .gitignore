@@ -28,3 +28,4 @@ java_jik/.gitignore
 .project
 
 .ipynb_checkpoints/
+node_modules/
