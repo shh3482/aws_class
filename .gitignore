@@ -28,4 +28,26 @@ java_jik/.gitignore
 .project
 
 .ipynb_checkpoints/
+<<<<<<< HEAD
 node_modules/
+=======
+
+*.keras
+*.model
+*.h5
+*.pkl
+*.png
+
+.env
+.env.local
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.DS_Store
+node_modules/
+.idea/
+>>>>>>> 33995d7248868d57b34b73635c55828d57730fcd
