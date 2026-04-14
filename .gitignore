@@ -34,3 +34,16 @@ java_jik/.gitignore
 *.h5
 *.pkl
 *.png
+
+.env
+.env.local
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.DS_Store
+node_modules/
+.idea/
