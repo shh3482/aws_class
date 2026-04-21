@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-
+import ImageText from './ImageText';
 function App() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState('');
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
 
- const handleAsk = async () => {
+  const handleAsk = async () => {
     setLoading(true);
     try {
         const response = await fetch(
@@ -28,8 +28,7 @@ function App() {
         setResult('에러 발생');
     }
     setLoading(false);
-};
-
+  };
 
   const handleTranslate = async () => {
     setLoading(true);
@@ -49,6 +48,8 @@ function App() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'Arial' }}>
+      
+      {/* --- 기존 기능 (텍스트 질문 및 번역) --- */}
       <h1>AI Service</h1>
       <textarea
         value={prompt}
@@ -81,6 +82,13 @@ function App() {
           <p><strong>답변:</strong> {result}</p>
         </div>
       )}
+
+      {/* 구분선 추가 */}
+      <hr style={{ margin: '40px 0', border: '1px solid #ddd' }} />
+
+      {/* --- 새로 추가한 기능 (이미지 + 텍스트) --- */}
+      <ImageText />
+
     </div>
   );
 }
